@@ -5,4 +5,5 @@ public class SOProductionFacility : ScriptableObject
 {
     public int inputItem;
     public int outputItem;
+    public EFacilityType facilityType;
 }
