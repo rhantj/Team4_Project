@@ -93,7 +93,7 @@ public class Inventory : MonoBehaviour
             Debug.Log("스페이스누름");
         }
 
-        move();
+        //move();
 
     }
 
