@@ -19,7 +19,7 @@ public class SupplyStation : MonoBehaviour
 
                 if(playerInventory != null)
                 {
-                    playerInventory.AddItem();
+                    playerInventory.AddItem2();
                     
                 }
                 supplyTimer=0f;
