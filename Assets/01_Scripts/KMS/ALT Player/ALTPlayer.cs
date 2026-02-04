@@ -3,14 +3,14 @@ using UnityEngine;
 
 public class ALTPlayer : MonoBehaviour
 {
-    public Stack<int> items = new();
+    public Queue<int> items = new();
 
     private void Awake()
     {
         items.Clear();
         for (int i = 0; i < 10; ++i)
         {
-            items.Push(i);
+            items.Enqueue(i);
         }
     }
 }
