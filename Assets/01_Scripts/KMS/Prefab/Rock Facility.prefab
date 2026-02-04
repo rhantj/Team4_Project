@@ -63,7 +63,7 @@ GameObject:
   - component: {fileID: 5202444615568245677}
   - component: {fileID: 3893615784429780156}
   m_Layer: 0
-  m_Name: Facility 1
+  m_Name: Rock Facility
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -78,7 +78,7 @@ Transform:
   m_GameObject: {fileID: 3156024711172715030}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -3, y: -0, z: 2.59}
+  m_LocalPosition: {x: 0, y: -0, z: 0}
   m_LocalScale: {x: 2, y: 2, z: 2}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -179,6 +179,11 @@ MonoBehaviour:
   m_FacilitySO: {fileID: 11400000, guid: 1b70a41afa367f14bbb25701fcb68a90, type: 2}
   m_OutputArea: {fileID: 439768692661796775}
   m_InputArea: {fileID: 1932347751999473584}
+  m_InputLimit: 5
+  m_OutputLimit: 5
+  m_ProductionTime: 5
+  m_Inputs: 
+  m_Outputs: 
 --- !u!1 &7239638098176336119
 GameObject:
   m_ObjectHideFlags: 0
