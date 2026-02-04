@@ -1,3 +1,7 @@
+using UnityEngine;
+
+// namespace Á¦°Å!
+
 public interface ICollectable
 {
     bool CanCollect();
@@ -14,5 +18,7 @@ public struct ResourceData
 
 public enum ResourceType
 {
-    Wood, Stone, Ore, Berry
+    Wood,
+    Stone,
+    Iron
 }

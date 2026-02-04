@@ -35,11 +35,11 @@ public class Tree : MonoBehaviour, ICollectable
         if (collectEffect != null)
             collectEffect.Play();
 
-        Debug.Log($"{resourceName} Ã¤Áý Áß...");
+
 
         yield return new WaitForSeconds(collectionTime);
 
-        Debug.Log($"{resourceName} x{woodAmount} È¹µæ!");
+   
 
         isCollected = true;
 

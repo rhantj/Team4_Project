@@ -2,15 +2,32 @@ using UnityEngine;
 
 public class PlayerAnimator : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    [Header("Animator Settings")]
+    [SerializeField] private Animator animator;
+
+    private PlayerMovement playerMovement;
+
+    private readonly int hashIsMoving = Animator.StringToHash("IsMoving");
+    private readonly int hashCollect = Animator.StringToHash("Collect");
+
+    private void Awake()
     {
-        
+        if (animator == null)
+            animator = GetComponentInChildren<Animator>();
+
+        playerMovement = GetComponent<PlayerMovement>();
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Update()
     {
-        
+        if (animator != null)
+        {
+            animator.SetBool(hashIsMoving, playerMovement.IsMoving);
+        }
+    }
+
+    public void PlayCollectAnimation()
+    {
+        animator?.SetTrigger(hashCollect);
     }
 }
