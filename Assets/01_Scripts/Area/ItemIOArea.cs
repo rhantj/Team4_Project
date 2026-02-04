@@ -2,17 +2,19 @@ using System;
 using System.Collections;
 using UnityEngine;
 
+
 public class ItemIOArea : MonoBehaviour
 {
     public event Action m_OnEnterArea;
     public event Action m_OnExitArea;
 
     [Header("Setting")]
-    [SerializeField] Transform m_player;
-    [SerializeField] private float m_CheckAreaInterval = 0.1f;
-    [SerializeField] private float m_Width;
-    [SerializeField] private float m_Height;
-    [SerializeField] public bool m_isPlayerEnter = false;
+    [SerializeField] public Transform m_player;
+    [SerializeField] protected float m_CheckAreaInterval = 0.1f;
+    [SerializeField] protected float m_Width;
+    [SerializeField] protected float m_Height;
+    [SerializeField] protected bool m_isPlayerEnter = false;
+    protected bool canDetect = true;
     RectZone m_IOArea = new()
     {
         minX = 0,
@@ -25,17 +27,23 @@ public class ItemIOArea : MonoBehaviour
 
     public bool IsPlayerEnter => m_isPlayerEnter;
 
-    private void Awake()
+    protected virtual void Awake()
     {
         UpdateBox();
     }
 
-    private void Start()
+
+    protected virtual void Start()
     {
         m_CheckCoroutine ??= StartCoroutine(Co_CheckArea());
     }
 
-    private void OnDisable()
+    protected virtual void OnEnable()
+    {
+        m_player = GameObject.Find("Player").transform;
+    }
+
+    protected virtual void OnDisable()
     {
         if(m_CheckCoroutine != null)
         {
@@ -44,7 +52,7 @@ public class ItemIOArea : MonoBehaviour
         }
     }
 
-    void UpdateBox()
+    protected void UpdateBox()
     {
         m_IOArea.minX = transform.position.x - m_Width / 2;
         m_IOArea.maxX = transform.position.x + m_Width / 2;
@@ -53,11 +61,11 @@ public class ItemIOArea : MonoBehaviour
         m_IOArea.maxZ = transform.position.z + m_Height / 2;
     }
 
-    IEnumerator Co_CheckArea()
+    protected IEnumerator Co_CheckArea()
     {
         var wait = new WaitForSeconds(m_CheckAreaInterval);
 
-        while (true)
+        while (canDetect)
         {
             UpdateBox();
 
@@ -67,29 +75,27 @@ public class ItemIOArea : MonoBehaviour
             {
                 m_isPlayerEnter = true;
                 m_OnEnterArea?.Invoke();
-                Debug.Log("Player Enter Zone");
             }
             else if(!isInsideNow && m_isPlayerEnter)
             {
                 m_isPlayerEnter = false;
                 m_OnExitArea?.Invoke();
-                Debug.Log("Player Exit Zone");
             }
 
             yield return wait;
         }
     }
 
-    private void OnDrawGizmos()
+    protected void OnDrawGizmos()
     {
         UpdateBox();
-        Gizmos.color = Color.blue;
+        Gizmos.color = Color.green;
 
         float width = m_IOArea.maxX - m_IOArea.minX;
         float depth = m_IOArea.maxZ - m_IOArea.minZ;
         float centerX = m_IOArea.minX + width / 2;
         float centerZ = m_IOArea.minZ + depth / 2;
 
-        Gizmos.DrawCube(new Vector3(centerX, 0, centerZ), new Vector3(width, 1, depth));
+        Gizmos.DrawWireCube(new Vector3(centerX, 0, centerZ), new Vector3(width, 1, depth));
     }
 }
