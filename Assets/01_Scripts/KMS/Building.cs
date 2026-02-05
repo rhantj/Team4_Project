@@ -1,6 +1,5 @@
-using NUnit.Framework;
+using System.Collections.Generic;
 using System.Collections;
-using System.Runtime.InteropServices;
 using UnityEngine;
 
 public class Building : MonoBehaviour
@@ -23,11 +22,18 @@ public class Building : MonoBehaviour
     private void OnDisable()
     {
         m_InputArea.m_OnEnterArea -= InputItems;
+
+        if (m_InputCoroutine != null)
+        {
+            StopCoroutine(m_InputCoroutine);
+            m_InputCoroutine = null;
+        }
     }
 
     public void SetItemAndStep(SOBuilding data)
     {
         m_Steps = data.Step;
+        m_InputItems = data.InputItems;
     }
 
     private void InputItems()
@@ -45,7 +51,7 @@ public class Building : MonoBehaviour
             var item = player.items.Dequeue();
             Debug.Log($"Get Item : {item}");
 
-            m_Progress++;
+            
 
             yield return wait;
         }
