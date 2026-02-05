@@ -1,0 +1,16 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a2efe8d37b6d6d04a9ac5ca0c3c13f35, type: 3}
+  m_Name: CopperBar
+  m_EditorClassIdentifier: Assembly-CSharp::ResourceItemData
+  itemName: CopperBar
+  itemPrefab: {fileID: 8370879627702163877, guid: 5e249106b92deea40af2e8f541ab1f75, type: 3}
