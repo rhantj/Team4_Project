@@ -3,14 +3,15 @@ using UnityEngine;
 
 public class Inventory : MonoBehaviour
 {
-    //용량
-    [SerializeField] private int capacity = 10;
-    //아이템 위치
-    [SerializeField] private Transform itemSpawnPoint;
+    
+    [Header("가방 용량")]
+    [SerializeField] private int m_Capacity = 10;
+    [Header("아이템 생성 위치")]
+    [SerializeField] private Transform m_ItemSpawnPoint;
 
-    public bool IsFull => stackItem.Count >= capacity;
+    public bool IsFull => m_StackItem.Count >= m_Capacity;
 
-    private List<GameObject>stackItem=new List<GameObject>();
+    private List<GameObject>m_StackItem=new List<GameObject>();
 
     public void AddItem(ResourceItemData data)
     {
@@ -21,12 +22,14 @@ public class Inventory : MonoBehaviour
             return;
         }
         //아이템 생성
-        GameObject resourceItem = Instantiate(data.itemPrefab);
-        resourceItem.transform.SetParent(itemSpawnPoint,false);
+        GameObject resourceItem = Instantiate(data.m_ItemPrefab);
+        resourceItem.transform.SetParent(m_ItemSpawnPoint,false);
+
+        resourceItem.name = data.m_ItemName;
 
         //아이템 높이계산
         float height = 0f;
-        foreach(GameObject obj in stackItem)
+        foreach(GameObject obj in m_StackItem)
         {
             height+=obj.GetComponentInChildren<Renderer>().bounds.size.y;
         }
@@ -34,22 +37,63 @@ public class Inventory : MonoBehaviour
         resourceItem.transform.localPosition = new Vector3(0, height, 0);
 
 
-        stackItem.Add(resourceItem);
+        m_StackItem.Add(resourceItem);
     }
-    public void RemoveItem()
+
+    public void RemoveItem(ResourceItemData data)
     {
-        if (stackItem.Count > 0)
+        for(int i=m_StackItem.Count-1;i>=0;i--)
         {
-            int lastIndex = stackItem.Count - 1;
-            GameObject removeItem=stackItem[lastIndex];
-
-            stackItem.RemoveAt(lastIndex);
-
-            //제거는 나중에 수정할예정
-            Destroy(removeItem);
-
-
+            if(m_StackItem[i].name==data.m_ItemName)
+            {
+                GameObject removeItem=m_StackItem[i];
+                m_StackItem.RemoveAt(i);
+                Destroy(removeItem);
+                SortItem();
+                return;
+            }
         }
     }
+    public void SortItem()
+    {
+        float height = 0f;
+
+        for(int i=0;i<m_StackItem.Count;i++)
+        {
+            m_StackItem[i].transform.localPosition = new Vector3(0, height, 0);
+            height += m_StackItem[i].GetComponentInChildren<Renderer>().bounds.size.y;
+        }
+    }
+    //public void RemoveItem(ResourceItemData data)
+    //{
+    //    if (m_StackItem.Count > 0)
+    //    {
+    //        int lastIndex = m_StackItem.Count - 1;
+
+    //        if (m_StackItem[lastIndex].name == data.m_ItemName)
+    //        {
+    //            GameObject removeItem=m_StackItem[lastIndex];
+    //            m_StackItem.RemoveAt(lastIndex);
+    //            Destroy(removeItem);
+    //        }
+
+            
+    //    }
+    //}
+    //public void RemoveItem()
+    //{
+    //    if (m_StackItem.Count > 0)
+    //    {
+    //        int lastIndex = m_StackItem.Count - 1;
+    //        GameObject removeItem=m_StackItem[lastIndex];
+
+    //        m_StackItem.RemoveAt(lastIndex);
+
+    //        //제거는 나중에 수정할예정
+    //        Destroy(removeItem);
+
+
+    //    }
+    //}
 
 }
