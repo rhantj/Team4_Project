@@ -6,14 +6,14 @@ public class PlayerResourceCollector : MonoBehaviour
     [SerializeField] private float collectionRange = 2f;
     [SerializeField] private LayerMask resourceLayer;
 
-    private ResourceStack resourceStack; // 추가!
+    private Inventory inventory;
     private Collider[] hitBuffer = new Collider[10];
     private float checkTimer = 0f;
-    private ResourceNode currentTarget = null;
+    private ICollectable currentTarget = null; // ICollectable
 
     private void Awake()
     {
-        resourceStack = GetComponent<ResourceStack>(); // 추가!
+        inventory = GetComponent<Inventory>();
     }
 
     private void Update()
@@ -29,7 +29,8 @@ public class PlayerResourceCollector : MonoBehaviour
 
     private void CheckForResources()
     {
-        if (currentTarget != null && !currentTarget.CanHarvest)
+        // ICollectable 사용
+        if (currentTarget != null && !currentTarget.CanCollect())
             currentTarget = null;
 
         if (currentTarget != null)
@@ -44,25 +45,26 @@ public class PlayerResourceCollector : MonoBehaviour
 
         if (hitCount > 0)
         {
-            ResourceNode closestNode = FindClosestResource(hitCount);
+            ICollectable closest = FindClosestCollectable(hitCount);
 
-            if (closestNode != null && closestNode.CanHarvest)
+            if (closest != null && closest.CanCollect())
             {
-                StartHarvest(closestNode);
+                StartHarvest(closest);
             }
         }
     }
 
-    private ResourceNode FindClosestResource(int hitCount)
+    private ICollectable FindClosestCollectable(int hitCount)
     {
         float closestDistance = float.MaxValue;
-        ResourceNode closest = null;
+        ICollectable closest = null;
 
         for (int i = 0; i < hitCount; i++)
         {
-            ResourceNode node = hitBuffer[i].GetComponent<ResourceNode>();
+            // ICollectable로 검색
+            ICollectable collectable = hitBuffer[i].GetComponent<ICollectable>();
 
-            if (node != null && node.CanHarvest)
+            if (collectable != null && collectable.CanCollect())
             {
                 float distance = Vector3.Distance(
                     transform.position,
@@ -72,7 +74,7 @@ public class PlayerResourceCollector : MonoBehaviour
                 if (distance < closestDistance)
                 {
                     closestDistance = distance;
-                    closest = node;
+                    closest = collectable;
                 }
             }
         }
@@ -80,12 +82,19 @@ public class PlayerResourceCollector : MonoBehaviour
         return closest;
     }
 
-    private void StartHarvest(ResourceNode node)
+    private void StartHarvest(ICollectable collectable)
     {
-        currentTarget = node;
-        node.StartHarvest(resourceStack); // resourceStack 전달!
+        currentTarget = collectable;
 
-    
+        // ResourceNode에 인벤토리 전달
+        if (collectable is ResourceNode node)
+        {
+            node.SetInventory(inventory);
+        }
+
+        collectable.Collect(); // ICollectable.Collect() 호출
+
+        Debug.Log("자원 수집 시작!");
     }
 
     private void OnDrawGizmosSelected()
