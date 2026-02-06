@@ -1,7 +1,6 @@
-using System.Collections.Generic;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
-using System.Net;
 
 public class ProdictionFacility : MonoBehaviour
 {
@@ -12,22 +11,22 @@ public class ProdictionFacility : MonoBehaviour
     [SerializeField] private int m_OutputLimit = 5;
     [SerializeField] private float m_ProductionTime = 5f;
 
-    private int m_Input;
-    private int m_Output;
+    private GameObject m_Input;
+    private GameObject m_Output;
     private Coroutine m_OutputCoroutine;
     private Coroutine m_InputCoroutine;
     private Coroutine m_ProductionCoroutine;
 
-    [SerializeField] private List<int> m_Inputs;
-    [SerializeField] private List<int> m_Outputs;
+    [SerializeField] private List<GameObject> m_Inputs;
+    [SerializeField] private List<GameObject> m_Outputs;
 
     public SOProductionFacility FacilitySO { get { return m_FacilitySO; } }
 
     private void Awake()
     {
         InitializeIOProduct(m_FacilitySO);
-        m_Inputs = new List<int>(m_InputLimit);
-        m_Outputs = new List<int>(m_OutputLimit);
+        m_Inputs = new List<GameObject>(m_InputLimit);
+        m_Outputs = new List<GameObject>(m_OutputLimit);
     }
 
     private void OnEnable()
@@ -103,8 +102,8 @@ public class ProdictionFacility : MonoBehaviour
             yield return null;
         }
 
-        var player = m_OutputArea.m_player.GetComponent<ALTPlayer>();
-        while (m_OutputArea.m_isPlayerEnter)
+        var inv = m_OutputArea.Player.GetComponent<Inventory>();
+        while (m_OutputArea.IsPlayerEnter)
         {
             if (m_Outputs.Count == 0)
             {
@@ -114,10 +113,19 @@ public class ProdictionFacility : MonoBehaviour
 
             if (m_Outputs.Count > 0)
             {
-                var item = m_Outputs[0];
+                if (inv.IsFull)
+                {
+                    yield return null;
+                    continue;
+                }
+
+                var itemdata = ScriptableObject.CreateInstance<ResourceItemData>();
+                itemdata.m_ItemName = "Log2";
+                itemdata.m_ItemPrefab = m_Outputs[0];
+
+                inv.AddItem(itemdata);
                 m_Outputs.RemoveAt(0);
-                player.items.Enqueue(item);
-                Debug.Log($"Return : {item}");
+                Debug.Log($"Output : {itemdata.m_ItemPrefab}, Current Stack : {m_Inputs.Count}");
             }
             yield return new WaitForSeconds(.5f);
         }
@@ -127,18 +135,17 @@ public class ProdictionFacility : MonoBehaviour
 
     private IEnumerator WaitForInput()
     {
-        Debug.Log("item input start");
         float elapsedTime = 0f;
         while (elapsedTime < .5f) 
         {
-            if (!m_InputArea.m_isPlayerEnter) yield break;
+            if (!m_InputArea.IsPlayerEnter) yield break;
 
             elapsedTime += Time.deltaTime;
             yield return null;
         }
 
-        var player = m_InputArea.m_player.GetComponent<ALTPlayer>();
-        while (m_InputArea.m_isPlayerEnter)
+        var inv = m_InputArea.Player.GetComponent<Inventory>();
+        while (m_InputArea.IsPlayerEnter)
         {
             if (m_Inputs.Count >= m_InputLimit)
             {
@@ -146,24 +153,22 @@ public class ProdictionFacility : MonoBehaviour
                 continue;
             }
 
-            if(player.items.Count == 0)
+            if (inv.IsEmpty)
             {
                 yield return null;
                 continue;
             }
 
-            if (m_Inputs.Count < m_InputLimit)
+            if(m_Inputs.Count < m_InputLimit)
             {
-                var item = player.items.Dequeue();
-                if (item != m_Input)
-                {
-                    yield return null;
-                    player.items.Enqueue(item);
-                    continue;
-                }
+                var itemdata = ScriptableObject.CreateInstance<ResourceItemData>();
+                itemdata.m_ItemName = "Log";
+                itemdata.m_ItemPrefab = m_Input;
 
-                m_Inputs.Add(item);
-                Debug.Log($"Get : {item}, Current Stack : {m_Inputs.Count}");
+                inv.RemoveItem(itemdata);
+                m_Inputs.Add(itemdata.m_ItemPrefab);
+
+                Debug.Log($"Input : {itemdata.m_ItemPrefab}, Current Stack : {m_Inputs.Count}");
             }
 
             m_ProductionCoroutine ??= StartCoroutine(ProductItems(m_ProductionTime));
@@ -171,32 +176,6 @@ public class ProdictionFacility : MonoBehaviour
         }
 
         m_InputCoroutine = null;
-    }
-
-    private void GiveItemToPlayer(ALTPlayer player)
-    {
-        if (m_Outputs.Count > 0)
-        {
-            var item = m_Outputs[0];
-            if (item == m_Output) return;
-            m_Outputs.RemoveAt(0);
-
-            player.items.Enqueue(item);
-            Debug.Log($"Return : {item}");
-        }
-    }
-
-    private void GetItemFromPlayer(ALTPlayer player)
-    {
-        if (m_Inputs.Count < m_InputLimit)
-        {
-            var item = player.items.Dequeue();
-            if (item != m_Input) return;
-            m_Inputs.Add(item);
-            Debug.Log($"Get : {item}, Current Stack : {m_Inputs.Count}");
-        }
-
-        m_ProductionCoroutine ??= StartCoroutine(ProductItems(m_ProductionTime));
     }
 
     private IEnumerator ProductItems(float delay)
@@ -216,7 +195,6 @@ public class ProdictionFacility : MonoBehaviour
             m_Inputs.RemoveAt(0);
             m_Outputs.Add(m_Output);
         }
-
         m_ProductionCoroutine = null;
     }
 }

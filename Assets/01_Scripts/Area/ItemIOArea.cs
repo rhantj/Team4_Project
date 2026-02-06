@@ -9,11 +9,11 @@ public class ItemIOArea : MonoBehaviour
     public event Action m_OnExitArea;
 
     [Header("Setting")]
-    [SerializeField] public Transform m_player;
+    [SerializeField] private SOPlayerReference m_Player;
     [SerializeField] protected float m_CheckAreaInterval = 0.1f;
     [SerializeField] protected float m_Width;
     [SerializeField] protected float m_Height;
-    [SerializeField] public bool m_isPlayerEnter = false;
+    [SerializeField] private bool m_isPlayerEnter = false;
     protected bool canDetect = true;
     RectZone m_IOArea = new()
     {
@@ -25,6 +25,7 @@ public class ItemIOArea : MonoBehaviour
 
     private Coroutine m_CheckCoroutine;
 
+    public Transform Player => m_Player.player;
     public bool IsPlayerEnter => m_isPlayerEnter;
 
     protected virtual void Awake()
@@ -38,10 +39,7 @@ public class ItemIOArea : MonoBehaviour
         m_CheckCoroutine ??= StartCoroutine(Co_CheckArea());
     }
 
-    protected virtual void OnEnable()
-    {
-        m_player = GameObject.Find("Player").transform;
-    }
+    protected virtual void OnEnable() { }
 
     protected virtual void OnDisable()
     {
@@ -69,7 +67,7 @@ public class ItemIOArea : MonoBehaviour
         {
             UpdateBox();
 
-            bool isInsideNow = m_IOArea.IsInside(m_player.position);
+            bool isInsideNow = m_IOArea.IsInside(m_Player.player.position);
 
             if(isInsideNow && !m_isPlayerEnter)
             {
