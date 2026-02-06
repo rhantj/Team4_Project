@@ -1,5 +1,4 @@
 using UnityEngine;
-using System;
 
 public class PlayerInteraction : MonoBehaviour
 {
@@ -9,15 +8,17 @@ public class PlayerInteraction : MonoBehaviour
     [SerializeField] private KeyCode interactKey = KeyCode.F;
 
     [Header("UI References")]
-    [SerializeField] private GameObject interactionPromptUI; // "F키로 건설" UI
+    [SerializeField] private GameObject interactionPromptUI;
 
+    private Inventory inventory;
     private Landmark nearbyLandmark = null;
     private Collider[] hitBuffer = new Collider[5];
     private float checkTimer = 0f;
-    private const float CHECK_INTERVAL = 0.2f;
 
-    // 이벤트
-    public event Action<Landmark> OnLandmarkInteracted;
+    private void Awake()
+    {
+        inventory = GetComponent<Inventory>();
+    }
 
     private void Update()
     {
@@ -29,12 +30,11 @@ public class PlayerInteraction : MonoBehaviour
     {
         checkTimer += Time.deltaTime;
 
-        if (checkTimer < CHECK_INTERVAL)
+        if (checkTimer < 0.2f)
             return;
 
         checkTimer = 0f;
 
-        // 주변 랜드마크 검색
         int hitCount = Physics.OverlapSphereNonAlloc(
             transform.position,
             interactionRange,
@@ -44,7 +44,6 @@ public class PlayerInteraction : MonoBehaviour
 
         Landmark previousLandmark = nearbyLandmark;
 
-        // 가장 가까운 랜드마크 찾기
         if (hitCount > 0)
         {
             nearbyLandmark = FindClosestLandmark(hitCount);
@@ -54,7 +53,6 @@ public class PlayerInteraction : MonoBehaviour
             nearbyLandmark = null;
         }
 
-        // UI 상태 업데이트
         if (previousLandmark != nearbyLandmark)
         {
             UpdateInteractionUI();
@@ -98,16 +96,20 @@ public class PlayerInteraction : MonoBehaviour
 
     private void Interact()
     {
-        if (nearbyLandmark == null)
+        if (nearbyLandmark == null || inventory == null)
             return;
 
+        //Inventory
+        bool success = nearbyLandmark.TryUpgrade(inventory);
 
-
-        // 이벤트 발생 (UI 매니저에서 구독)
-        OnLandmarkInteracted?.Invoke(nearbyLandmark);
-
-        // 또는 직접 UI 열기
-        // UIManager.Instance.OpenLandmarkBuildUI(nearbyLandmark);
+        if (success)
+        {
+            Debug.Log("건설 성공!");
+        }
+        else
+        {
+            Debug.Log("건설 실패!");
+        }
     }
 
     private void UpdateInteractionUI()
@@ -116,30 +118,11 @@ public class PlayerInteraction : MonoBehaviour
         {
             bool shouldShow = nearbyLandmark != null;
             interactionPromptUI.SetActive(shouldShow);
-
-            // UI 위치를 랜드마크 위로 (선택)
-            if (shouldShow)
-            {
-                UpdatePromptPosition();
-            }
         }
-    }
-
-    private void UpdatePromptPosition()
-    {
-        if (nearbyLandmark == null || interactionPromptUI == null)
-            return;
-
-        // 랜드마크 위에 UI 표시
-        Vector3 worldPos = nearbyLandmark.transform.position + Vector3.up * 3f;
-        Vector3 screenPos = Camera.main.WorldToScreenPoint(worldPos);
-
-        interactionPromptUI.transform.position = screenPos;
     }
 
     private void OnDrawGizmosSelected()
     {
-        // 상호작용 범위 시각화
         Gizmos.color = Color.cyan;
         Gizmos.DrawWireSphere(transform.position, interactionRange);
     }
