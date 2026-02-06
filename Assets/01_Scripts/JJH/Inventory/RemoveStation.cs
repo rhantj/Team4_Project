@@ -2,9 +2,10 @@ using UnityEngine;
 
 public class RemoveStation : MonoBehaviour
 {
+    [SerializeField]private ResourceItemData m_SoItemData;
     //薯剪 除問(雪擊熱煙說塭颶)
-    [SerializeField]private float removeInterval = 1f;
-    private float removeTimer = 0f;
+    [SerializeField]private float m_RemoveInterval = 1f;
+    private float m_RemoveTimer = 0f;
 
     private void OnTriggerStay(Collider other)
     {
@@ -13,11 +14,11 @@ public class RemoveStation : MonoBehaviour
             Inventory inven=other.GetComponent<Inventory>();
             if (inven != null)
             {
-                removeTimer += Time.deltaTime;
-                if(removeTimer >= removeInterval)
+                m_RemoveTimer += Time.deltaTime;
+                if(m_RemoveTimer >= m_RemoveInterval)
                 {
-                    inven.RemoveItem();
-                    removeTimer = 0f;
+                    inven.RemoveItem(m_SoItemData);
+                    m_RemoveTimer = 0f;
                 }
             }
         }
@@ -26,7 +27,7 @@ public class RemoveStation : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            removeTimer = 0f;
+            m_RemoveTimer = 0f;
         }
     }
     
