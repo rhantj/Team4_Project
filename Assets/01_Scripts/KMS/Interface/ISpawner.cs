@@ -1,5 +1,5 @@
 using UnityEngine;
 public interface ISpawner
 {
-    void InstantiateFaility(EFacilityType type, Vector3 pos, Quaternion rot);
+    void InstantiateFaility(EFacilityType type, Vector3 pos, Quaternion rot, out GameObject facility);
 }

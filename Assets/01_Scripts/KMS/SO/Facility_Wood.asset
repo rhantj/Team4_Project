@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e7181f36b54a6c340ba530149e36eaf7, type: 3}
-  m_Name: SOProductionFacility
+  m_Name: Facility_Wood
   m_EditorClassIdentifier: Assembly-CSharp::SOProductionFacility
-  inputItem: 1
-  outputItem: 2
+  inputItem: {fileID: 6754428488172609419, guid: b84eaf5ef0fb91140b1d56f7b61572be, type: 3}
+  outputItem: {fileID: 5620069798872243853, guid: cfaeed19511c25a40a9cf1f3c4623eaa, type: 3}
