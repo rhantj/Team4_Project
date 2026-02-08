@@ -13,7 +13,7 @@ public class ItemIOArea : MonoBehaviour
     [SerializeField] protected float m_CheckAreaInterval = 0.1f;
     [SerializeField] protected float m_Width;
     [SerializeField] protected float m_Height;
-    [SerializeField] protected bool m_isPlayerEnter = false;
+    [SerializeField] public bool m_isPlayerEnter = false;
     protected bool canDetect = true;
     RectZone m_IOArea = new()
     {
