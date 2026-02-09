@@ -38,11 +38,13 @@ public class FacilitySpawner : MonoBehaviour, ISpawner
         FacilitySpawnSystem.DI(this);
     }
 
-    public void InstantiateFaility(EFacilityType type, Vector3 pos, Quaternion rot)
+    public void InstantiateFaility(EFacilityType type, Vector3 pos, Quaternion rot, out GameObject facility)
     {
+        facility = null;
         if (m_FacilityCache.TryGetValue(type, out var pf))
         {
             Instantiate(pf, pos, rot);
+            facility = pf;
         }
     }
 }
