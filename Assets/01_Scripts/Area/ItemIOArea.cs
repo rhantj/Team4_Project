@@ -25,7 +25,7 @@ public class ItemIOArea : MonoBehaviour
 
     private Coroutine m_CheckCoroutine;
 
-    public Transform Player => m_Player.player;
+    public Transform Player => m_Player.player.transform;
     public bool IsPlayerEnter => m_isPlayerEnter;
 
     protected virtual void Awake()
@@ -57,6 +57,8 @@ public class ItemIOArea : MonoBehaviour
 
         m_IOArea.minZ = transform.position.z - m_Height / 2;
         m_IOArea.maxZ = transform.position.z + m_Height / 2;
+
+        transform.localScale = new Vector3(m_Width, .5f, m_Height);
     }
 
     protected IEnumerator Co_CheckArea()
@@ -67,7 +69,7 @@ public class ItemIOArea : MonoBehaviour
         {
             UpdateBox();
 
-            bool isInsideNow = m_IOArea.IsInside(m_Player.player.position);
+            bool isInsideNow = m_IOArea.IsInside(m_Player.player.transform.position);
 
             if(isInsideNow && !m_isPlayerEnter)
             {
