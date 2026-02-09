@@ -40,7 +40,7 @@ public class ResourceNode : MonoBehaviour, ICollectable // ICollectable
         return new ResourceData
         {
             resourceType = resourceType,
-            resourceName = itemData.m_ItemName,
+            resourceName = itemData.m_SoItemName,
             amount = resourceAmount
         };
     }
@@ -58,11 +58,11 @@ public class ResourceNode : MonoBehaviour, ICollectable // ICollectable
         if (harvestEffect != null)
             harvestEffect.Play();
 
-        Debug.Log(itemData.m_ItemName + " Ã¤Áý Áß...");
+        Debug.Log(itemData.m_SoItemName + " Ã¤Áý Áß...");
 
         yield return new WaitForSeconds(harvestTime);
 
-        Debug.Log(itemData.m_ItemName + " x" + resourceAmount + " È¹µæ!");
+        Debug.Log(itemData.m_SoItemName + " x" + resourceAmount + " È¹µæ!");
 
         if (playerInventory != null && itemData != null)
         {
@@ -90,6 +90,6 @@ public class ResourceNode : MonoBehaviour, ICollectable // ICollectable
         if (visualModel != null)
             visualModel.SetActive(true);
 
-        Debug.Log(itemData.m_ItemName + " ¸®½ºÆù!");
+        Debug.Log(itemData.m_SoItemName + " ¸®½ºÆù!");
     }
 }
