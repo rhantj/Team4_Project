@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2efe8d37b6d6d04a9ac5ca0c3c13f35, type: 3}
   m_Name: CopperBar
   m_EditorClassIdentifier: Assembly-CSharp::ResourceItemData
-  m_ItemName: CopperBar
+  m_SoItemName: CopperBar
   m_ItemPrefab: {fileID: 8370879627702163877, guid: 5e249106b92deea40af2e8f541ab1f75, type: 3}

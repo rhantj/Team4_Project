@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Inventory : MonoBehaviour
@@ -11,49 +12,90 @@ public class Inventory : MonoBehaviour
 
     public bool IsFull => m_StackItem.Count >= m_Capacity;
 
-    private List<GameObject>m_StackItem=new List<GameObject>();
+    public bool IsEmpty => m_StackItem.Count == 0;
+
+    //private List<GameObject>m_StackItem=new List<GameObject>();
+
+    private List<Item> m_StackItem = new List<Item>();
 
     public void AddItem(ResourceItemData data)
     {
-        //가득참 체크
-        if (IsFull)
-        {
-            Debug.Log("인벤토리 가득참");
-            return;
-        }
-        //아이템 생성
+        if (IsFull) return;
+
         GameObject resourceItem = Instantiate(data.m_ItemPrefab);
-        resourceItem.transform.SetParent(m_ItemSpawnPoint,false);
 
-        resourceItem.name = data.m_ItemName;
+        Item item=resourceItem.GetComponent<Item>();
 
-        //아이템 높이계산
+        resourceItem.transform.SetParent(m_ItemSpawnPoint, false);
+
         float height = 0f;
-        foreach(GameObject obj in m_StackItem)
+
+        foreach (Item stackItem in m_StackItem)
         {
-            height+=obj.GetComponentInChildren<Renderer>().bounds.size.y;
+            height += stackItem.GetComponentInChildren<Renderer>().bounds.size.y;
         }
 
         resourceItem.transform.localPosition = new Vector3(0, height, 0);
 
+        m_StackItem.Add(item);
 
-        m_StackItem.Add(resourceItem);
-    }
+    }   
+    //public void AddItem(ResourceItemData data)
+    //{
+    //    //가득참 체크
+    //    if (IsFull)
+    //    {
+    //        Debug.Log("인벤토리 가득참");
+    //        return;
+    //    }
+    //    //아이템 생성
+    //    GameObject resourceItem = Instantiate(data.m_ItemPrefab);
+    //    resourceItem.transform.SetParent(m_ItemSpawnPoint,false);
 
+    //    resourceItem.name = data.m_ItemName;
+
+    //    //아이템 높이계산
+    //    float height = 0f;
+    //    foreach(GameObject obj in m_StackItem)
+    //    {
+    //        height+=obj.GetComponentInChildren<Renderer>().bounds.size.y;
+    //    }
+
+    //    resourceItem.transform.localPosition = new Vector3(0, height, 0);
+
+
+    //    m_StackItem.Add(resourceItem);
+    //}
     public void RemoveItem(ResourceItemData data)
     {
         for(int i=m_StackItem.Count-1;i>=0;i--)
         {
-            if(m_StackItem[i].name==data.m_ItemName)
+            if (m_StackItem[i].m_ItemData == data)
             {
-                GameObject removeItem=m_StackItem[i];
+                Item itemRemove = m_StackItem[i];
                 m_StackItem.RemoveAt(i);
-                Destroy(removeItem);
+
+                Destroy(itemRemove.gameObject);
+
                 SortItem();
                 return;
             }
         }
     }
+    //public void RemoveItem(ResourceItemData data)
+    //{
+    //    for(int i=m_StackItem.Count-1;i>=0;i--)
+    //    {
+    //        if(m_StackItem[i].name==data.m_ItemName)
+    //        {
+    //            GameObject removeItem=m_StackItem[i];
+    //            m_StackItem.RemoveAt(i);
+    //            Destroy(removeItem);
+    //            SortItem();
+    //            return;
+    //        }
+    //    }
+    //}
     public void SortItem()
     {
         float height = 0f;
@@ -95,5 +137,19 @@ public class Inventory : MonoBehaviour
 
     //    }
     //}
-
+    public Vector3 GetNextItemPos()
+    {
+        float yOffset = 0f;
+        foreach(var item in m_StackItem)
+        {
+            yOffset+=item.GetComponentInChildren<Renderer>().bounds.size.y;
+        }
+        return m_ItemSpawnPoint.position + (m_ItemSpawnPoint.up * yOffset);
+    }
+    public void AdditemList(Item item)
+    {
+        item.transform.SetParent(m_ItemSpawnPoint);
+        item.transform.localRotation=Quaternion.identity;
+        m_StackItem.Add(item);
+    }
 }
