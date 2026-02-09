@@ -83,7 +83,7 @@ public class Landmark : MonoBehaviour
 
             foreach (GameObject item in stackItem)
             {
-                if (item.name == requiredItemData.m_ItemName)
+                if (item.name == requiredItemData.m_SoItemName)
                 {
                     count++;
                 }
