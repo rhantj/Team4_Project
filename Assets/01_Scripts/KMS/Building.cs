@@ -77,7 +77,7 @@ public class Building : MonoBehaviour
             }
 
             var itemdata = ScriptableObject.CreateInstance<ResourceItemData>();
-            itemdata.m_ItemName = currentStep.StepName;
+            itemdata.m_SoItemName = currentStep.StepName;
             itemdata.m_ItemPrefab = currentStep.RequierItem;
 
             inv.RemoveItem(itemdata);

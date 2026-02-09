@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 399ea4d20c622db4f9227d2c8a7bb741, type: 3}
   m_Name: PlayerRef
   m_EditorClassIdentifier: Assembly-CSharp::SOPlayerReference
-  player: {fileID: 0}
+  player: {fileID: 3455816917229034268, guid: 69ab4b25b4ee9744689fa00f44d9dbf1, type: 3}

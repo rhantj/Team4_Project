@@ -4,18 +4,26 @@ using UnityEngine;
 
 public class ProdictionFacility : MonoBehaviour
 {
+    [Header("Production")]
     [SerializeField] private SOProductionFacility m_FacilitySO;
     [SerializeField] private ItemIOArea m_OutputArea;
     [SerializeField] private ItemIOArea m_InputArea;
+    [SerializeField] private ItemIOArea m_UpgradeArea;
     [SerializeField] private int m_InputLimit = 5;
     [SerializeField] private int m_OutputLimit = 5;
     [SerializeField] private float m_ProductionTime = 5f;
+
+    [Header("Upgrades")]
+    [SerializeField] private float m_CurrentCostProgress = 0f;
+    [SerializeField] private float m_UpgradeCost = 1000f;
+    [SerializeField] private bool isAutomated = false;
 
     private GameObject m_Input;
     private GameObject m_Output;
     private Coroutine m_OutputCoroutine;
     private Coroutine m_InputCoroutine;
     private Coroutine m_ProductionCoroutine;
+    private Coroutine m_UpgradeCoroutine;
 
     [SerializeField] private List<GameObject> m_Inputs;
     [SerializeField] private List<GameObject> m_Outputs;
@@ -42,6 +50,12 @@ public class ProdictionFacility : MonoBehaviour
             m_InputArea.m_OnEnterArea += PlayerEnterInputArea;
             m_InputArea.m_OnExitArea += PlayerExitInputArea;
         }
+
+        if (m_UpgradeArea)
+        {
+            m_UpgradeArea.m_OnEnterArea += PlayerEnterUpgradeArea;
+            m_UpgradeArea.m_OnExitArea += PlayerExitUpgradeArea;
+        }
     }
 
     private void OnDisable()
@@ -57,7 +71,14 @@ public class ProdictionFacility : MonoBehaviour
             m_InputArea.m_OnEnterArea -= PlayerEnterInputArea;
             m_InputArea.m_OnExitArea -= PlayerExitInputArea;
         }
+
+        if (m_UpgradeArea)
+        {
+            m_UpgradeArea.m_OnEnterArea -= PlayerEnterUpgradeArea;
+            m_UpgradeArea.m_OnExitArea -= PlayerExitUpgradeArea;
+        }
     }
+
     private void InitializeIOProduct(SOProductionFacility data)
     {
         m_Input = data.inputItem;   
@@ -65,9 +86,12 @@ public class ProdictionFacility : MonoBehaviour
     }
 
     private void PlayerEnterOutputArea() => 
-        m_OutputCoroutine = StartCoroutine(WaitForOutput());
+        m_OutputCoroutine = StartCoroutine(Co_WaitForOutput());
     private void PlayerEnterInputArea() =>
-        m_InputCoroutine = StartCoroutine(WaitForInput());
+        m_InputCoroutine = StartCoroutine(Co_WaitForInput());
+
+    private void PlayerEnterUpgradeArea() =>
+        m_UpgradeCoroutine = StartCoroutine(Co_WaitForUpgrade());
 
     private void PlayerExitOutputArea()
     {
@@ -87,7 +111,16 @@ public class ProdictionFacility : MonoBehaviour
         }
     }
 
-    private IEnumerator WaitForOutput()
+    private void PlayerExitUpgradeArea()
+    {
+        if (m_UpgradeCoroutine != null)
+        {
+            StopCoroutine(m_UpgradeCoroutine);
+            m_UpgradeCoroutine = null;
+        }
+    }
+
+    private IEnumerator Co_WaitForOutput()
     {
         if (m_Outputs.Count == 0)
         {
@@ -120,7 +153,7 @@ public class ProdictionFacility : MonoBehaviour
                 }
 
                 var itemdata = ScriptableObject.CreateInstance<ResourceItemData>();
-                itemdata.m_ItemName = "Log2";
+                itemdata.m_SoItemName = "Log2";
                 itemdata.m_ItemPrefab = m_Outputs[0];
 
                 inv.AddItem(itemdata);
@@ -133,7 +166,7 @@ public class ProdictionFacility : MonoBehaviour
         m_OutputCoroutine = null;
     }
 
-    private IEnumerator WaitForInput()
+    private IEnumerator Co_WaitForInput()
     {
         float elapsedTime = 0f;
         while (elapsedTime < .5f) 
@@ -162,7 +195,7 @@ public class ProdictionFacility : MonoBehaviour
             if(m_Inputs.Count < m_InputLimit)
             {
                 var itemdata = ScriptableObject.CreateInstance<ResourceItemData>();
-                itemdata.m_ItemName = "Log";
+                itemdata.m_SoItemName = "Log";
                 itemdata.m_ItemPrefab = m_Input;
 
                 inv.RemoveItem(itemdata);
@@ -171,14 +204,16 @@ public class ProdictionFacility : MonoBehaviour
                 Debug.Log($"Input : {itemdata.m_ItemPrefab}, Current Stack : {m_Inputs.Count}");
             }
 
-            m_ProductionCoroutine ??= StartCoroutine(ProductItems(m_ProductionTime));
+            if (isAutomated)
+                m_ProductionCoroutine ??= StartCoroutine(Co_ProductItems(m_ProductionTime));
+
             yield return new WaitForSeconds(.5f);
         }
 
         m_InputCoroutine = null;
     }
 
-    private IEnumerator ProductItems(float delay)
+    private IEnumerator Co_ProductItems(float delay)
     {
         var wait = new WaitForSeconds(delay);
 
@@ -196,5 +231,34 @@ public class ProdictionFacility : MonoBehaviour
             m_Outputs.Add(m_Output);
         }
         m_ProductionCoroutine = null;
+    }
+
+    private IEnumerator Co_WaitForUpgrade()
+    {
+        var wait = new WaitForSeconds(0.1f);
+        float elapse = 0;
+        while (elapse < 0.5f)
+        {
+            elapse += Time.deltaTime;
+            yield return null;
+        }
+
+        var inv = m_UpgradeArea.Player.GetComponent<Inventory>();
+        while (m_UpgradeArea.IsPlayerEnter && m_CurrentCostProgress < m_UpgradeCost)
+        {
+            //if (inv.Gold > 0)
+            //    m_CurrentCostProgress += inv.Gold;
+
+            m_CurrentCostProgress += 100f;
+            if(m_CurrentCostProgress >= m_UpgradeCost)
+            {
+                isAutomated = true;
+                m_ProductionCoroutine ??= StartCoroutine(Co_ProductItems(m_ProductionTime));
+            }
+
+            yield return wait;
+        }
+
+        m_UpgradeCoroutine = null;
     }
 }

@@ -6,6 +6,6 @@ public class PlayerReference : MonoBehaviour
 
     private void Awake()
     {
-        m_Playerref.player = this.transform;
+        m_Playerref.player = gameObject;
     }
 }

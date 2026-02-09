@@ -44,7 +44,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aa62c5d7792dea74d94c50920c2db869, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ItemIOArea
-  m_player: {fileID: 0}
+  m_Player: {fileID: 0}
   m_CheckAreaInterval: 0.1
   m_Width: 1.31
   m_Height: 0.94
@@ -179,11 +179,15 @@ MonoBehaviour:
   m_FacilitySO: {fileID: 11400000, guid: 1b70a41afa367f14bbb25701fcb68a90, type: 2}
   m_OutputArea: {fileID: 439768692661796775}
   m_InputArea: {fileID: 1932347751999473584}
+  m_UpgradeArea: {fileID: 0}
   m_InputLimit: 5
   m_OutputLimit: 5
   m_ProductionTime: 5
-  m_Inputs: 
-  m_Outputs: 
+  m_CurrentCostProgress: 0
+  m_UpgradeCost: 1000
+  isAutomated: 0
+  m_Inputs: []
+  m_Outputs: []
 --- !u!1 &7239638098176336119
 GameObject:
   m_ObjectHideFlags: 0
@@ -228,7 +232,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aa62c5d7792dea74d94c50920c2db869, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ItemIOArea
-  m_player: {fileID: 0}
+  m_Player: {fileID: 0}
   m_CheckAreaInterval: 0.1
   m_Width: 2.82
   m_Height: 0.94
