@@ -1,5 +1,6 @@
+using System;
 using System.Collections;
-using Unity.VisualScripting;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Building : MonoBehaviour
@@ -7,11 +8,12 @@ public class Building : MonoBehaviour
     [Header("Data")]
     [SerializeField] private SOBuilding m_BuildingData;
 
+    [Header("Upgrade Spawns")] [Tooltip("Per Step Index")]
+    [SerializeField] private List<StepSpawnGroup> m_SpawnGroups = new();
+
     [Header("Status")]
-    [SerializeField] private EFacilityType m_FacilityType;
     [SerializeField] private int m_CurrentStepIdx = 0;
     [SerializeField] private int m_CurrentStepItems = 0;
-    [SerializeField] private GameObject m_FacilityCache = null;
     [Range(0, 100)]
     [SerializeField] private float m_Progress = 0;
 
@@ -19,6 +21,9 @@ public class Building : MonoBehaviour
     [SerializeField] private ItemIOArea m_InputArea;
 
     private Coroutine m_InputCoroutine;
+    private readonly WaitForSeconds m_InputDuration = new(0.1f);
+
+    private readonly HashSet<int> m_ExcutedStepSpawns = new();
 
     private void OnEnable()
     {
@@ -57,10 +62,8 @@ public class Building : MonoBehaviour
             yield return null;
         }
 
-        var inv = m_InputArea.Player.GetComponent<Inventory>();
+        var inv = m_InputArea.Player.GetComponent<InventoryExpended>();
         var currentStep = m_BuildingData.Steps[m_CurrentStepIdx];
-        var wait = new WaitForSeconds(0.1f);
-
 
         while (m_InputArea.IsPlayerEnter)
         {
@@ -76,12 +79,10 @@ public class Building : MonoBehaviour
                 continue;
             }
 
-            var itemdata = ScriptableObject.CreateInstance<ResourceItemData>();
-            itemdata.m_SoItemName = currentStep.StepName;
-            itemdata.m_ItemPrefab = currentStep.RequierItem;
-
-            inv.RemoveItem(itemdata);
-            m_CurrentStepItems++;
+            if (inv.TryRemoveItemByName(currentStep.StepName))
+            {
+                m_CurrentStepItems++;
+            }
 
             UpdateProgress();
 
@@ -91,22 +92,12 @@ public class Building : MonoBehaviour
                 m_CurrentStepItems = 0;
 
                 // spawn facility
-                if(m_FacilityCache == null)
-                {
-                    FacilitySpawnSystem.Spawner.InstantiateFaility(
-                    m_FacilityType,
-                    Vector3.left * 5f,
-                    Quaternion.identity,
-                    out var treeFacility);
+                ExcuteSpawnGroupForStep(m_CurrentStepIdx);
 
-                    m_FacilityCache = treeFacility;
-                }
-
-                yield return null;
-                continue;
+                yield break;
             }
 
-            yield return wait;
+            yield return m_InputDuration;
         }
 
         m_InputCoroutine = null;
@@ -120,5 +111,27 @@ public class Building : MonoBehaviour
         var currentStepProgress = (float)m_CurrentStepItems / m_BuildingData.Steps[m_CurrentStepIdx].RequierAmount;
 
         m_Progress = ((m_CurrentStepIdx + currentStepProgress) / totalStep) * 100f;
+    }
+
+    private void ExcuteSpawnGroupForStep(int stepIdx)
+    {
+        if (m_ExcutedStepSpawns.Contains(stepIdx)) return;
+
+        var group = m_SpawnGroups.Find(g => g.StepIndexToTrigger == stepIdx);
+        if (group == null || group.Requests == null || group.Requests.Count == 0)
+            return;
+
+        foreach(var req in group.Requests)
+        {
+            if(req.SpawnPoint == null) continue;
+            var pos = req.SpawnPoint.TransformPoint(req.LocalOffset);
+            Quaternion rot = req.UsePointRotation ?
+                req.SpawnPoint.rotation :
+                Quaternion.Euler(req.EulerRotationOverride);
+
+            FacilitySpawnSystem.Spawner.GetOrCreateFacility(req.Type, pos, rot);
+        }
+
+        m_ExcutedStepSpawns.Add(stepIdx);
     }
 }

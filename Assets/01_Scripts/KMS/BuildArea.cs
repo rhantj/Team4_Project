@@ -45,11 +45,11 @@ public class BuildArea : ItemIOArea
 
         // if
 
-        FacilitySpawnSystem.Spawner.InstantiateFaility(
+        FacilitySpawnSystem.Spawner.GetOrCreateFacility(
             type, 
             transform.position, 
-            transform.rotation,
-            out var _);
+            transform.rotation
+            );
         canDetect = false;
     }
 }
