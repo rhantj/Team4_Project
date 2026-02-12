@@ -6,7 +6,7 @@ public class CameraFollow : MonoBehaviour
     [SerializeField] private Transform target; // 플레이어
 
     [Header("Camera Settings")]
-    [SerializeField] private Vector3 offset = new Vector3(0f, 10f, -10f); // 카메라 위치 오프셋
+    [SerializeField] private Vector3 offset = new Vector3(0f, 5f, -10f); // 카메라 위치 오프셋
     [SerializeField] private float smoothSpeed = 5f; // 부드러운 정도 (높을수록 빠름)
 
     [Header("Rotation")]

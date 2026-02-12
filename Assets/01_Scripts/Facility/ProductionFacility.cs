@@ -1,5 +1,7 @@
+using NUnit.Framework.Interfaces;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 public class ProdictionFacility : MonoBehaviour
@@ -14,27 +16,30 @@ public class ProdictionFacility : MonoBehaviour
     [SerializeField] private float m_ProductionTime = 5f;
 
     [Header("Upgrades")]
-    [SerializeField] private float m_CurrentCostProgress = 0f;
-    [SerializeField] private float m_UpgradeCost = 1000f;
-    [SerializeField] private bool isAutomated = false;
+    [ReadOnly][SerializeField] private float m_CurrentCostProgress = 0f;
+    [ReadOnly][SerializeField] private float m_UpgradeCost = 1000f;
+    [ReadOnly][SerializeField] private bool m_IsUpgraded = false;
 
     private GameObject m_Input;
     private GameObject m_Output;
+
     private Coroutine m_OutputCoroutine;
     private Coroutine m_InputCoroutine;
     private Coroutine m_ProductionCoroutine;
     private Coroutine m_UpgradeCoroutine;
+    private readonly WaitForSeconds m_IODuration = new(0.5f);
 
-    [SerializeField] private List<GameObject> m_Inputs;
-    [SerializeField] private List<GameObject> m_Outputs;
+    [SerializeField] private List<GameObject> m_Inputs = new();
+    [SerializeField] private List<GameObject> m_Outputs = new();
+
+    private InventoryExpended m_Inv;
 
     public SOProductionFacility FacilitySO { get { return m_FacilitySO; } }
 
     private void Awake()
     {
         InitializeIOProduct(m_FacilitySO);
-        m_Inputs = new List<GameObject>(m_InputLimit);
-        m_Outputs = new List<GameObject>(m_OutputLimit);
+        m_Inv = m_InputArea.Player.GetComponent<InventoryExpended>();
     }
 
     private void OnEnable()
@@ -135,7 +140,6 @@ public class ProdictionFacility : MonoBehaviour
             yield return null;
         }
 
-        var inv = m_OutputArea.Player.GetComponent<Inventory>();
         while (m_OutputArea.IsPlayerEnter)
         {
             if (m_Outputs.Count == 0)
@@ -146,21 +150,16 @@ public class ProdictionFacility : MonoBehaviour
 
             if (m_Outputs.Count > 0)
             {
-                if (inv.IsFull)
+                if (m_Inv.IsFull)
                 {
                     yield return null;
                     continue;
                 }
 
-                var itemdata = ScriptableObject.CreateInstance<ResourceItemData>();
-                itemdata.m_SoItemName = "Log2";
-                itemdata.m_ItemPrefab = m_Outputs[0];
-
-                inv.AddItem(itemdata);
+                m_Inv.AddItem(m_Outputs[0]);
                 m_Outputs.RemoveAt(0);
-                Debug.Log($"Output : {itemdata.m_ItemPrefab}, Current Stack : {m_Inputs.Count}");
             }
-            yield return new WaitForSeconds(.5f);
+            yield return m_IODuration;
         }
 
         m_OutputCoroutine = null;
@@ -177,7 +176,6 @@ public class ProdictionFacility : MonoBehaviour
             yield return null;
         }
 
-        var inv = m_InputArea.Player.GetComponent<Inventory>();
         while (m_InputArea.IsPlayerEnter)
         {
             if (m_Inputs.Count >= m_InputLimit)
@@ -186,28 +184,19 @@ public class ProdictionFacility : MonoBehaviour
                 continue;
             }
 
-            if (inv.IsEmpty)
+            if (m_Inv.IsEmpty)
             {
                 yield return null;
                 continue;
             }
 
-            if(m_Inputs.Count < m_InputLimit)
+            if (m_Inv.TryRemoveItemByName(m_Input.name))
             {
-                var itemdata = ScriptableObject.CreateInstance<ResourceItemData>();
-                itemdata.m_SoItemName = "Log";
-                itemdata.m_ItemPrefab = m_Input;
-
-                inv.RemoveItem(itemdata);
-                m_Inputs.Add(itemdata.m_ItemPrefab);
-
-                Debug.Log($"Input : {itemdata.m_ItemPrefab}, Current Stack : {m_Inputs.Count}");
+                m_Inputs.Add(m_Input);
+                m_ProductionCoroutine ??= StartCoroutine(Co_ProductItems(m_ProductionTime));
             }
 
-            if (isAutomated)
-                m_ProductionCoroutine ??= StartCoroutine(Co_ProductItems(m_ProductionTime));
-
-            yield return new WaitForSeconds(.5f);
+            yield return m_IODuration;
         }
 
         m_InputCoroutine = null;
@@ -235,7 +224,6 @@ public class ProdictionFacility : MonoBehaviour
 
     private IEnumerator Co_WaitForUpgrade()
     {
-        var wait = new WaitForSeconds(0.1f);
         float elapse = 0;
         while (elapse < 0.5f)
         {
@@ -243,22 +231,32 @@ public class ProdictionFacility : MonoBehaviour
             yield return null;
         }
 
-        var inv = m_UpgradeArea.Player.GetComponent<Inventory>();
-        while (m_UpgradeArea.IsPlayerEnter && m_CurrentCostProgress < m_UpgradeCost)
+        while (m_UpgradeArea.IsPlayerEnter && m_CurrentCostProgress < m_UpgradeCost && !m_IsUpgraded)
         {
-            //if (inv.Gold > 0)
-            //    m_CurrentCostProgress += inv.Gold;
-
-            m_CurrentCostProgress += 100f;
-            if(m_CurrentCostProgress >= m_UpgradeCost)
+            if (m_Inv.Gold > 0)
             {
-                isAutomated = true;
-                m_ProductionCoroutine ??= StartCoroutine(Co_ProductItems(m_ProductionTime));
+                m_Inv.Gold -= 100f;
+                m_CurrentCostProgress += 100f;
             }
 
-            yield return wait;
+            if(m_CurrentCostProgress >= m_UpgradeCost)
+            {
+                UpgradeList();
+                yield break;
+            }
+
+            yield return m_IODuration;
         }
 
         m_UpgradeCoroutine = null;
+    }
+
+    private void UpgradeList()
+    {
+        m_IsUpgraded = true;
+
+        m_OutputLimit += 5;
+        m_InputLimit += 5;
+        m_ProductionTime *= 0.5f;
     }
 }
