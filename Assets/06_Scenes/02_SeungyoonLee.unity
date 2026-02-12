@@ -388,7 +388,7 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
-  field of view: 60
+  field of view: 87.5265
   orthographic: 0
   orthographic size: 5
   m_Depth: -1
@@ -414,8 +414,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1108536585}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: -10}
+  m_LocalRotation: {x: -0.30102944, y: 0, z: 0, w: 0.95361483}
+  m_LocalPosition: {x: 0, y: 1.0999999, z: -22.15}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -433,10 +433,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e9221faadb2b4c644923b356f453fcc9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CameraViewTransitionBehaviour
-  m_TransitionMinimumDistance: 7
-  m_TransitionMaximumDistance: 25
-  <MixRatio>k__BackingField: 0
-  m_CameraOffsetMixingCurve:
+  <PlayerCharacterTransform>k__BackingField: {fileID: 1252901619}
+  <MainBuildingTransform>k__BackingField: {fileID: 1764242218}
+  <MinimumDistance>k__BackingField: 10
+  <MaximumDistance>k__BackingField: 25
+  <SmoothTime>k__BackingField: 0.15
+  m_MixingCurve:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 3
@@ -460,60 +462,16 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  m_DefaultCameraOffset: {x: 0, y: -10, z: 10}
-  m_TransitionedCameraOffset: {x: 0, y: -30, z: 20}
-  m_CameraFieldOfViewCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    - serializedVersion: 3
-      time: 1
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  m_DefaultCameraFieldOfView: 60
-  m_TransitionedCameraFieldOfView: 45
-  m_CameraLookAtMixingCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    - serializedVersion: 3
-      time: 1
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  m_MainBuildingTransform: {fileID: 1764242218}
-  m_PlayerCharacterTransform: {fileID: 1252901619}
+  m_ClampValue1: 0.1
+  m_ClampValue2: 1
+  <RawRatio>k__BackingField: 0
+  <MixRatio>k__BackingField: 0.1
+  m_StartLookAtOffset: {x: 0, y: 1, z: 2.5}
+  m_EndLookAtOffset: {x: 0, y: 7.5, z: -15}
+  m_StartCameraOffset: {x: 0, y: 10, z: -10}
+  m_EndCameraOffset: {x: 0, y: -7.5, z: -8}
+  m_StartFieldOfView: 60
+  m_EndFieldOfView: 90
 --- !u!114 &1108536590
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -666,7 +624,7 @@ Transform:
   m_GameObject: {fileID: 1252901615}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 23.69, y: 1, z: 0}
+  m_LocalPosition: {x: 0, y: 1, z: -7}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -780,8 +738,8 @@ Transform:
   m_GameObject: {fileID: 1764242214}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 5, z: 0}
-  m_LocalScale: {x: 10, y: 5, z: 10}
+  m_LocalPosition: {x: 0, y: 15, z: 0}
+  m_LocalScale: {x: 10, y: 15, z: 10}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
