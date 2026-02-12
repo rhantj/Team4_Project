@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2efe8d37b6d6d04a9ac5ca0c3c13f35, type: 3}
   m_Name: Log
   m_EditorClassIdentifier: Assembly-CSharp::ResourceItemData
-  m_ItemName: Log
+  m_SoItemName: Log
   m_ItemPrefab: {fileID: 6754428488172609419, guid: b84eaf5ef0fb91140b1d56f7b61572be, type: 3}

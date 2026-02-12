@@ -12,7 +12,7 @@ public class RemoveStation : MonoBehaviour
         if(other.CompareTag("Player"))
         {
             Inventory inven=other.GetComponent<Inventory>();
-            if (inven != null)
+            if (inven != null&&!inven.IsEmpty)
             {
                 m_RemoveTimer += Time.deltaTime;
                 if(m_RemoveTimer >= m_RemoveInterval)

@@ -1,33 +1,45 @@
-using System.Collections.Generic;
+using NUnit.Framework.Interfaces;
 using System.Collections;
+using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UnityEngine;
-using System.Net;
 
 public class ProdictionFacility : MonoBehaviour
 {
+    [Header("Production")]
     [SerializeField] private SOProductionFacility m_FacilitySO;
     [SerializeField] private ItemIOArea m_OutputArea;
     [SerializeField] private ItemIOArea m_InputArea;
+    [SerializeField] private ItemIOArea m_UpgradeArea;
     [SerializeField] private int m_InputLimit = 5;
     [SerializeField] private int m_OutputLimit = 5;
     [SerializeField] private float m_ProductionTime = 5f;
 
-    private int m_Input;
-    private int m_Output;
+    [Header("Upgrades")]
+    [ReadOnly][SerializeField] private float m_CurrentCostProgress = 0f;
+    [ReadOnly][SerializeField] private float m_UpgradeCost = 1000f;
+    [ReadOnly][SerializeField] private bool m_IsUpgraded = false;
+
+    private GameObject m_Input;
+    private GameObject m_Output;
+
     private Coroutine m_OutputCoroutine;
     private Coroutine m_InputCoroutine;
     private Coroutine m_ProductionCoroutine;
+    private Coroutine m_UpgradeCoroutine;
+    private readonly WaitForSeconds m_IODuration = new(0.5f);
 
-    [SerializeField] private List<int> m_Inputs;
-    [SerializeField] private List<int> m_Outputs;
+    [SerializeField] private List<GameObject> m_Inputs = new();
+    [SerializeField] private List<GameObject> m_Outputs = new();
+
+    private InventoryExpended m_Inv;
 
     public SOProductionFacility FacilitySO { get { return m_FacilitySO; } }
 
     private void Awake()
     {
         InitializeIOProduct(m_FacilitySO);
-        m_Inputs = new List<int>(m_InputLimit);
-        m_Outputs = new List<int>(m_OutputLimit);
+        m_Inv = m_InputArea.Player.GetComponent<InventoryExpended>();
     }
 
     private void OnEnable()
@@ -42,6 +54,12 @@ public class ProdictionFacility : MonoBehaviour
         {
             m_InputArea.m_OnEnterArea += PlayerEnterInputArea;
             m_InputArea.m_OnExitArea += PlayerExitInputArea;
+        }
+
+        if (m_UpgradeArea)
+        {
+            m_UpgradeArea.m_OnEnterArea += PlayerEnterUpgradeArea;
+            m_UpgradeArea.m_OnExitArea += PlayerExitUpgradeArea;
         }
     }
 
@@ -58,7 +76,14 @@ public class ProdictionFacility : MonoBehaviour
             m_InputArea.m_OnEnterArea -= PlayerEnterInputArea;
             m_InputArea.m_OnExitArea -= PlayerExitInputArea;
         }
+
+        if (m_UpgradeArea)
+        {
+            m_UpgradeArea.m_OnEnterArea -= PlayerEnterUpgradeArea;
+            m_UpgradeArea.m_OnExitArea -= PlayerExitUpgradeArea;
+        }
     }
+
     private void InitializeIOProduct(SOProductionFacility data)
     {
         m_Input = data.inputItem;   
@@ -66,9 +91,12 @@ public class ProdictionFacility : MonoBehaviour
     }
 
     private void PlayerEnterOutputArea() => 
-        m_OutputCoroutine = StartCoroutine(WaitForOutput());
+        m_OutputCoroutine = StartCoroutine(Co_WaitForOutput());
     private void PlayerEnterInputArea() =>
-        m_InputCoroutine = StartCoroutine(WaitForInput());
+        m_InputCoroutine = StartCoroutine(Co_WaitForInput());
+
+    private void PlayerEnterUpgradeArea() =>
+        m_UpgradeCoroutine = StartCoroutine(Co_WaitForUpgrade());
 
     private void PlayerExitOutputArea()
     {
@@ -88,7 +116,16 @@ public class ProdictionFacility : MonoBehaviour
         }
     }
 
-    private IEnumerator WaitForOutput()
+    private void PlayerExitUpgradeArea()
+    {
+        if (m_UpgradeCoroutine != null)
+        {
+            StopCoroutine(m_UpgradeCoroutine);
+            m_UpgradeCoroutine = null;
+        }
+    }
+
+    private IEnumerator Co_WaitForOutput()
     {
         if (m_Outputs.Count == 0)
         {
@@ -103,8 +140,7 @@ public class ProdictionFacility : MonoBehaviour
             yield return null;
         }
 
-        var player = m_OutputArea.m_player.GetComponent<ALTPlayer>();
-        while (m_OutputArea.m_isPlayerEnter)
+        while (m_OutputArea.IsPlayerEnter)
         {
             if (m_Outputs.Count == 0)
             {
@@ -114,31 +150,33 @@ public class ProdictionFacility : MonoBehaviour
 
             if (m_Outputs.Count > 0)
             {
-                var item = m_Outputs[0];
+                if (m_Inv.IsFull)
+                {
+                    yield return null;
+                    continue;
+                }
+
+                m_Inv.AddItem(m_Outputs[0]);
                 m_Outputs.RemoveAt(0);
-                player.items.Enqueue(item);
-                Debug.Log($"Return : {item}");
             }
-            yield return new WaitForSeconds(.5f);
+            yield return m_IODuration;
         }
 
         m_OutputCoroutine = null;
     }
 
-    private IEnumerator WaitForInput()
+    private IEnumerator Co_WaitForInput()
     {
-        Debug.Log("item input start");
         float elapsedTime = 0f;
         while (elapsedTime < .5f) 
         {
-            if (!m_InputArea.m_isPlayerEnter) yield break;
+            if (!m_InputArea.IsPlayerEnter) yield break;
 
             elapsedTime += Time.deltaTime;
             yield return null;
         }
 
-        var player = m_InputArea.m_player.GetComponent<ALTPlayer>();
-        while (m_InputArea.m_isPlayerEnter)
+        while (m_InputArea.IsPlayerEnter)
         {
             if (m_Inputs.Count >= m_InputLimit)
             {
@@ -146,60 +184,25 @@ public class ProdictionFacility : MonoBehaviour
                 continue;
             }
 
-            if(player.items.Count == 0)
+            if (m_Inv.IsEmpty)
             {
                 yield return null;
                 continue;
             }
 
-            if (m_Inputs.Count < m_InputLimit)
+            if (m_Inv.TryRemoveItemByName(m_Input.name))
             {
-                var item = player.items.Dequeue();
-                if (item != m_Input)
-                {
-                    yield return null;
-                    player.items.Enqueue(item);
-                    continue;
-                }
-
-                m_Inputs.Add(item);
-                Debug.Log($"Get : {item}, Current Stack : {m_Inputs.Count}");
+                m_Inputs.Add(m_Input);
+                m_ProductionCoroutine ??= StartCoroutine(Co_ProductItems(m_ProductionTime));
             }
 
-            m_ProductionCoroutine ??= StartCoroutine(ProductItems(m_ProductionTime));
-            yield return new WaitForSeconds(.5f);
+            yield return m_IODuration;
         }
 
         m_InputCoroutine = null;
     }
 
-    private void GiveItemToPlayer(ALTPlayer player)
-    {
-        if (m_Outputs.Count > 0)
-        {
-            var item = m_Outputs[0];
-            if (item == m_Output) return;
-            m_Outputs.RemoveAt(0);
-
-            player.items.Enqueue(item);
-            Debug.Log($"Return : {item}");
-        }
-    }
-
-    private void GetItemFromPlayer(ALTPlayer player)
-    {
-        if (m_Inputs.Count < m_InputLimit)
-        {
-            var item = player.items.Dequeue();
-            if (item != m_Input) return;
-            m_Inputs.Add(item);
-            Debug.Log($"Get : {item}, Current Stack : {m_Inputs.Count}");
-        }
-
-        m_ProductionCoroutine ??= StartCoroutine(ProductItems(m_ProductionTime));
-    }
-
-    private IEnumerator ProductItems(float delay)
+    private IEnumerator Co_ProductItems(float delay)
     {
         var wait = new WaitForSeconds(delay);
 
@@ -216,7 +219,44 @@ public class ProdictionFacility : MonoBehaviour
             m_Inputs.RemoveAt(0);
             m_Outputs.Add(m_Output);
         }
-
         m_ProductionCoroutine = null;
+    }
+
+    private IEnumerator Co_WaitForUpgrade()
+    {
+        float elapse = 0;
+        while (elapse < 0.5f)
+        {
+            elapse += Time.deltaTime;
+            yield return null;
+        }
+
+        while (m_UpgradeArea.IsPlayerEnter && m_CurrentCostProgress < m_UpgradeCost && !m_IsUpgraded)
+        {
+            if (m_Inv.Gold > 0)
+            {
+                m_Inv.Gold -= 100f;
+                m_CurrentCostProgress += 100f;
+            }
+
+            if(m_CurrentCostProgress >= m_UpgradeCost)
+            {
+                UpgradeList();
+                yield break;
+            }
+
+            yield return m_IODuration;
+        }
+
+        m_UpgradeCoroutine = null;
+    }
+
+    private void UpgradeList()
+    {
+        m_IsUpgraded = true;
+
+        m_OutputLimit += 5;
+        m_InputLimit += 5;
+        m_ProductionTime *= 0.5f;
     }
 }

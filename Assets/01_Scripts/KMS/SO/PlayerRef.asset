@@ -9,8 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e7181f36b54a6c340ba530149e36eaf7, type: 3}
-  m_Name: SOProductionFacility
-  m_EditorClassIdentifier: Assembly-CSharp::SOProductionFacility
-  inputItem: 1
-  outputItem: 2
+  m_Script: {fileID: 11500000, guid: 399ea4d20c622db4f9227d2c8a7bb741, type: 3}
+  m_Name: PlayerRef
+  m_EditorClassIdentifier: Assembly-CSharp::SOPlayerReference
+  player: {fileID: 3455816917229034268, guid: 69ab4b25b4ee9744689fa00f44d9dbf1, type: 3}

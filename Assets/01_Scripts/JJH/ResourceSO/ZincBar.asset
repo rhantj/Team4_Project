@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2efe8d37b6d6d04a9ac5ca0c3c13f35, type: 3}
   m_Name: ZincBar
   m_EditorClassIdentifier: Assembly-CSharp::ResourceItemData
-  m_ItemName: ZincBar
+  m_SoItemName: ZincBar
   m_ItemPrefab: {fileID: 6906487911144238011, guid: b2b3c42eb7a73c24695fb4e75acbd9cf, type: 3}

@@ -20,6 +20,21 @@ public class SupplyStation : MonoBehaviour
                 m_SupplyTimer += Time.deltaTime;
                 if(m_SupplyTimer >= m_SupplyInterval)
                 {
+                    //GameObject obj = Instantiate(m_SoItemData.m_ItemPrefab, transform.position, Quaternion.identity);
+                    //Item item=obj.GetComponent<Item>();
+
+                    //if (item != null)
+                    //{
+                    //    Vector3 targetPos=inven.GetNextItemPos();
+
+                    //    item.FlyTo(targetPos,() =>
+                    //    {
+                    //        inven.AddItem(m_SoItemData);
+                    //    });
+
+                    //    m_SupplyTimer= 0f;
+                    //}
+
                     inven.AddItem(m_SoItemData);
                     m_SupplyTimer = 0f;
                 }
