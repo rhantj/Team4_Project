@@ -1,8 +1,9 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ProdictionFacility : MonoBehaviour
+public class ProductionFacility : MonoBehaviour
 {
     [Header("Production")]
     [SerializeField] private SOProductionFacility m_FacilitySO;
@@ -32,12 +33,38 @@ public class ProdictionFacility : MonoBehaviour
 
     private InventoryExpended m_Inv;
 
+    public event Action m_OnInputChanged;
+    public event Action m_OnOutputChanged;
+    public event Action m_OnUpgradeChanged;
+
+    public int InputCount => m_Inputs.Count;
+    public int OutputCount => m_Outputs.Count;
+    public int InputLimit => m_InputLimit;
+    public int OutputLimit => m_OutputLimit;
+
+    public float UpgradeProgress => m_CurrentCostProgress;
+    public float UpgradeCost => m_UpgradeCost;
+    public bool IsUpgraded => m_IsUpgraded;
+
+    void NotifyInput() => m_OnInputChanged?.Invoke();
+    void NotifyOutput() => m_OnOutputChanged?.Invoke();
+    void NotifyUpgrade() => m_OnUpgradeChanged?.Invoke();
+
     public SOProductionFacility FacilitySO { get { return m_FacilitySO; } }
+
+    FacilityPanelView m_PanelView;
 
     private void Awake()
     {
         InitializeIOProduct(m_FacilitySO);
         m_Inv = m_InputArea.Player.GetComponent<InventoryExpended>();
+
+        m_PanelView = GetComponentInChildren<FacilityPanelView>(true);
+    }
+
+    private void Start()
+    {
+        m_PanelView?.Bind(this);
     }
 
     private void OnEnable()
@@ -156,6 +183,7 @@ public class ProdictionFacility : MonoBehaviour
 
                 m_Inv.AddItem(m_Outputs[0]);
                 m_Outputs.RemoveAt(0);
+                NotifyOutput();
             }
             yield return m_IODuration;
         }
@@ -191,6 +219,7 @@ public class ProdictionFacility : MonoBehaviour
             if (m_Inv.TryRemoveItemByName(m_Input.name))
             {
                 m_Inputs.Add(m_Input);
+                NotifyInput();
                 m_ProductionCoroutine ??= StartCoroutine(Co_ProductItems(m_ProductionTime));
             }
 
@@ -216,6 +245,7 @@ public class ProdictionFacility : MonoBehaviour
 
             m_Inputs.RemoveAt(0);
             m_Outputs.Add(m_Output);
+            NotifyOutput();
         }
         m_ProductionCoroutine = null;
     }
@@ -256,5 +286,7 @@ public class ProdictionFacility : MonoBehaviour
         m_OutputLimit += 5;
         m_InputLimit += 5;
         m_ProductionTime *= 0.5f;
+
+        NotifyUpgrade();
     }
 }

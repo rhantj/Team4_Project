@@ -130,7 +130,10 @@ public class Building : MonoBehaviour
                       req.SpawnPoint.rotation :
                       Quaternion.Euler(req.EulerRotationOverride);
 
-            FacilitySpawnSystem.Spawner.GetOrCreateFacility(req.Type, pos, rot);
+            //FacilitySpawnSystem.Spawner.GetOrCreateFacility(req.Type, pos, rot);
+
+            var facilitySpawn = GameManager.Instance.GetService<FacilitySpawner>();
+            var go = facilitySpawn.GetOrCreateFacility(req.Type, pos, rot);
         }
 
         m_ExcutedStepSpawns.Add(stepIdx);
