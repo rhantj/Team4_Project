@@ -9,7 +9,7 @@ public class PlayerResourceCollector : MonoBehaviour
     private Inventory inventory;
     private Collider[] hitBuffer = new Collider[10];
     private float checkTimer = 0f;
-    private ICollectable currentTarget = null; // ICollectable
+    private ICollectable currentTarget = null;
 
     private void Awake()
     {
@@ -19,7 +19,6 @@ public class PlayerResourceCollector : MonoBehaviour
     private void Update()
     {
         checkTimer += Time.deltaTime;
-
         if (checkTimer >= 0.2f)
         {
             checkTimer = 0f;
@@ -29,12 +28,14 @@ public class PlayerResourceCollector : MonoBehaviour
 
     private void CheckForResources()
     {
-        // ICollectable 사용
+        // 현재 타겟이 수집 불가능하면 null로 설정
         if (currentTarget != null && !currentTarget.CanCollect())
             currentTarget = null;
 
-        if (currentTarget != null)
-            return;
+        // *** 중요: 타겟이 있어도 수집 가능하면 다시 시작 ***
+        // if (currentTarget != null)
+        //     return;
+        // 위 코드를 삭제하거나 주석 처리
 
         int hitCount = Physics.OverlapSphereNonAlloc(
             transform.position,
@@ -46,10 +47,13 @@ public class PlayerResourceCollector : MonoBehaviour
         if (hitCount > 0)
         {
             ICollectable closest = FindClosestCollectable(hitCount);
-
             if (closest != null && closest.CanCollect())
             {
-                StartHarvest(closest);
+                // 현재 타겟과 다르거나, 현재 타겟이 없으면 시작
+                if (currentTarget != closest)
+                {
+                    StartHarvest(closest);
+                }
             }
         }
     }
@@ -61,9 +65,7 @@ public class PlayerResourceCollector : MonoBehaviour
 
         for (int i = 0; i < hitCount; i++)
         {
-            // ICollectable로 검색
             ICollectable collectable = hitBuffer[i].GetComponent<ICollectable>();
-
             if (collectable != null && collectable.CanCollect())
             {
                 float distance = Vector3.Distance(
@@ -92,8 +94,7 @@ public class PlayerResourceCollector : MonoBehaviour
             node.SetInventory(inventory);
         }
 
-        collectable.Collect(); // ICollectable.Collect() 호출
-
+        collectable.Collect();
         Debug.Log("자원 수집 시작!");
     }
 
