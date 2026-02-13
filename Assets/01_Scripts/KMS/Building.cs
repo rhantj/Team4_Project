@@ -125,9 +125,10 @@ public class Building : MonoBehaviour
         {
             if(req.SpawnPoint == null) continue;
             var pos = req.SpawnPoint.TransformPoint(req.LocalOffset);
-            Quaternion rot = req.UsePointRotation ?
-                req.SpawnPoint.rotation :
-                Quaternion.Euler(req.EulerRotationOverride);
+
+            var rot = req.UsePointRotation ?
+                      req.SpawnPoint.rotation :
+                      Quaternion.Euler(req.EulerRotationOverride);
 
             FacilitySpawnSystem.Spawner.GetOrCreateFacility(req.Type, pos, rot);
         }
