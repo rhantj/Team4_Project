@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 using TMPro;
 
 public class ResourceNodeUI : MonoBehaviour
@@ -7,6 +8,9 @@ public class ResourceNodeUI : MonoBehaviour
     [SerializeField] private GameObject uiPanel;
     [SerializeField] private TextMeshProUGUI resourceNameText;
     [SerializeField] private TextMeshProUGUI countText;
+
+    [Header("Loading Bar")]
+    [SerializeField] private Slider loadingSlider;
 
     private ResourceNode currentNode;
 
@@ -24,9 +28,8 @@ public class ResourceNodeUI : MonoBehaviour
 
         ResourceData data = node.GetResourceData();
 
-        // 자원 타입에 따라 이름 변경
         string displayName = data.resourceName;
-        if (data.resourceType == ResourceType.Wood) // Log일 때
+        if (data.resourceType == ResourceType.Wood)
         {
             displayName = "Tree";
         }
@@ -35,9 +38,8 @@ public class ResourceNodeUI : MonoBehaviour
 
         int remaining = node.GetRemainingHarvests();
         int max = node.GetMaxHarvestCount();
-        countText.text = $"{max-remaining}/{max}";
+        countText.text = $"{max - remaining}/{max}";
 
-        // 색상 변경
         if (remaining == 0)
         {
             countText.color = Color.red;
@@ -56,6 +58,7 @@ public class ResourceNodeUI : MonoBehaviour
     {
         currentNode = null;
         uiPanel.SetActive(false);
+        HideLoadingBar();
     }
 
     public void UpdateUI()
@@ -63,6 +66,39 @@ public class ResourceNodeUI : MonoBehaviour
         if (currentNode != null)
         {
             ShowResourceInfo(currentNode);
+        }
+    }
+
+    public void ShowLoadingBar(float duration)
+    {
+        if (loadingSlider != null)
+        {
+            loadingSlider.gameObject.SetActive(true);
+            loadingSlider.value = 0f;
+        }
+    }
+
+    public void ResetLoadingBar()
+    {
+        if (loadingSlider != null)
+        {
+            loadingSlider.value = 0f;
+        }
+    }
+
+    public void UpdateLoadingBar(float progress)
+    {
+        if (loadingSlider != null)
+        {
+            loadingSlider.value = progress;
+        }
+    }
+
+    public void HideLoadingBar()
+    {
+        if (loadingSlider != null)
+        {
+            loadingSlider.gameObject.SetActive(false);
         }
     }
 }
