@@ -3,6 +3,6 @@ public enum EFacilityType
 {
     none,
     sales,
-    tree,
+    wood,
     rock
 }
