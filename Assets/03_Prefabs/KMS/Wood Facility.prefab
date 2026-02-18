@@ -198,7 +198,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1341308628944045635}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8ff20ddbcb4c3364b847369a11913106, type: 3}
+  m_Script: {fileID: 11500000, guid: f2027ccade1680e4f95e310b9d99736f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FacilityOutputView
   m_Text: {fileID: 2258265605281329881}
@@ -578,7 +578,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 3653396942917791343}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7a00f804e87a77f49933c54069c64697, type: 3}
+  m_Script: {fileID: 11500000, guid: 1641a5452ab88c047a6877fe015c617b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FacilityPanelView
   m_InputView: {fileID: 8705413391536356721}
@@ -1157,7 +1157,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 7708836001594031898}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2b4aa28f0310e744e948b8fb7e1cf5cf, type: 3}
+  m_Script: {fileID: 11500000, guid: 9bd395b25e46aba4ba53fb35facaf73d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FacilityUpgradeView
   m_Text: {fileID: 7004457792907498420}
@@ -1687,7 +1687,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 9104684942517057610}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 77f857cea7e444742aa6ebe639a73686, type: 3}
+  m_Script: {fileID: 11500000, guid: 11eef45ec1c36e5478e72e51f3cb78ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::InputView
   m_Text: {fileID: 5331584972818173575}
