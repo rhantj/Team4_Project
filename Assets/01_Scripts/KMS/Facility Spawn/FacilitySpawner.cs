@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class FacilitySpawner : MonoBehaviour, IService // ISpawner
+public class FacilitySpawner : MonoBehaviour, IService
 {
     [SerializeField] private Facility[] m_Facilities;
 
@@ -11,23 +11,9 @@ public class FacilitySpawner : MonoBehaviour, IService // ISpawner
 
     GameObjectPoolingService m_PoolingService;
 
-    //private void Awake()
-    //{
-    //    foreach (var facility in m_Facilities)
-    //    {
-    //        if (facility.FacilityPF == null) continue;
-
-    //        if (!m_PrefabCache.ContainsKey(facility.FacilityType))
-    //        {
-    //            m_PrefabCache.Add(facility.FacilityType, facility.FacilityPF);
-    //        }
-    //    }
-    //}
-
     private void OnEnable()
     {
         m_PoolingService ??= GameManager.Instance.GetService<GameObjectPoolingService>();
-        //FacilitySpawnSystem.DI(this);
     }
 
     public void Configure(IServiceConfig iConfig)
