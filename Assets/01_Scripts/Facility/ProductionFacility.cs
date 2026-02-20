@@ -245,6 +245,7 @@ public class ProductionFacility : MonoBehaviour
 
             m_Inputs.RemoveAt(0);
             m_Outputs.Add(m_Output);
+            NotifyInput();
             NotifyOutput();
         }
         m_ProductionCoroutine = null;
@@ -265,6 +266,7 @@ public class ProductionFacility : MonoBehaviour
             {
                 m_Inv.Gold -= 100f;
                 m_CurrentCostProgress += 100f;
+                NotifyUpgrade();
             }
 
             if(m_CurrentCostProgress >= m_UpgradeCost)

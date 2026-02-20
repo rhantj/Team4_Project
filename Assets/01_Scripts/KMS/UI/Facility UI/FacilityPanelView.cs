@@ -5,6 +5,7 @@ public class FacilityPanelView : MonoBehaviour, IBindable<ProductionFacility>
     [SerializeField] private FacilityInputView m_InputView;
     [SerializeField] private FacilityOutputView m_OutputView;
     [SerializeField] private FacilityUpgradeView m_UpgradeView;
+    [SerializeField] private ProgressBar m_ProgressBar;
 
     private FacilityPanelVM m_PanelVM;
 
