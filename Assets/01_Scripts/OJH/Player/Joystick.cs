@@ -8,8 +8,29 @@ public class Joystick : MonoBehaviour, IDragHandler, IPointerUpHandler, IPointer
     [SerializeField] private float handleRange = 100f;
 
     private Vector2 inputVector = Vector2.zero;
+    private Canvas canvas;
+    private Camera cam;
 
     public Vector2 Direction => inputVector;
+
+    private void Start()
+    {
+        // Canvas 찾기
+        canvas = GetComponentInParent<Canvas>();
+
+        // Canvas RenderMode에 따라 카메라 설정
+        if (canvas != null)
+        {
+            if (canvas.renderMode == RenderMode.ScreenSpaceCamera)
+            {
+                cam = canvas.worldCamera;
+            }
+            else if (canvas.renderMode == RenderMode.ScreenSpaceOverlay)
+            {
+                cam = null;
+            }
+        }
+    }
 
     public void OnPointerDown(PointerEventData eventData)
     {
@@ -20,21 +41,21 @@ public class Joystick : MonoBehaviour, IDragHandler, IPointerUpHandler, IPointer
     {
         Vector2 position = Vector2.zero;
 
+        // RectTransformUtility로 정확한 로컬 포지션 계산
         if (RectTransformUtility.ScreenPointToLocalPointInRectangle(
             joystickBackground,
             eventData.position,
-            eventData.pressEventCamera,
+            cam, // Canvas 타입에 맞는 카메라 사용
             out position))
         {
+            // 정규화 (-1 ~ 1 범위로)
             position.x = (position.x / joystickBackground.sizeDelta.x);
             position.y = (position.y / joystickBackground.sizeDelta.y);
 
-            float x = (position.x * 2) - 1;
-            float y = (position.y * 2) - 1;
-
-            inputVector = new Vector2(x, y);
+            inputVector = new Vector2(position.x * 2, position.y * 2);
             inputVector = Vector2.ClampMagnitude(inputVector, 1f);
 
+            // 핸들 위치 업데이트
             joystickHandle.anchoredPosition = new Vector2(
                 inputVector.x * handleRange,
                 inputVector.y * handleRange
