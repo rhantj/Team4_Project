@@ -27,6 +27,7 @@ public class Building : MonoBehaviour
     public event Action m_OnInputChanged;
     public event Action m_OnStepChanged;
     public event Action<float> m_OnProgressChanged;
+    public event Action m_OnBuildCompleted;
 
     public float Progress => m_Progress;
     public int CurrentStepItems => m_CurrentStepItems;
@@ -53,6 +54,9 @@ public class Building : MonoBehaviour
     {
         m_InputArea.m_OnEnterArea += InputItems;
         m_InputArea.m_OnExitArea += ExitArea;
+
+        var cvTransition = Camera.main.GetComponent<CameraViewTransitionBehaviour>();
+        cvTransition.MainBuildingTransform = this.transform;
     }
 
     private void OnDisable()
@@ -149,15 +153,19 @@ public class Building : MonoBehaviour
 
         foreach(var req in group.Requests)
         {
-            if(req.SpawnPoint == null) continue;
-            var pos = req.SpawnPoint.TransformPoint(req.LocalOffset);
+            if (req.SpawnPoint == null)
+                req.SpawnPoint = this.transform;
 
+            var facilitySpawn = GameManager.Instance.GetService<FacilitySpawner>();
+            var go = facilitySpawn.GetOrCreateFacility(req.Type, Vector3.zero, Quaternion.identity);
+
+            req.SpawnPoint = go.transform;
+            var pos = req.SpawnPoint.TransformPoint(req.LocalOffset);
             var rot = req.UsePointRotation ?
                       req.SpawnPoint.rotation :
                       Quaternion.Euler(req.EulerRotationOverride);
 
-            var facilitySpawn = GameManager.Instance.GetService<FacilitySpawner>();
-            var go = facilitySpawn.GetOrCreateFacility(req.Type, pos, rot);
+            go.transform.SetPositionAndRotation(pos, rot);
         }
 
         m_ExcutedStepSpawns.Add(stepIdx);

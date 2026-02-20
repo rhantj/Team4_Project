@@ -18,8 +18,7 @@ public class FacilitySpawner : MonoBehaviour, IService
 
     public void Configure(IServiceConfig iConfig)
     {
-        var cfg = iConfig as FacilitySpawnerConfig;
-        if (cfg != null && cfg.Facilities != null && cfg.Facilities.Length > 0)
+        if (iConfig is FacilitySpawnerConfig cfg && cfg.Facilities != null && cfg.Facilities.Length > 0)
             m_Facilities = cfg.Facilities;
 
         RebuildPrefabCache();
