@@ -1,0 +1,172 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!687078895 &4343727234628468602
+SpriteAtlas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: BattleScene_Atlas
+  m_EditorData:
+    serializedVersion: 2
+    textureSettings:
+      serializedVersion: 2
+      anisoLevel: 1
+      compressionQuality: 50
+      maxTextureSize: 2048
+      textureCompression: 0
+      filterMode: 1
+      generateMipMaps: 0
+      readable: 0
+      crunchedCompression: 0
+      sRGB: 1
+    platformSettings: []
+    packingSettings:
+      serializedVersion: 2
+      padding: 4
+      blockOffset: 1
+      allowAlphaSplitting: 0
+      enableRotation: 0
+      enableTightPacking: 0
+      enableAlphaDilation: 0
+    secondaryTextureSettings: {}
+    variantMultiplier: 1
+    packables:
+    - {fileID: 1559856165, guid: 9f40087d53e7e0240899610017429b79, type: 3}
+    - {fileID: 341921202, guid: 9f40087d53e7e0240899610017429b79, type: 3}
+    - {fileID: -541714009, guid: 9f40087d53e7e0240899610017429b79, type: 3}
+    - {fileID: 1975574246, guid: 9f40087d53e7e0240899610017429b79, type: 3}
+    - {fileID: -1756750789, guid: 9f40087d53e7e0240899610017429b79, type: 3}
+    - {fileID: 2034956381, guid: 9f40087d53e7e0240899610017429b79, type: 3}
+    - {fileID: 915298735, guid: 9f40087d53e7e0240899610017429b79, type: 3}
+    - {fileID: 816199402, guid: 9f40087d53e7e0240899610017429b79, type: 3}
+    - {fileID: 1708147236, guid: 9f40087d53e7e0240899610017429b79, type: 3}
+    - {fileID: -146660615, guid: 9f40087d53e7e0240899610017429b79, type: 3}
+    - {fileID: -303093959, guid: 9f40087d53e7e0240899610017429b79, type: 3}
+    - {fileID: 1560141161, guid: 9f40087d53e7e0240899610017429b79, type: 3}
+    - {fileID: 1871124101, guid: 9f40087d53e7e0240899610017429b79, type: 3}
+    - {fileID: -484549047, guid: 9f40087d53e7e0240899610017429b79, type: 3}
+    - {fileID: 392541659, guid: 9f40087d53e7e0240899610017429b79, type: 3}
+    - {fileID: 809455671, guid: 9f40087d53e7e0240899610017429b79, type: 3}
+    - {fileID: 467698074, guid: 9f40087d53e7e0240899610017429b79, type: 3}
+    - {fileID: -648868809, guid: 9f40087d53e7e0240899610017429b79, type: 3}
+    - {fileID: -339090564, guid: 9f40087d53e7e0240899610017429b79, type: 3}
+    - {fileID: -1630922034, guid: 9f40087d53e7e0240899610017429b79, type: 3}
+    - {fileID: 1975432542, guid: 9f40087d53e7e0240899610017429b79, type: 3}
+    - {fileID: -1185743207, guid: 9f40087d53e7e0240899610017429b79, type: 3}
+    - {fileID: -1673326406, guid: 9f40087d53e7e0240899610017429b79, type: 3}
+    - {fileID: 1504483980, guid: 9f40087d53e7e0240899610017429b79, type: 3}
+    - {fileID: -1819899424, guid: 9f40087d53e7e0240899610017429b79, type: 3}
+    - {fileID: 21300000, guid: 45f38576d10de8e4ba15dfef89242499, type: 3}
+    - {fileID: 21300000, guid: d67ec5c9b2748b6489065fd083112776, type: 3}
+    - {fileID: 21300000, guid: 893b850230b8b9945aae12dbdc2e7164, type: 3}
+    - {fileID: 21300000, guid: bdabfbfe9c7260148bf007c67b196550, type: 3}
+    - {fileID: 21300000, guid: aca6d14e60b24974d87e56e328444269, type: 3}
+    - {fileID: 21300000, guid: 73f8949a4ccbd654582bbfc47127a983, type: 3}
+    - {fileID: 21300000, guid: 48c5c2a97d968404fbef407495935c07, type: 3}
+    bindAsDefault: 1
+    isAtlasV2: 0
+    cachedData: {fileID: 0}
+    packedSpriteRenderDataKeys:
+    - 893b850230b8b9945aae12dbdc2e7164: 21300000
+    - 45f38576d10de8e4ba15dfef89242499: 21300000
+    - 48c5c2a97d968404fbef407495935c07: 21300000
+    - d67ec5c9b2748b6489065fd083112776: 21300000
+    - 73f8949a4ccbd654582bbfc47127a983: 21300000
+    - 9f40087d53e7e0240899610017429b79: -1819899424
+    - 9f40087d53e7e0240899610017429b79: 1975432542
+    - 9f40087d53e7e0240899610017429b79: -1185743207
+    - 9f40087d53e7e0240899610017429b79: -1673326406
+    - 9f40087d53e7e0240899610017429b79: 1504483980
+    - 9f40087d53e7e0240899610017429b79: 915298735
+    - 9f40087d53e7e0240899610017429b79: 816199402
+    - 9f40087d53e7e0240899610017429b79: -1756750789
+    - 9f40087d53e7e0240899610017429b79: 2034956381
+    - 9f40087d53e7e0240899610017429b79: -541714009
+    - 9f40087d53e7e0240899610017429b79: 1975574246
+    - 9f40087d53e7e0240899610017429b79: 1559856165
+    - 9f40087d53e7e0240899610017429b79: 341921202
+    - 9f40087d53e7e0240899610017429b79: 1708147236
+    - 9f40087d53e7e0240899610017429b79: -146660615
+    - 9f40087d53e7e0240899610017429b79: 809455671
+    - 9f40087d53e7e0240899610017429b79: 392541659
+    - 9f40087d53e7e0240899610017429b79: -648868809
+    - 9f40087d53e7e0240899610017429b79: 467698074
+    - 9f40087d53e7e0240899610017429b79: 1560141161
+    - 9f40087d53e7e0240899610017429b79: -303093959
+    - 9f40087d53e7e0240899610017429b79: -484549047
+    - 9f40087d53e7e0240899610017429b79: 1871124101
+    - 9f40087d53e7e0240899610017429b79: -1630922034
+    - 9f40087d53e7e0240899610017429b79: -339090564
+    - aca6d14e60b24974d87e56e328444269: 21300000
+    - bdabfbfe9c7260148bf007c67b196550: 21300000
+  m_MasterAtlas: {fileID: 0}
+  m_PackedSprites:
+  - {fileID: 21300000, guid: 893b850230b8b9945aae12dbdc2e7164, type: 3}
+  - {fileID: 21300000, guid: 45f38576d10de8e4ba15dfef89242499, type: 3}
+  - {fileID: 21300000, guid: 48c5c2a97d968404fbef407495935c07, type: 3}
+  - {fileID: 21300000, guid: d67ec5c9b2748b6489065fd083112776, type: 3}
+  - {fileID: 21300000, guid: 73f8949a4ccbd654582bbfc47127a983, type: 3}
+  - {fileID: -1819899424, guid: 9f40087d53e7e0240899610017429b79, type: 3}
+  - {fileID: 1975432542, guid: 9f40087d53e7e0240899610017429b79, type: 3}
+  - {fileID: -1185743207, guid: 9f40087d53e7e0240899610017429b79, type: 3}
+  - {fileID: -1673326406, guid: 9f40087d53e7e0240899610017429b79, type: 3}
+  - {fileID: 1504483980, guid: 9f40087d53e7e0240899610017429b79, type: 3}
+  - {fileID: 915298735, guid: 9f40087d53e7e0240899610017429b79, type: 3}
+  - {fileID: 816199402, guid: 9f40087d53e7e0240899610017429b79, type: 3}
+  - {fileID: -1756750789, guid: 9f40087d53e7e0240899610017429b79, type: 3}
+  - {fileID: 2034956381, guid: 9f40087d53e7e0240899610017429b79, type: 3}
+  - {fileID: -541714009, guid: 9f40087d53e7e0240899610017429b79, type: 3}
+  - {fileID: 1975574246, guid: 9f40087d53e7e0240899610017429b79, type: 3}
+  - {fileID: 1559856165, guid: 9f40087d53e7e0240899610017429b79, type: 3}
+  - {fileID: 341921202, guid: 9f40087d53e7e0240899610017429b79, type: 3}
+  - {fileID: 1708147236, guid: 9f40087d53e7e0240899610017429b79, type: 3}
+  - {fileID: -146660615, guid: 9f40087d53e7e0240899610017429b79, type: 3}
+  - {fileID: 809455671, guid: 9f40087d53e7e0240899610017429b79, type: 3}
+  - {fileID: 392541659, guid: 9f40087d53e7e0240899610017429b79, type: 3}
+  - {fileID: -648868809, guid: 9f40087d53e7e0240899610017429b79, type: 3}
+  - {fileID: 467698074, guid: 9f40087d53e7e0240899610017429b79, type: 3}
+  - {fileID: 1560141161, guid: 9f40087d53e7e0240899610017429b79, type: 3}
+  - {fileID: -303093959, guid: 9f40087d53e7e0240899610017429b79, type: 3}
+  - {fileID: -484549047, guid: 9f40087d53e7e0240899610017429b79, type: 3}
+  - {fileID: 1871124101, guid: 9f40087d53e7e0240899610017429b79, type: 3}
+  - {fileID: -1630922034, guid: 9f40087d53e7e0240899610017429b79, type: 3}
+  - {fileID: -339090564, guid: 9f40087d53e7e0240899610017429b79, type: 3}
+  - {fileID: 21300000, guid: aca6d14e60b24974d87e56e328444269, type: 3}
+  - {fileID: 21300000, guid: bdabfbfe9c7260148bf007c67b196550, type: 3}
+  m_PackedSpriteNamesToIndex:
+  - EXP_mid
+  - EXP 1
+  - SkillBox
+  - EXP_big
+  - citie
+  - BattleScene_Atlas_24
+  - BattleScene_Atlas_20
+  - BattleScene_Atlas_21
+  - BattleScene_Atlas_22
+  - BattleScene_Atlas_23
+  - BattleScene_Atlas_6
+  - BattleScene_Atlas_7
+  - BattleScene_Atlas_4
+  - BattleScene_Atlas_5
+  - BattleScene_Atlas_2
+  - BattleScene_Atlas_3
+  - BattleScene_Atlas_0
+  - BattleScene_Atlas_1
+  - BattleScene_Atlas_8
+  - BattleScene_Atlas_9
+  - BattleScene_Atlas_15
+  - BattleScene_Atlas_14
+  - BattleScene_Atlas_17
+  - BattleScene_Atlas_16
+  - BattleScene_Atlas_11
+  - BattleScene_Atlas_10
+  - BattleScene_Atlas_13
+  - BattleScene_Atlas_12
+  - BattleScene_Atlas_19
+  - BattleScene_Atlas_18
+  - manjijinbi
+  - manjihuixue
+  m_RenderDataMap: {}
+  m_Tag: BattleScene_Atlas
+  m_IsVariant: 0
