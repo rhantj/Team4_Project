@@ -819,7 +819,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1551395334
 Transform:
   m_ObjectHideFlags: 0
@@ -1012,7 +1012,7 @@ MonoBehaviour:
     - rid: 2890532939602853965
       type: {class: StageManagerConfig, ns: , asm: Assembly-CSharp}
       data:
-        <Requirement>k__BackingField: 3
+        <Requirement>k__BackingField: 0
         <BuildingSpawnRequests>k__BackingField:
         - BuildingPF: {fileID: 5652102533273159326, guid: 9f9ca647e1ce86d4a8ec75b115637a19, type: 3}
           SpawnPoint: {fileID: 0}
@@ -1051,6 +1051,75 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7fc20a605fee51a4892931428cc26c3b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Joystick
+--- !u!1001 &2080408481
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 2021351990551227189, guid: e8165ad1b986a8440aaa9d28be2bc14f, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2178684735083695324, guid: e8165ad1b986a8440aaa9d28be2bc14f, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2178684735083695324, guid: e8165ad1b986a8440aaa9d28be2bc14f, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2178684735083695324, guid: e8165ad1b986a8440aaa9d28be2bc14f, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2178684735083695324, guid: e8165ad1b986a8440aaa9d28be2bc14f, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2178684735083695324, guid: e8165ad1b986a8440aaa9d28be2bc14f, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2178684735083695324, guid: e8165ad1b986a8440aaa9d28be2bc14f, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2178684735083695324, guid: e8165ad1b986a8440aaa9d28be2bc14f, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2178684735083695324, guid: e8165ad1b986a8440aaa9d28be2bc14f, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2178684735083695324, guid: e8165ad1b986a8440aaa9d28be2bc14f, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2178684735083695324, guid: e8165ad1b986a8440aaa9d28be2bc14f, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7667388785187489422, guid: e8165ad1b986a8440aaa9d28be2bc14f, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9218556633580466298, guid: e8165ad1b986a8440aaa9d28be2bc14f, type: 3}
+      propertyPath: m_Name
+      value: Theme-Egypt
+      objectReference: {fileID: 0}
+    - target: {fileID: 9218556633580466298, guid: e8165ad1b986a8440aaa9d28be2bc14f, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: e8165ad1b986a8440aaa9d28be2bc14f, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -1064,3 +1133,4 @@ SceneRoots:
   - {fileID: 733976443}
   - {fileID: 983818521}
   - {fileID: 759668725}
+  - {fileID: 2080408481}
