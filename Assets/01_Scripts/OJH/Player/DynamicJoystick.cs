@@ -1,87 +1,56 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.UI;
 
 public class DynamicJoystick : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IDragHandler
 {
-    [Header("Dynamic Joystick Components")]
-    [SerializeField] private RectTransform dynamicJoystick;
+    [Header("Components")]
     [SerializeField] private RectTransform dynamicBackground;
     [SerializeField] private RectTransform dynamicHandle;
 
+    [Header("Fixed Joystick 제외 영역")]
+    [SerializeField] private RectTransform fixedJoystickBackground; // JoystickBackground 연결
+    [SerializeField] private float fixedJoystickRadius = 100f;
     [Header("Fixed Joystick Reference")]
-    [SerializeField] private RectTransform joystick;
-    [SerializeField] private RectTransform fixedJoystickArea; // 고정 조이스틱 영역
-    [SerializeField] private float fixedJoystickRadius = 150f; // 고정 조이스틱 반경
-
+    [SerializeField] private GameObject fixedJoystick; // JoystickBackground 연결
     [Header("Settings")]
     [SerializeField] private float handleRange = 50f;
 
+
+
     private Vector2 inputVector = Vector2.zero;
     private Canvas canvas;
-    private Camera cam;
     private bool isActive = false;
 
     public Vector2 Direction => inputVector;
-    public float Horizontal => inputVector.x;
-    public float Vertical => inputVector.y;
 
     private void Start()
     {
         canvas = GetComponentInParent<Canvas>();
-        if (canvas == null)
-        {
-            canvas = FindObjectOfType<Canvas>();
-        }
-
-        if (canvas != null && canvas.renderMode == RenderMode.ScreenSpaceCamera)
-        {
-            cam = canvas.worldCamera;
-            if (cam == null)
-            {
-                cam = Camera.main;
-            }
-        }
-
-        dynamicJoystick.gameObject.SetActive(false);
+        dynamicBackground.gameObject.SetActive(false);
     }
 
     public void OnPointerDown(PointerEventData eventData)
     {
+        // 고정 조이스틱 영역인지 체크 (스크린 좌표 기준)
+        Vector2 fixedJoystickScreenPos = RectTransformUtility.WorldToScreenPoint(null, fixedJoystickBackground.position);
+        float distance = Vector2.Distance(eventData.position, fixedJoystickScreenPos);
+        float scaledRadius = fixedJoystickRadius * canvas.scaleFactor;
 
-        if (fixedJoystickArea != null)
-        {
-            Vector2 fixedLocalPoint;
-            RectTransformUtility.ScreenPointToLocalPointInRectangle(
-                canvas.transform as RectTransform,
-                eventData.position,
-                cam,
-                out fixedLocalPoint
-            );
+        // 고정 조이스틱 영역이면 무시
+        if (distance <= scaledRadius) return;
 
-            float distance = Vector2.Distance(fixedLocalPoint, fixedJoystickArea.anchoredPosition);
-
-            // 고정 조이스틱 영역이면 무시
-            if (distance <= fixedJoystickRadius)
-            {
-                return;
-            }
-        }
-
-        //터치 위치를 Canvas 로컬 좌표로 변환
+        // 다이나믹 조이스틱 활성화
+        isActive = true;
+        dynamicBackground.gameObject.SetActive(true);
+        fixedJoystick.SetActive(false); // 고정 조이스틱 비활성화 
+        // 터치 위치에 배경 생성
         Vector2 localPoint;
         RectTransformUtility.ScreenPointToLocalPointInRectangle(
             canvas.transform as RectTransform,
             eventData.position,
-            cam,
+            null,
             out localPoint
         );
-
-        // 동적 조이스틱 활성화
-        // 고정 조이스틱 비활성화
-        isActive = true;
-        dynamicJoystick.gameObject.SetActive(true);
-        joystick.gameObject.SetActive(false);
         dynamicBackground.anchoredPosition = localPoint;
 
         OnDrag(eventData);
@@ -91,14 +60,12 @@ public class DynamicJoystick : MonoBehaviour, IPointerDownHandler, IPointerUpHan
     {
         if (!isActive) return;
 
-        Vector2 backgroundScreenPos = RectTransformUtility.WorldToScreenPoint(cam, dynamicBackground.position);
+        Vector2 backgroundScreenPos = RectTransformUtility.WorldToScreenPoint(null, dynamicBackground.position);
         Vector2 radius = dynamicBackground.sizeDelta / 2;
         inputVector = (eventData.position - backgroundScreenPos) / (radius * canvas.scaleFactor);
 
         if (inputVector.magnitude > 1f)
-        {
             inputVector = inputVector.normalized;
-        }
 
         dynamicHandle.anchoredPosition = inputVector * handleRange;
     }
@@ -106,13 +73,10 @@ public class DynamicJoystick : MonoBehaviour, IPointerDownHandler, IPointerUpHan
     public void OnPointerUp(PointerEventData eventData)
     {
         if (!isActive) return;
-
-        // 동적 조이스틱 비활성화
-        // 고정 조이스틱 활성화
+        isActive = false;
         inputVector = Vector2.zero;
         dynamicHandle.anchoredPosition = Vector2.zero;
-        dynamicJoystick.gameObject.SetActive(false);
-        joystick.gameObject.SetActive(true);
-        isActive = false;
+        dynamicBackground.gameObject.SetActive(false);
+        fixedJoystick.SetActive(true); // 고정 조이스틱 다시 활성화
     }
 }
