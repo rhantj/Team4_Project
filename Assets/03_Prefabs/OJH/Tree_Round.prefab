@@ -737,7 +737,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ResourceNode
   resourceType: 0
   resourceAmount: 1
-  harvestTime: 0.5
+  harvestTime: 0.2
   maxHarvestCount: 10
   itemData: {fileID: 11400000, guid: 8c6e8b775fb0b6049b86d705cacd0a6d, type: 2}
   visualModel: {fileID: 0}

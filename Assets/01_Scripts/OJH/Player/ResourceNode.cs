@@ -3,6 +3,8 @@ using System.Collections;
 
 public class ResourceNode : MonoBehaviour, ICollectable
 {
+    private Coroutine harvestCoroutine;
+
     [Header("Resource Settings")]
     [SerializeField] private ResourceType resourceType = ResourceType.Wood;
     [SerializeField] private int resourceAmount = 1;
@@ -24,8 +26,8 @@ public class ResourceNode : MonoBehaviour, ICollectable
     [SerializeField] private float respawnTime = 5f;
 
     [Header("UI References")]
-    [SerializeField] private bool usePlayerUI = true; // 플레이어 UI 사용 여부
-    [SerializeField] private bool useWorldSpaceUI = true; // 월드 스페이스 UI 사용 여부
+    [SerializeField] private bool usePlayerUI = true;
+    [SerializeField] private bool useWorldSpaceUI = true;
 
     private ResourceNodeUI playerUI;
     private WorldSpaceResourceUI worldSpaceUI;
@@ -38,31 +40,24 @@ public class ResourceNode : MonoBehaviour, ICollectable
 
     private void Start()
     {
-        // 플레이어 찾기
         GameObject player = GameObject.FindGameObjectWithTag("Player");
         if (player != null)
         {
             playerTransform = player.transform;
 
-            // 플레이어 UI
             if (usePlayerUI)
             {
                 playerUI = player.GetComponentInChildren<ResourceNodeUI>();
                 if (playerUI == null)
-                {
                     Debug.LogWarning("Player에 ResourceNodeUI가 없습니다!");
-                }
             }
         }
 
-        // 월드 스페이스 UI
         if (useWorldSpaceUI)
         {
             worldSpaceUI = GetComponentInChildren<WorldSpaceResourceUI>();
             if (worldSpaceUI == null)
-            {
                 Debug.LogWarning("WorldSpaceResourceUI가 없습니다!");
-            }
         }
     }
 
@@ -74,51 +69,82 @@ public class ResourceNode : MonoBehaviour, ICollectable
         bool wasNearby = isPlayerNearby;
         isPlayerNearby = distance <= interactionDistance && !isDepleted;
 
-        // 플레이어가 범위에 들어왔을 때
         if (isPlayerNearby && !wasNearby)
         {
-            // 플레이어 UI 표시
             if (usePlayerUI && playerUI != null)
             {
                 playerUI.ShowResourceInfo(this);
                 playerUI.ShowLoadingBar(harvestTime);
             }
 
-            // 월드 스페이스 UI 표시
             if (useWorldSpaceUI && worldSpaceUI != null)
             {
                 worldSpaceUI.ShowResourceInfo();
                 worldSpaceUI.ShowLoadingBar(harvestTime);
             }
         }
-        // 플레이어가 범위를 벗어났을 때
         else if (!isPlayerNearby && wasNearby)
         {
-            // 플레이어 UI 숨김
             if (usePlayerUI && playerUI != null)
-            {
                 playerUI.HideUI();
-            }
 
-            // 월드 스페이스 UI 숨김
             if (useWorldSpaceUI && worldSpaceUI != null)
-            {
                 worldSpaceUI.HideUI();
-            }
+            CancelHarvest();
         }
     }
+    private IEnumerator RespawnCoroutine()
+    {
+        yield return new WaitForSeconds(respawnTime);
 
+        currentHarvestCount = 0;
+        isDepleted = false;
+        isBeingHarvested = false;
+        harvestCoroutine = null;
+
+        if (visualModel != null)
+            visualModel.SetActive(true);
+    }
     public bool CanCollect()
     {
         return !isBeingHarvested && !isDepleted && currentHarvestCount < maxHarvestCount;
     }
 
+    public bool IsBeingHarvested()
+    {
+        return isBeingHarvested;
+    }
+
     public void Collect()
     {
+        if (isBeingHarvested) // 이미 수집 중이면 무시
+        {
+            //Debug.Log("이미 수집 중 - Collect 무시!");
+            return;
+        }
+
         if (currentInventory != null)
         {
-            StartCoroutine(HarvestCoroutine(currentInventory));
+            isBeingHarvested = true;
+            harvestCoroutine = StartCoroutine(HarvestCoroutine(currentInventory));
         }
+    }
+    public void CancelHarvest()
+    {
+        StopAllCoroutines();
+        harvestCoroutine = null;
+        isBeingHarvested = false;
+
+        if (harvestEffect != null)
+            harvestEffect.Stop();
+
+        if (usePlayerUI && playerUI != null)
+            playerUI.ResetLoadingBar();
+
+        if (useWorldSpaceUI && worldSpaceUI != null)
+            worldSpaceUI.ResetLoadingBar();
+
+        //Debug.Log("수집 중단!");
     }
 
     public ResourceData GetResourceData()
@@ -153,37 +179,27 @@ public class ResourceNode : MonoBehaviour, ICollectable
 
     private IEnumerator HarvestCoroutine(Inventory playerInventory)
     {
-        isBeingHarvested = true;
-
         if (harvestEffect != null)
             harvestEffect.Play();
 
-        // 전체 시간 계산
         float totalTime = (currentHarvestCount == 0) ? harvestTime : (respawnTime + harvestTime);
-
-        // 로딩 바 업데이트
         float elapsedTime = 0f;
+
         while (elapsedTime < totalTime)
         {
             elapsedTime += Time.deltaTime;
             float progress = elapsedTime / totalTime;
 
-            // 플레이어 UI 업데이트
             if (usePlayerUI && playerUI != null)
-            {
                 playerUI.UpdateLoadingBar(progress);
-            }
 
-            // 월드 스페이스 UI 업데이트
             if (useWorldSpaceUI && worldSpaceUI != null)
-            {
                 worldSpaceUI.UpdateLoadingBar(progress);
-            }
 
             yield return null;
         }
 
-        // 수집 완료!
+        // 수집 완료
         currentHarvestCount++;
 
         if (playerInventory != null && itemData != null)
@@ -194,23 +210,18 @@ public class ResourceNode : MonoBehaviour, ICollectable
             }
         }
 
-        // 수집 완료 후 로딩바 리셋 및 UI 업데이트
         if (usePlayerUI && playerUI != null)
         {
             playerUI.ResetLoadingBar();
             if (isPlayerNearby)
-            {
                 playerUI.UpdateUI();
-            }
         }
 
         if (useWorldSpaceUI && worldSpaceUI != null)
         {
             worldSpaceUI.ResetLoadingBar();
             if (isPlayerNearby)
-            {
                 worldSpaceUI.UpdateUI();
-            }
         }
 
         if (currentHarvestCount >= maxHarvestCount)
@@ -219,21 +230,17 @@ public class ResourceNode : MonoBehaviour, ICollectable
             if (visualModel != null)
                 visualModel.SetActive(false);
 
-            // 고갈되었을 때 UI 숨김
             if (usePlayerUI && playerUI != null)
-            {
                 playerUI.HideUI();
-            }
 
             if (useWorldSpaceUI && worldSpaceUI != null)
-            {
                 worldSpaceUI.HideUI();
-            }
+            StartCoroutine(RespawnCoroutine()); 
         }
         else
         {
-            // 다음 수집 대기
             isBeingHarvested = false;
+            harvestCoroutine = null;
 
             if (visualModel != null)
                 visualModel.SetActive(true);
@@ -250,14 +257,10 @@ public class ResourceNode : MonoBehaviour, ICollectable
             visualModel.SetActive(true);
 
         if (usePlayerUI && playerUI != null && isPlayerNearby)
-        {
             playerUI.UpdateUI();
-        }
 
         if (useWorldSpaceUI && worldSpaceUI != null && isPlayerNearby)
-        {
             worldSpaceUI.UpdateUI();
-        }
     }
 
     private void OnDestroy()
@@ -265,14 +268,10 @@ public class ResourceNode : MonoBehaviour, ICollectable
         if (isPlayerNearby)
         {
             if (usePlayerUI && playerUI != null)
-            {
                 playerUI.HideUI();
-            }
 
             if (useWorldSpaceUI && worldSpaceUI != null)
-            {
                 worldSpaceUI.HideUI();
-            }
         }
     }
 }

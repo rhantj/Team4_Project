@@ -55,7 +55,7 @@ public class Joystick : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, I
             background.gameObject.SetActive(true);
             background.position = eventData.position;
         }
-        Debug.Log("조이스틱 터치됨!"); // 이거 추가
+      
         OnDrag(eventData);
     }
 
