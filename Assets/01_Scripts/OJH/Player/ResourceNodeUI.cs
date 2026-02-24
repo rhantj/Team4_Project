@@ -73,11 +73,12 @@ public class ResourceNodeUI : MonoBehaviour
     {
         if (loadingSlider != null)
         {
-            loadingSlider.gameObject.SetActive(true);
             loadingSlider.value = 0f;
+            loadingSlider.minValue = 0f; // 추가
+            loadingSlider.maxValue = 1f; // 추가
+            loadingSlider.gameObject.SetActive(true); // SetActive를 value 설정 후로 이동
         }
     }
-
     public void ResetLoadingBar()
     {
         if (loadingSlider != null)
