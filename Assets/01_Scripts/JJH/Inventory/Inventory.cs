@@ -7,7 +7,7 @@ public class Inventory : MonoBehaviour
 {
     
     [Header("가방 용량")]
-    [SerializeField] private int m_Capacity = 10;
+    [SerializeField] public int m_Capacity = 10;
     [Header("아이템 생성 위치")]
     [SerializeField] protected Transform m_ItemSpawnPoint;
 
@@ -17,6 +17,20 @@ public class Inventory : MonoBehaviour
 
     protected List<Item> m_StackItem = new List<Item>();
 
+    //아이템개수관련
+    public int m_ItemCount=> m_StackItem.Count;
+    public int GetItemCount(ResourceItemData data)
+    {
+        int count = 0;
+        foreach (Item item in m_StackItem)
+        {
+            if (item.m_ItemData == data)
+            {
+                count++;
+            }
+        }
+        return count;
+    }
     //1번(세로로 쌓이는게있음)
     //public void AddItem(ResourceItemData data)
     //{
