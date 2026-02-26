@@ -14,15 +14,15 @@ public class BuildArea : ItemIOArea
     protected override void OnEnable()
     {
         base.OnEnable();
-        m_OnEnterArea += EnterBuildFacilityArea;
-        m_OnExitArea += ExitBuildFacilityArea;
+        m_OnEnterAreaByPlayer += EnterBuildFacilityArea;
+        m_OnExitAreaByPlayer += ExitBuildFacilityArea;
     }
 
     protected override void OnDisable()
     {
         base.OnDisable();
-        m_OnEnterArea -= EnterBuildFacilityArea;
-        m_OnExitArea -= ExitBuildFacilityArea;
+        m_OnEnterAreaByPlayer -= EnterBuildFacilityArea;
+        m_OnExitAreaByPlayer -= ExitBuildFacilityArea;
     }
 
     private void EnterBuildFacilityArea()

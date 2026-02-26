@@ -109,6 +109,13 @@ public class GameManager : MonoBehaviour
         return iService as T;
     }
 
+    public bool TryGetService<T>(out T service) where T : MonoBehaviour, IService
+    {
+        if (m_RegesteredServices.TryGetValue(typeof(T), out IService iService)) service = iService as T;
+        else service = null;
+        return null == service;
+    }
+
 #if UNITY_EDITOR
     private void OnValidate()
     {

@@ -13,8 +13,8 @@ public class ProductionSales : MonoBehaviour
     {
         if (m_InputArea)
         {
-            m_InputArea.m_OnEnterArea += PlayerEnterInputArea;
-            m_InputArea.m_OnExitArea += PlayerExitInputArea;
+            m_InputArea.m_OnEnterAreaByPlayer += PlayerEnterInputArea;
+            m_InputArea.m_OnExitAreaByPlayer += PlayerExitInputArea;
         }
     }
 
@@ -22,8 +22,8 @@ public class ProductionSales : MonoBehaviour
     {
         if (m_InputArea)
         {
-            m_InputArea.m_OnEnterArea -= PlayerEnterInputArea;
-            m_InputArea.m_OnExitArea -= PlayerExitInputArea;
+            m_InputArea.m_OnEnterAreaByPlayer -= PlayerEnterInputArea;
+            m_InputArea.m_OnExitAreaByPlayer -= PlayerExitInputArea;
         }
     }
 

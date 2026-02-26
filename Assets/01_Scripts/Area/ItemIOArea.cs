@@ -5,8 +5,11 @@ using UnityEngine;
 
 public class ItemIOArea : MonoBehaviour
 {
-    public event Action m_OnEnterArea;
-    public event Action m_OnExitArea;
+    public event Action m_OnEnterAreaByPlayer;
+    public event Action m_OnExitAreaByPlayer;
+
+    private event Action m_OnEnterAreaByWorker;
+    private event Action m_OnExitAreaByWorker;
 
     [Header("Setting")]
     [SerializeField] private SOPlayerReference m_Player;
@@ -60,12 +63,12 @@ public class ItemIOArea : MonoBehaviour
             if(isInsideNow && !m_isPlayerEnter)
             {
                 m_isPlayerEnter = true;
-                m_OnEnterArea?.Invoke();
+                m_OnEnterAreaByPlayer?.Invoke();
             }
             else if(!isInsideNow && m_isPlayerEnter)
             {
                 m_isPlayerEnter = false;
-                m_OnExitArea?.Invoke();
+                m_OnExitAreaByPlayer?.Invoke();
             }
 
             yield return wait;

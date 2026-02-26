@@ -71,20 +71,20 @@ public class ProductionFacility : MonoBehaviour
     {
         if (m_OutputArea)
         {
-            m_OutputArea.m_OnEnterArea += PlayerEnterOutputArea;
-            m_OutputArea.m_OnExitArea += PlayerExitOutputArea;
+            m_OutputArea.m_OnEnterAreaByPlayer += PlayerEnterOutputArea;
+            m_OutputArea.m_OnExitAreaByPlayer += PlayerExitOutputArea;
         }
 
         if (m_InputArea)
         {
-            m_InputArea.m_OnEnterArea += PlayerEnterInputArea;
-            m_InputArea.m_OnExitArea += PlayerExitInputArea;
+            m_InputArea.m_OnEnterAreaByPlayer += PlayerEnterInputArea;
+            m_InputArea.m_OnExitAreaByPlayer += PlayerExitInputArea;
         }
 
         if (m_UpgradeArea)
         {
-            m_UpgradeArea.m_OnEnterArea += PlayerEnterUpgradeArea;
-            m_UpgradeArea.m_OnExitArea += PlayerExitUpgradeArea;
+            m_UpgradeArea.m_OnEnterAreaByPlayer += PlayerEnterUpgradeArea;
+            m_UpgradeArea.m_OnExitAreaByPlayer += PlayerExitUpgradeArea;
         }
     }
 
@@ -92,20 +92,20 @@ public class ProductionFacility : MonoBehaviour
     {
         if (m_OutputArea)
         {
-            m_OutputArea.m_OnEnterArea -= PlayerEnterOutputArea;
-            m_OutputArea.m_OnExitArea -= PlayerExitOutputArea;
+            m_OutputArea.m_OnEnterAreaByPlayer -= PlayerEnterOutputArea;
+            m_OutputArea.m_OnExitAreaByPlayer -= PlayerExitOutputArea;
         }
 
         if (m_InputArea)
         {
-            m_InputArea.m_OnEnterArea -= PlayerEnterInputArea;
-            m_InputArea.m_OnExitArea -= PlayerExitInputArea;
+            m_InputArea.m_OnEnterAreaByPlayer -= PlayerEnterInputArea;
+            m_InputArea.m_OnExitAreaByPlayer -= PlayerExitInputArea;
         }
 
         if (m_UpgradeArea)
         {
-            m_UpgradeArea.m_OnEnterArea -= PlayerEnterUpgradeArea;
-            m_UpgradeArea.m_OnExitArea -= PlayerExitUpgradeArea;
+            m_UpgradeArea.m_OnEnterAreaByPlayer -= PlayerEnterUpgradeArea;
+            m_UpgradeArea.m_OnExitAreaByPlayer -= PlayerExitUpgradeArea;
         }
     }
 
