@@ -14,7 +14,7 @@ public class Building : MonoBehaviour
     [Header("Status")]
     [SerializeField] private int m_CurrentStepIdx = 0;
     [SerializeField] private int m_CurrentStepItems = 0;
-    [Range(0, 100)]
+    [Range(0, 1)]
     [SerializeField] private float m_Progress = 0;
 
     [Header("Area")]
@@ -22,13 +22,41 @@ public class Building : MonoBehaviour
 
     private Coroutine m_InputCoroutine;
     private readonly WaitForSeconds m_InputDuration = new(0.1f);
-
     private readonly HashSet<int> m_ExcutedStepSpawns = new();
+
+    public event Action m_OnInputChanged;
+    public event Action m_OnStepChanged;
+    public event Action<float> m_OnProgressChanged;
+    public event Action m_OnBuildCompleted;
+
+    public float Progress => m_Progress;
+    public int CurrentStepItems => m_CurrentStepItems;
+    public int CurrentRequire = 0;
+
+    void NotifyInput() => m_OnInputChanged?.Invoke();
+
+    BuildingPanelView m_PanelView;
+
+    private void Awake()
+    {
+        m_PanelView = GetComponentInChildren<BuildingPanelView>(true);
+
+        var currentStep = m_BuildingData.Steps[0];
+        CurrentRequire = currentStep.RequierAmount;
+    }
+
+    private void Start()
+    {
+        m_PanelView?.Bind(this);
+    }
 
     private void OnEnable()
     {
         m_InputArea.m_OnEnterArea += InputItems;
         m_InputArea.m_OnExitArea += ExitArea;
+
+        var cvTransition = Camera.main.GetComponent<CameraViewTransitionBehaviour>();
+        cvTransition.MainBuildingTransform = this.transform;
     }
 
     private void OnDisable()
@@ -82,6 +110,7 @@ public class Building : MonoBehaviour
             if (inv.TryRemoveItemByName(currentStep.StepName))
             {
                 m_CurrentStepItems++;
+                NotifyInput();
             }
 
             UpdateProgress();
@@ -110,7 +139,8 @@ public class Building : MonoBehaviour
         var totalStep = m_BuildingData.Steps.Count;
         var currentStepProgress = (float)m_CurrentStepItems / m_BuildingData.Steps[m_CurrentStepIdx].RequierAmount;
 
-        m_Progress = ((m_CurrentStepIdx + currentStepProgress) / totalStep) * 100f;
+        m_Progress = (m_CurrentStepIdx + currentStepProgress) / totalStep;
+        m_OnProgressChanged?.Invoke(m_Progress);
     }
 
     private void ExcuteSpawnGroupForStep(int stepIdx)
@@ -123,16 +153,22 @@ public class Building : MonoBehaviour
 
         foreach(var req in group.Requests)
         {
-            if(req.SpawnPoint == null) continue;
-            var pos = req.SpawnPoint.TransformPoint(req.LocalOffset);
+            if (req.SpawnPoint == null)
+                req.SpawnPoint = this.transform;
 
+            var facilitySpawn = GameManager.Instance.GetService<FacilitySpawner>();
+            var go = facilitySpawn.GetOrCreateFacility(req.Type, Vector3.zero, Quaternion.identity);
+
+            req.SpawnPoint = go.transform;
+            var pos = req.SpawnPoint.TransformPoint(req.LocalOffset);
             var rot = req.UsePointRotation ?
                       req.SpawnPoint.rotation :
                       Quaternion.Euler(req.EulerRotationOverride);
 
-            FacilitySpawnSystem.Spawner.GetOrCreateFacility(req.Type, pos, rot);
+            go.transform.SetPositionAndRotation(pos, rot);
         }
 
         m_ExcutedStepSpawns.Add(stepIdx);
+        NotifyInput();
     }
 }

@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 
 public class PlayerResourceCollector : MonoBehaviour
 {
@@ -10,6 +11,7 @@ public class PlayerResourceCollector : MonoBehaviour
     private Collider[] hitBuffer = new Collider[10];
     private float checkTimer = 0f;
     private ICollectable currentTarget = null;
+    private bool isCancelCooldown = false;
 
     private void Awake()
     {
@@ -18,6 +20,32 @@ public class PlayerResourceCollector : MonoBehaviour
 
     private void Update()
     {
+        if (currentTarget != null)
+        {
+            ResourceNode node = currentTarget as ResourceNode;
+            if (node != null)
+            {
+                // 수집 완료 감지
+                if (!node.IsBeingHarvested())
+                {
+                    currentTarget = null;
+                    return;
+                }
+
+                // 범위 이탈 감지
+                float distance = Vector3.Distance(transform.position, node.transform.position);
+                if (distance > collectionRange)
+                {
+                    node.CancelHarvest();
+                    currentTarget = null;
+                    StartCoroutine(CancelCooldown());
+                    return;
+                }
+            }
+        }
+
+        if (isCancelCooldown) return;
+
         checkTimer += Time.deltaTime;
         if (checkTimer >= 0.2f)
         {
@@ -26,16 +54,20 @@ public class PlayerResourceCollector : MonoBehaviour
         }
     }
 
+    private IEnumerator CancelCooldown()
+    {
+        isCancelCooldown = true;
+        yield return new WaitForSeconds(0.3f);
+        isCancelCooldown = false;
+    }
+
     private void CheckForResources()
     {
-        // 현재 타겟이 수집 불가능하면 null로 설정
         if (currentTarget != null && !currentTarget.CanCollect())
             currentTarget = null;
 
-        // *** 중요: 타겟이 있어도 수집 가능하면 다시 시작 ***
-        // if (currentTarget != null)
-        //     return;
-        // 위 코드를 삭제하거나 주석 처리
+        if (currentTarget != null)
+            return;
 
         int hitCount = Physics.OverlapSphereNonAlloc(
             transform.position,
@@ -49,11 +81,7 @@ public class PlayerResourceCollector : MonoBehaviour
             ICollectable closest = FindClosestCollectable(hitCount);
             if (closest != null && closest.CanCollect())
             {
-                // 현재 타겟과 다르거나, 현재 타겟이 없으면 시작
-                if (currentTarget != closest)
-                {
-                    StartHarvest(closest);
-                }
+                StartHarvest(closest);
             }
         }
     }
@@ -66,6 +94,7 @@ public class PlayerResourceCollector : MonoBehaviour
         for (int i = 0; i < hitCount; i++)
         {
             ICollectable collectable = hitBuffer[i].GetComponent<ICollectable>();
+
             if (collectable != null && collectable.CanCollect())
             {
                 float distance = Vector3.Distance(
@@ -88,14 +117,13 @@ public class PlayerResourceCollector : MonoBehaviour
     {
         currentTarget = collectable;
 
-        // ResourceNode에 인벤토리 전달
         if (collectable is ResourceNode node)
         {
             node.SetInventory(inventory);
         }
 
         collectable.Collect();
-        Debug.Log("자원 수집 시작!");
+        //Debug.Log("자원 수집 시작!");
     }
 
     private void OnDrawGizmosSelected()

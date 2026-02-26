@@ -2,26 +2,40 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class FacilitySpawner : MonoBehaviour, ISpawner
+public class FacilitySpawner : MonoBehaviour, IService
 {
     [SerializeField] private Facility[] m_Facilities;
 
     private readonly Dictionary<EFacilityType, GameObject> m_PrefabCache = new();
     private readonly Dictionary<EFacilityType, GameObject> m_InstanceCache = new();
 
-    private void Awake()
+    GameObjectPoolingService m_PoolingService;
+
+    private void OnEnable()
     {
-        foreach (var facility in m_Facilities)
+        m_PoolingService ??= GameManager.Instance.GetService<GameObjectPoolingService>();
+    }
+
+    public void Configure(IServiceConfig iConfig)
+    {
+        if (iConfig is FacilitySpawnerConfig cfg && cfg.Facilities != null && cfg.Facilities.Length > 0)
+            m_Facilities = cfg.Facilities;
+
+        RebuildPrefabCache();
+    }
+
+    private void RebuildPrefabCache()
+    {
+        m_PrefabCache.Clear();
+        if (m_PrefabCache == null) return;
+
+        foreach(var facility in m_Facilities)
         {
             if (facility.FacilityPF == null) continue;
 
             if (!m_PrefabCache.ContainsKey(facility.FacilityType))
-            {
                 m_PrefabCache.Add(facility.FacilityType, facility.FacilityPF);
-            }
         }
-
-        FacilitySpawnSystem.DI(this);
     }
 
     public GameObject GetOrCreateFacility(EFacilityType type, Vector3 pos, Quaternion rot)
@@ -34,8 +48,13 @@ public class FacilitySpawner : MonoBehaviour, ISpawner
 
         if (!m_PrefabCache.TryGetValue(type, out var pf) || !pf) return null;
 
-        var inst = Instantiate(pf, pos, rot);
+        var inst = (m_PoolingService != null) ?
+                   m_PoolingService.GetOrCreateGameObject(pf) :
+                   Instantiate(pf);
+
+        inst.transform.SetPositionAndRotation(pos, rot);
         m_InstanceCache[type] = inst;
+
         return inst;
     }
 }
