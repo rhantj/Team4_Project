@@ -8,9 +8,9 @@ public class FacilityPanelVM : IDisposable
     public OutputVM Output { get; private set; }
     public UpgradeVM Upgrade { get; private set; }
 
-    public FacilityPanelVM(ProductionFacility facility)
+    public FacilityPanelVM(ProductionFacility model)
     {
-        m_Facility = facility;
+        m_Facility = model;
 
         Input = new InputVM(m_Facility);
         Output = new OutputVM(m_Facility);

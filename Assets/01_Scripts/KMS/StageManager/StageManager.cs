@@ -1,62 +1,86 @@
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
+
+[Serializable]
+public class StageManagerConfig : ServiceConfig<StageManager>
+{
+    [field: SerializeField] public SOStageConfig StageConfig { get; private set; }
+}
 
 public class StageManager : MonoBehaviour, IService
 {
-    [SerializeField] private BuildingSpawnRequest[] m_BuildingConfig;
-    [SerializeField] private BuildingSpawnRequest[] m_ResourceConfig;
+    private SOStageConfig m_StageConfig;
+    [SerializeField] private int m_StageIdx = 0;
 
-    GameObjectPoolingService m_PoolingService;
+    private FacilitySpawner m_FacilitySpawner;
 
-    private int m_StageIdx = 0;
+    private List<GameObject> m_SpawnedObjects = new();
+    private Building m_CurrentMainBuilding;
 
-    public int StageIdx => m_StageIdx;
-
-    private void OnEnable()
+    public int StageIdx
     {
-        m_PoolingService ??= GameManager.Instance.GetService<GameObjectPoolingService>();
+        get => m_StageIdx;
+        set { m_StageIdx = value; }
     }
 
-    private void Start()
+    private async void Start()
     {
-        RebuildStage(StageIdx);
+        await RebuildStage(StageIdx);
     }
 
     public void Configure(IServiceConfig iConfig)
     {
-        if (iConfig is StageManagerConfig cfg)
-        {
-            if (cfg.BuildingSpawnRequests != null && cfg.BuildingSpawnRequests.Length > 0)
-                m_BuildingConfig = cfg.BuildingSpawnRequests;
+        if (iConfig is StageManagerConfig cfg && cfg.StageConfig != null)
+            m_StageConfig = cfg.StageConfig;
 
-            if (cfg.ResourceSpawnRequests != null && cfg.ResourceSpawnRequests.Length > 0)
-                m_ResourceConfig = cfg.ResourceSpawnRequests;
+        m_FacilitySpawner ??= GameManager.Instance.GetService<FacilitySpawner>();
+    }
+
+    public async Awaitable RebuildStage(int stageIdx)
+    {
+        ClearStage();
+
+        var step = m_StageConfig.Steps[stageIdx];
+
+        // Theme spawn
+        var theme = await m_FacilitySpawner.SpawnFromRequestAsync(step.StageTheme);
+        m_SpawnedObjects.Add(theme);
+
+        // Main Building spawn
+        var buildingGO = await m_FacilitySpawner.SpawnFromRequestAsync(step.MainBuilding);
+        m_SpawnedObjects.Add(buildingGO);
+
+        m_CurrentMainBuilding = buildingGO.GetComponent<Building>();
+        if (m_CurrentMainBuilding)
+            m_CurrentMainBuilding.m_OnBuildCompleted += OnBuildCompleted;
+
+        // Resources spawn
+        foreach (var res in step.Resources)
+        {
+            var obj = await m_FacilitySpawner.SpawnFromRequestAsync(res);
+            m_SpawnedObjects.Add(obj);
         }
     }
 
-    public void RebuildStage(int stageIdx)
+    private void ClearStage()
     {
-        if (m_PoolingService == null) return;
+        foreach (var obj in m_SpawnedObjects)
+            m_FacilitySpawner. RemoveObject(obj);
 
-        var buildingcfg = m_BuildingConfig[stageIdx];
-        var resourcecfg = m_ResourceConfig[stageIdx];
+        m_SpawnedObjects.Clear();
 
-        SpawnObjectFromRequest(buildingcfg);
-        SpawnObjectFromRequest(resourcecfg);
+        if (m_CurrentMainBuilding)
+        {
+            m_CurrentMainBuilding.m_OnBuildCompleted -= OnBuildCompleted;
+            m_CurrentMainBuilding = null;
+        }
     }
 
-    private void SpawnObjectFromRequest(BuildingSpawnRequest req)
+    private async void OnBuildCompleted()
     {
-        if (req.SpawnPoint == null)
-            req.SpawnPoint = req.BuildingPF.transform;
-
-        var bpos = req.SpawnPoint.TransformPoint(req.LocalOffset);
-        var brot = req.UsePointRotation ?
-                   req.SpawnPoint.rotation :
-                   Quaternion.Euler(req.EulerRotationOverride);
-
-        var binst = m_PoolingService.GetOrCreateGameObject(req.BuildingPF);
-
-        binst.transform.SetPositionAndRotation(bpos, brot);
+        StageIdx++;
+        await RebuildStage(StageIdx);
     }
 }
  

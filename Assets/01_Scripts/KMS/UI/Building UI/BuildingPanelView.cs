@@ -12,13 +12,13 @@ public class BuildingPanelView : MonoBehaviour, IBindable<Building>
         Unbind();
     }
 
-    public void Bind(Building vm)
+    public void Bind(Building model)
     {
         Unbind();
 
-        m_PanelVM = new BuildingPanelVM(vm);
+        m_PanelVM = new BuildingPanelVM(model);
 
-        vm.m_OnProgressChanged += UpdateProgressBar;
+        model.m_OnProgressChanged += UpdateProgressBar;
         m_InputView.Bind(m_PanelVM.Input);
 
         m_PanelVM.Input.Refresh();

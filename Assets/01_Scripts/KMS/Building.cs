@@ -23,19 +23,25 @@ public class Building : MonoBehaviour
     private Coroutine m_InputCoroutine;
     private readonly WaitForSeconds m_InputDuration = new(0.1f);
     private readonly HashSet<int> m_ExcutedStepSpawns = new();
+    private List<GameObject> m_SpawnedFacilities = new();
 
+    // Events
     public event Action m_OnInputChanged;
     public event Action m_OnStepChanged;
     public event Action<float> m_OnProgressChanged;
     public event Action m_OnBuildCompleted;
 
+    private FacilitySpawner m_FacilitySpawner;
+    private BuildingPanelView m_PanelView;
+
+    void NotifyInput() => m_OnInputChanged?.Invoke();
+    void NotifyBuildComplete() => m_OnBuildCompleted?.Invoke();
+
+    // Property Getters/Setters
     public float Progress => m_Progress;
     public int CurrentStepItems => m_CurrentStepItems;
     public int CurrentRequire = 0;
-
-    void NotifyInput() => m_OnInputChanged?.Invoke();
-
-    BuildingPanelView m_PanelView;
+    public List<GameObject> SpawnedFacilities => m_SpawnedFacilities;
 
     private void Awake()
     {
@@ -57,6 +63,8 @@ public class Building : MonoBehaviour
 
         var cvTransition = Camera.main.GetComponent<CameraViewTransitionBehaviour>();
         cvTransition.MainBuildingTransform = this.transform;
+
+        m_FacilitySpawner = GameManager.Instance.GetService<FacilitySpawner>();
     }
 
     private void OnDisable()
@@ -120,8 +128,18 @@ public class Building : MonoBehaviour
                 m_CurrentStepIdx++;
                 m_CurrentStepItems = 0;
 
+                if(m_CurrentStepIdx >= m_BuildingData.Steps.Count)
+                {
+                    m_Progress = 1f;
+                    m_OnProgressChanged?.Invoke(m_Progress);
+
+                    NotifyBuildComplete();
+                    yield break;
+                }
+
                 // spawn facility
-                ExcuteSpawnGroupForStep(m_CurrentStepIdx);
+                //ExcuteSpawnGroupForStep(m_CurrentStepIdx);
+                NotifyInput();
 
                 yield break;
             }
@@ -143,32 +161,31 @@ public class Building : MonoBehaviour
         m_OnProgressChanged?.Invoke(m_Progress);
     }
 
-    private void ExcuteSpawnGroupForStep(int stepIdx)
-    {
-        if (m_ExcutedStepSpawns.Contains(stepIdx)) return;
+    //private void ExcuteSpawnGroupForStep(int stepIdx)
+    //{
+    //    if (m_ExcutedStepSpawns.Contains(stepIdx)) return;
 
-        var group = m_SpawnGroups.Find(g => g.StepIndexToTrigger == stepIdx);
-        if (group == null || group.Requests == null || group.Requests.Count == 0)
-            return;
+    //    var group = m_SpawnGroups.Find(g => g.StepIndexToTrigger == stepIdx);
+    //    if (group == null || group.Requests == null || group.Requests.Count == 0)
+    //        return;
 
-        foreach(var req in group.Requests)
-        {
-            if (req.SpawnPoint == null)
-                req.SpawnPoint = this.transform;
+    //    foreach (var req in group.Requests)
+    //    {
+    //        if (req.SpawnPoint == null)
+    //            req.SpawnPoint = this.transform;
 
-            var facilitySpawn = GameManager.Instance.GetService<FacilitySpawner>();
-            var go = facilitySpawn.GetOrCreateFacility(req.Type, Vector3.zero, Quaternion.identity);
+    //        var go = m_FacilitySpawner.GetOrCreateFacility(req.Type, Vector3.zero, Quaternion.identity);
 
-            req.SpawnPoint = go.transform;
-            var pos = req.SpawnPoint.TransformPoint(req.LocalOffset);
-            var rot = req.UsePointRotation ?
-                      req.SpawnPoint.rotation :
-                      Quaternion.Euler(req.EulerRotationOverride);
+    //        req.SpawnPoint = go.transform;
+    //        var pos = req.SpawnPoint.TransformPoint(req.LocalOffset);
+    //        var rot = req.UsePointRotation ?
+    //                  req.SpawnPoint.rotation :
+    //                  Quaternion.Euler(req.EulerRotationOverride);
 
-            go.transform.SetPositionAndRotation(pos, rot);
-        }
+    //        go.transform.SetPositionAndRotation(pos, rot);
+    //        m_SpawnedFacilities.Add(go);
+    //    }
 
-        m_ExcutedStepSpawns.Add(stepIdx);
-        NotifyInput();
-    }
+    //    m_ExcutedStepSpawns.Add(stepIdx);
+    //}
 }
