@@ -1,3 +1,4 @@
+using System.Net.NetworkInformation;
 using UnityEngine;
 
 public class FacilityPanelView : MonoBehaviour, IBindable<ProductionFacility>
@@ -18,6 +19,7 @@ public class FacilityPanelView : MonoBehaviour, IBindable<ProductionFacility>
         m_InputView.Bind(m_PanelVM.Input);
         m_OutputView.Bind(m_PanelVM.Output);
         m_UpgradeView.Bind(m_PanelVM.Upgrade);
+        facility.m_OnProductionProgressChanged += UpdateProgressBar;
 
         m_PanelVM.Input.Refresh();
         m_PanelVM.Output.Refresh();
@@ -38,4 +40,7 @@ public class FacilityPanelView : MonoBehaviour, IBindable<ProductionFacility>
     {
         Unbind();
     }
+
+    private void UpdateProgressBar(float f) =>
+        m_ProgressBar.Value = f;
 }

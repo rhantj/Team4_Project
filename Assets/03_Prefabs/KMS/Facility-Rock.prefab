@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 3325605324953210785}
   - component: {fileID: 6164748704768443101}
   m_Layer: 0
-  m_Name: Wood Facility
+  m_Name: Facility-Rock
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -2,15 +2,6 @@ using UnityEngine;
 
 public class InventoryExpended : Inventory
 {
-    public bool HasItem(Item item)
-    {
-        if (m_StackItem.Contains(item))
-        {
-            return true;
-        }
-        return false;
-    }
-
     public float Gold { get; set; }
 
     public bool TryRemoveItemByName(string itemName)

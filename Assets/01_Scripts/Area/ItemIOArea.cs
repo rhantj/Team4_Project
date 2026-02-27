@@ -98,12 +98,12 @@ public class ItemIOArea : MonoBehaviour
 
     private static Vector3 Rotate(Quaternion q, Vector3 v)
     {
-        // v' = q * v * q^-1
+        // v' = v +2(s * (u x v) + u x (u x v)))
         var u = new Vector3(q.x, q.y, q.z);
         var s = q.w;
 
-        Vector3 crossUV = Vector3.Cross(u, v);
-        Vector3 crossU_crossUV = Vector3.Cross(u, crossUV);
+        Vector3 crossUV = Vector3.Cross(u, v);              // u x v
+        Vector3 crossU_crossUV = Vector3.Cross(u, crossUV); // u x (u x v)
 
         return v + 2f * (s * crossUV + crossU_crossUV);
     }

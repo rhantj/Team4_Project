@@ -1,9 +1,9 @@
 using System;
-using UnityEngine;
+using UnityEngine.AddressableAssets;
 
 [Serializable]
 public class Facility
 {
-    public GameObject FacilityPF;
+    public AssetReferenceGameObject PrefabReference;
     public EFacilityType FacilityType;
 }

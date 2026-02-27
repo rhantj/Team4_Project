@@ -13,6 +13,7 @@ public class ProductionFacility : MonoBehaviour
     [SerializeField] private int m_InputLimit = 5;
     [SerializeField] private int m_OutputLimit = 5;
     [SerializeField] private float m_ProductionTime = 5f;
+    [SerializeField, ReadOnly] private float m_CurrentProductionProgress = 0f;
 
     [Header("Upgrades")]
     [ReadOnly][SerializeField] private float m_CurrentCostProgress = 0f;
@@ -36,11 +37,13 @@ public class ProductionFacility : MonoBehaviour
     public event Action m_OnInputChanged;
     public event Action m_OnOutputChanged;
     public event Action m_OnUpgradeChanged;
+    public event Action<float> m_OnProductionProgressChanged;
 
     public int InputCount => m_Inputs.Count;
     public int OutputCount => m_Outputs.Count;
     public int InputLimit => m_InputLimit;
     public int OutputLimit => m_OutputLimit;
+    public float ProductionProgress => m_CurrentProductionProgress;
 
     public float UpgradeProgress => m_CurrentCostProgress;
     public float UpgradeCost => m_UpgradeCost;
@@ -49,6 +52,7 @@ public class ProductionFacility : MonoBehaviour
     void NotifyInput() => m_OnInputChanged?.Invoke();
     void NotifyOutput() => m_OnOutputChanged?.Invoke();
     void NotifyUpgrade() => m_OnUpgradeChanged?.Invoke();
+    void NotifyProductionProgress(float val) => m_OnProductionProgressChanged?.Invoke(val);
 
     public SOProductionFacility FacilitySO { get { return m_FacilitySO; } }
 
@@ -241,7 +245,21 @@ public class ProductionFacility : MonoBehaviour
                 continue;
             }
 
-            yield return wait;
+            float elapse = 0;
+            m_CurrentCostProgress = 0;
+            NotifyProductionProgress(m_CurrentProductionProgress);
+
+            while (elapse < delay)
+            {
+                elapse += Time.deltaTime;
+                m_CurrentProductionProgress = elapse / delay;
+                NotifyProductionProgress(m_CurrentProductionProgress);
+
+                yield return null;
+            }
+
+            m_CurrentProductionProgress = 1f;
+            NotifyProductionProgress(m_CurrentProductionProgress);
 
             m_Inputs.RemoveAt(0);
             m_Outputs.Add(m_Output);
