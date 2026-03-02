@@ -1,9 +1,10 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
 
 public class ResourceNodeUI : MonoBehaviour
 {
+  
     [Header("UI References")]
     [SerializeField] private GameObject uiPanel;
     [SerializeField] private TextMeshProUGUI resourceNameText;
@@ -12,39 +13,71 @@ public class ResourceNodeUI : MonoBehaviour
     [Header("Loading Bar")]
     [SerializeField] private Slider loadingSlider;
 
+    [Header("Follow Target")]
+    [SerializeField] private Transform followTarget;
+    [SerializeField] private Vector3 offset = new Vector3(0, 2f, 0);
+    [SerializeField] private float updateInterval = 0.05f;
+
+    private Camera mainCamera;
+    private Inventory playerInventory;
     private ResourceNode currentNode;
+    private RectTransform uiPanelRect;
+    private float nextUpdateTime;
 
     private void Start()
     {
+        mainCamera = Camera.main;
+        uiPanelRect = uiPanel.GetComponent<RectTransform>();
         HideUI();
+
+        var player = GameObject.FindGameObjectWithTag("Player");
+        if (player != null)
+        {
+            playerInventory = player.GetComponent<Inventory>();
+            if (followTarget == null)
+                followTarget = player.transform;
+        }
     }
 
+    private void LateUpdate()
+    {
+        if (!uiPanel.activeSelf || followTarget == null || mainCamera == null) return;
+        if (Time.time < nextUpdateTime) return;
+        nextUpdateTime = Time.time + updateInterval;
+
+        Vector3 screenPos = mainCamera.WorldToScreenPoint(followTarget.position + offset);
+
+        if (screenPos.z < 0)
+        {
+            uiPanel.SetActive(false);
+            return;
+        }
+
+        uiPanelRect.position = screenPos;
+    }
     public void ShowResourceInfo(ResourceNode node)
     {
         if (node == null) return;
-
         currentNode = node;
         uiPanel.SetActive(true);
 
         ResourceData data = node.GetResourceData();
-
         string displayName = data.resourceName;
         if (data.resourceType == ResourceType.Wood)
-        {
             displayName = "Tree";
-        }
 
         resourceNameText.text = displayName;
 
-        int remaining = node.GetRemainingHarvests();
         int max = node.GetMaxHarvestCount();
-        countText.text = $"{max - remaining}/{max}";
+        int invenCount = playerInventory != null ? playerInventory.GetItemCount(node.GetItemData()) : 0;
+        countText.text = $"{invenCount}/{max}";
 
-        if (remaining == 0)
+        if (invenCount >= max)
         {
             countText.color = Color.red;
+            HideLoadingBar();
         }
-        else if (remaining <= max / 2)
+        else if (invenCount >= max / 2)
         {
             countText.color = Color.yellow;
         }
@@ -64,9 +97,7 @@ public class ResourceNodeUI : MonoBehaviour
     public void UpdateUI()
     {
         if (currentNode != null)
-        {
             ShowResourceInfo(currentNode);
-        }
     }
 
     public void ShowLoadingBar(float duration)
@@ -74,32 +105,27 @@ public class ResourceNodeUI : MonoBehaviour
         if (loadingSlider != null)
         {
             loadingSlider.value = 0f;
-            loadingSlider.minValue = 0f; // 추가
-            loadingSlider.maxValue = 1f; // 추가
-            loadingSlider.gameObject.SetActive(true); // SetActive를 value 설정 후로 이동
+            loadingSlider.minValue = 0f;
+            loadingSlider.maxValue = 1f;
+            loadingSlider.gameObject.SetActive(true);
         }
     }
+
     public void ResetLoadingBar()
     {
         if (loadingSlider != null)
-        {
             loadingSlider.value = 0f;
-        }
     }
 
     public void UpdateLoadingBar(float progress)
     {
         if (loadingSlider != null)
-        {
             loadingSlider.value = progress;
-        }
     }
 
     public void HideLoadingBar()
     {
         if (loadingSlider != null)
-        {
             loadingSlider.gameObject.SetActive(false);
-        }
     }
 }
