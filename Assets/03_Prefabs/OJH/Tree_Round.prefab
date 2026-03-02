@@ -19,7 +19,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &184533454070054510
 RectTransform:
   m_ObjectHideFlags: 0
@@ -213,7 +213,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &5479768929759823006
 RectTransform:
   m_ObjectHideFlags: 0
@@ -305,7 +305,7 @@ RectTransform:
   m_Father: {fileID: 2739541984385807416}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -380,7 +380,7 @@ RectTransform:
   m_Father: {fileID: 99384057334511904}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 10, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -737,7 +737,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ResourceNode
   resourceType: 0
   resourceAmount: 1
-  harvestTime: 0.2
+  harvestTime: 1
   maxHarvestCount: 10
   itemData: {fileID: 11400000, guid: 8c6e8b775fb0b6049b86d705cacd0a6d, type: 2}
   visualModel: {fileID: 0}
@@ -746,6 +746,9 @@ MonoBehaviour:
   respawnTime: 5
   usePlayerUI: 1
   useWorldSpaceUI: 1
+  showRangeCircle: 1
+  rangeColor: {r: 1, g: 1, b: 0, a: 0.5}
+  circleSegments: 36
 --- !u!65 &1861685754443570448
 BoxCollider:
   m_ObjectHideFlags: 0

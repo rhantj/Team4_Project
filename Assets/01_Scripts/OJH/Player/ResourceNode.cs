@@ -29,6 +29,15 @@ public class ResourceNode : MonoBehaviour, ICollectable
     [SerializeField] private bool usePlayerUI = true;
     [SerializeField] private bool useWorldSpaceUI = true;
 
+
+    [Header("Range Indicator")]
+    [SerializeField] private bool showRangeCircle = true;
+    [SerializeField] private Color rangeColor = new Color(1f, 1f, 0f, 0.5f);
+    [SerializeField] private int circleSegments = 36;
+
+    private LineRenderer rangeCircle;
+
+
     private ResourceNodeUI playerUI;
     private WorldSpaceResourceUI worldSpaceUI;
 
@@ -44,6 +53,12 @@ public class ResourceNode : MonoBehaviour, ICollectable
         if (player != null)
         {
             playerTransform = player.transform;
+            currentInventory = player.GetComponent<Inventory>();
+
+            // collectionRange 동기화
+            var collector = player.GetComponent<PlayerResourceCollector>();
+            if (collector != null)
+                interactionDistance = collector.CollectionRange;
 
             if (usePlayerUI)
             {
@@ -59,6 +74,9 @@ public class ResourceNode : MonoBehaviour, ICollectable
             if (worldSpaceUI == null)
                 Debug.LogWarning("WorldSpaceResourceUI가 없습니다!");
         }
+
+        if (showRangeCircle)
+            CreateRangeCircle();
     }
 
     private void Update()
@@ -71,16 +89,21 @@ public class ResourceNode : MonoBehaviour, ICollectable
 
         if (isPlayerNearby && !wasNearby)
         {
+            int invenCount = currentInventory != null ? currentInventory.GetItemCount(itemData) : 0;
+            bool isFull = invenCount >= maxHarvestCount;
+
             if (usePlayerUI && playerUI != null)
             {
                 playerUI.ShowResourceInfo(this);
-                playerUI.ShowLoadingBar(harvestTime);
+                if (!isFull)
+                    playerUI.ShowLoadingBar(harvestTime);
             }
 
             if (useWorldSpaceUI && worldSpaceUI != null)
             {
                 worldSpaceUI.ShowResourceInfo();
-                worldSpaceUI.ShowLoadingBar(harvestTime);
+                if (!isFull)
+                    worldSpaceUI.ShowLoadingBar(harvestTime);
             }
         }
         else if (!isPlayerNearby && wasNearby)
@@ -93,6 +116,7 @@ public class ResourceNode : MonoBehaviour, ICollectable
             CancelHarvest();
         }
     }
+
     private IEnumerator RespawnCoroutine()
     {
         yield return new WaitForSeconds(respawnTime);
@@ -105,11 +129,17 @@ public class ResourceNode : MonoBehaviour, ICollectable
         if (visualModel != null)
             visualModel.SetActive(true);
     }
+
     public bool CanCollect()
     {
+        if (currentInventory != null)
+        {
+            int invenCount = currentInventory.GetItemCount(itemData);
+            if (invenCount >= maxHarvestCount) return false;
+            if (currentInventory.IsFull) return false; // 인벤토리 전체 꽉 찼을 때
+        }
         return !isBeingHarvested && !isDepleted && currentHarvestCount < maxHarvestCount;
     }
-
     public bool IsBeingHarvested()
     {
         return isBeingHarvested;
@@ -117,11 +147,7 @@ public class ResourceNode : MonoBehaviour, ICollectable
 
     public void Collect()
     {
-        if (isBeingHarvested) // 이미 수집 중이면 무시
-        {
-            //Debug.Log("이미 수집 중 - Collect 무시!");
-            return;
-        }
+        if (isBeingHarvested) return;
 
         if (currentInventory != null)
         {
@@ -129,6 +155,7 @@ public class ResourceNode : MonoBehaviour, ICollectable
             harvestCoroutine = StartCoroutine(HarvestCoroutine(currentInventory));
         }
     }
+
     public void CancelHarvest()
     {
         StopAllCoroutines();
@@ -143,8 +170,6 @@ public class ResourceNode : MonoBehaviour, ICollectable
 
         if (useWorldSpaceUI && worldSpaceUI != null)
             worldSpaceUI.ResetLoadingBar();
-
-        //Debug.Log("수집 중단!");
     }
 
     public ResourceData GetResourceData()
@@ -161,6 +186,8 @@ public class ResourceNode : MonoBehaviour, ICollectable
     {
         currentInventory = inventory;
     }
+
+    public ResourceItemData GetItemData() => itemData; // 추가
 
     public string GetHarvestInfo()
     {
@@ -180,26 +207,23 @@ public class ResourceNode : MonoBehaviour, ICollectable
     private IEnumerator HarvestCoroutine(Inventory playerInventory)
     {
         if (harvestEffect != null)
-            harvestEffect.Play();
+        harvestEffect.Play();
 
-        float totalTime = (currentHarvestCount == 0) ? harvestTime : (respawnTime + harvestTime);
-        float elapsedTime = 0f;
+    float elapsedTime = 0f;
 
-        while (elapsedTime < totalTime)
-        {
-            elapsedTime += Time.deltaTime;
-            float progress = elapsedTime / totalTime;
+    while (elapsedTime < harvestTime)
+    {
+        elapsedTime += Time.deltaTime;
+        float progress = elapsedTime / harvestTime;
 
-            if (usePlayerUI && playerUI != null)
-                playerUI.UpdateLoadingBar(progress);
+        if (usePlayerUI && playerUI != null)
+            playerUI.UpdateLoadingBar(progress);
 
-            if (useWorldSpaceUI && worldSpaceUI != null)
-                worldSpaceUI.UpdateLoadingBar(progress);
+        if (useWorldSpaceUI && worldSpaceUI != null)
+            worldSpaceUI.UpdateLoadingBar(progress);
 
-            yield return null;
-        }
-
-        // 수집 완료
+        yield return null;
+    }
         currentHarvestCount++;
 
         if (playerInventory != null && itemData != null)
@@ -235,7 +259,7 @@ public class ResourceNode : MonoBehaviour, ICollectable
 
             if (useWorldSpaceUI && worldSpaceUI != null)
                 worldSpaceUI.HideUI();
-            StartCoroutine(RespawnCoroutine()); 
+            StartCoroutine(RespawnCoroutine());
         }
         else
         {
@@ -272,6 +296,32 @@ public class ResourceNode : MonoBehaviour, ICollectable
 
             if (useWorldSpaceUI && worldSpaceUI != null)
                 worldSpaceUI.HideUI();
+        }
+    }
+    private void CreateRangeCircle()
+    {
+        GameObject circleObj = new GameObject("RangeCircle");
+        circleObj.transform.SetParent(transform);
+        circleObj.transform.localPosition = Vector3.zero;
+
+        rangeCircle = circleObj.AddComponent<LineRenderer>();
+        rangeCircle.loop = true;
+        rangeCircle.useWorldSpace = false;
+        rangeCircle.widthMultiplier = 0.05f;
+        rangeCircle.positionCount = circleSegments;
+
+        // 머티리얼 설정
+        rangeCircle.material = new Material(Shader.Find("Sprites/Default"));
+        rangeCircle.startColor = rangeColor;
+        rangeCircle.endColor = rangeColor;
+
+        // 원 그리기
+        for (int i = 0; i < circleSegments; i++)
+        {
+            float angle = 2f * Mathf.PI * i / circleSegments;
+            float x = Mathf.Cos(angle) * interactionDistance;
+            float z = Mathf.Sin(angle) * interactionDistance;
+            rangeCircle.SetPosition(i, new Vector3(x, 0.05f, z));
         }
     }
 }

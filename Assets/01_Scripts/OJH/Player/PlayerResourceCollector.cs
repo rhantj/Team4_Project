@@ -4,8 +4,10 @@ using System.Collections;
 public class PlayerResourceCollector : MonoBehaviour
 {
     [Header("Collection Settings")]
-    [SerializeField] private float collectionRange = 2f;
+    [SerializeField] private float collectionRange = 3f;
     [SerializeField] private LayerMask resourceLayer;
+
+    public float CollectionRange => collectionRange;
 
     private Inventory inventory;
     private Collider[] hitBuffer = new Collider[10];

@@ -1,5 +1,4 @@
 using UnityEngine;
-using static UnityEngine.UIElements.UxmlAttributeDescription;
 
 public class PlayerController : MonoBehaviour
 {
@@ -10,29 +9,34 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private Joystick fixedJoystick;
     [SerializeField] private DynamicJoystick dynamicJoystick;
 
-    private Rigidbody rb; // Rigidbody2D → Rigidbody
+    [Header("Animation")]
+    [SerializeField] private Animator animator;
+
+    private Rigidbody rb;
 
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
+        if (animator == null)
+            animator = GetComponentInChildren<Animator>();
     }
 
     private void FixedUpdate()
     {
         Vector2 input = fixedJoystick.Direction;
-
         if (input == Vector2.zero)
             input = dynamicJoystick.Direction;
 
-        // 3D 이동 (X, Z축으로 이동)
         Vector3 moveDir = new Vector3(input.x, 0f, input.y) * moveSpeed;
         rb.linearVelocity = new Vector3(moveDir.x, rb.linearVelocity.y, moveDir.z);
 
-        // 이동 방향으로 캐릭터 회전
         if (input != Vector2.zero)
         {
             Quaternion targetRotation = Quaternion.LookRotation(new Vector3(input.x, 0f, input.y));
             transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, 0.15f);
         }
+
+        // 애니메이션 - 움직이면 1, 멈추면 0
+        animator?.SetFloat("Speed", input.magnitude);
     }
 }
