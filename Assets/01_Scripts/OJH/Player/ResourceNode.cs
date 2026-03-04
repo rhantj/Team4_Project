@@ -89,8 +89,7 @@ public class ResourceNode : MonoBehaviour, ICollectable
 
         if (isPlayerNearby && !wasNearby)
         {
-            int invenCount = currentInventory != null ? currentInventory.GetItemCount(itemData) : 0;
-            bool isFull = invenCount >= maxHarvestCount;
+            bool isFull = currentInventory != null && currentInventory.IsFull; // 수정
 
             if (usePlayerUI && playerUI != null)
             {
@@ -134,9 +133,7 @@ public class ResourceNode : MonoBehaviour, ICollectable
     {
         if (currentInventory != null)
         {
-            int invenCount = currentInventory.GetItemCount(itemData);
-            if (invenCount >= maxHarvestCount) return false;
-            if (currentInventory.IsFull) return false; // 인벤토리 전체 꽉 찼을 때
+            if (currentInventory.IsFull) return false; // IsFull만
         }
         return !isBeingHarvested && !isDepleted && currentHarvestCount < maxHarvestCount;
     }

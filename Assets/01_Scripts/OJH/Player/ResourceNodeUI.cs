@@ -60,16 +60,15 @@ public class ResourceNodeUI : MonoBehaviour
         if (node == null) return;
         currentNode = node;
         uiPanel.SetActive(true);
-
         ResourceData data = node.GetResourceData();
         string displayName = data.resourceName;
         if (data.resourceType == ResourceType.Wood)
             displayName = "Tree";
-
         resourceNameText.text = displayName;
 
-        int max = node.GetMaxHarvestCount();
-        int invenCount = playerInventory != null ? playerInventory.GetItemCount(node.GetItemData()) : 0;
+        // 수정: 노드별 max → 인벤토리 전체 용량
+        int max = playerInventory != null ? playerInventory.m_Capacity : 0;
+        int invenCount = playerInventory != null ? playerInventory.m_ItemCount : 0;
         countText.text = $"{invenCount}/{max}";
 
         if (invenCount >= max)
