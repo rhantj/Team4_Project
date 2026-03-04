@@ -22,7 +22,7 @@ public class ResourceNode : MonoBehaviour, ICollectable
     [SerializeField] private ParticleSystem harvestEffect;
 
     [Header("UI Settings")]
-    [SerializeField] private float interactionDistance = 3f;
+    [SerializeField] private float interactionDistance = 5f;
     [SerializeField] private float respawnTime = 5f;
 
     [Header("UI References")]
@@ -39,7 +39,6 @@ public class ResourceNode : MonoBehaviour, ICollectable
 
 
     private ResourceNodeUI playerUI;
-    private WorldSpaceResourceUI worldSpaceUI;
 
     private bool isBeingHarvested = false;
     private bool isDepleted = false;
@@ -68,12 +67,7 @@ public class ResourceNode : MonoBehaviour, ICollectable
             }
         }
 
-        if (useWorldSpaceUI)
-        {
-            worldSpaceUI = GetComponentInChildren<WorldSpaceResourceUI>();
-            if (worldSpaceUI == null)
-                Debug.LogWarning("WorldSpaceResourceUI가 없습니다!");
-        }
+    
 
         if (showRangeCircle)
             CreateRangeCircle();
@@ -98,20 +92,13 @@ public class ResourceNode : MonoBehaviour, ICollectable
                     playerUI.ShowLoadingBar(harvestTime);
             }
 
-            if (useWorldSpaceUI && worldSpaceUI != null)
-            {
-                worldSpaceUI.ShowResourceInfo();
-                if (!isFull)
-                    worldSpaceUI.ShowLoadingBar(harvestTime);
-            }
         }
         else if (!isPlayerNearby && wasNearby)
         {
             if (usePlayerUI && playerUI != null)
                 playerUI.HideUI();
 
-            if (useWorldSpaceUI && worldSpaceUI != null)
-                worldSpaceUI.HideUI();
+       
             CancelHarvest();
         }
     }
@@ -165,8 +152,7 @@ public class ResourceNode : MonoBehaviour, ICollectable
         if (usePlayerUI && playerUI != null)
             playerUI.ResetLoadingBar();
 
-        if (useWorldSpaceUI && worldSpaceUI != null)
-            worldSpaceUI.ResetLoadingBar();
+
     }
 
     public ResourceData GetResourceData()
@@ -216,8 +202,7 @@ public class ResourceNode : MonoBehaviour, ICollectable
         if (usePlayerUI && playerUI != null)
             playerUI.UpdateLoadingBar(progress);
 
-        if (useWorldSpaceUI && worldSpaceUI != null)
-            worldSpaceUI.UpdateLoadingBar(progress);
+ 
 
         yield return null;
     }
@@ -238,12 +223,6 @@ public class ResourceNode : MonoBehaviour, ICollectable
                 playerUI.UpdateUI();
         }
 
-        if (useWorldSpaceUI && worldSpaceUI != null)
-        {
-            worldSpaceUI.ResetLoadingBar();
-            if (isPlayerNearby)
-                worldSpaceUI.UpdateUI();
-        }
 
         if (currentHarvestCount >= maxHarvestCount)
         {
@@ -254,8 +233,7 @@ public class ResourceNode : MonoBehaviour, ICollectable
             if (usePlayerUI && playerUI != null)
                 playerUI.HideUI();
 
-            if (useWorldSpaceUI && worldSpaceUI != null)
-                worldSpaceUI.HideUI();
+    
             StartCoroutine(RespawnCoroutine());
         }
         else
@@ -280,8 +258,6 @@ public class ResourceNode : MonoBehaviour, ICollectable
         if (usePlayerUI && playerUI != null && isPlayerNearby)
             playerUI.UpdateUI();
 
-        if (useWorldSpaceUI && worldSpaceUI != null && isPlayerNearby)
-            worldSpaceUI.UpdateUI();
     }
 
     private void OnDestroy()
@@ -291,8 +267,7 @@ public class ResourceNode : MonoBehaviour, ICollectable
             if (usePlayerUI && playerUI != null)
                 playerUI.HideUI();
 
-            if (useWorldSpaceUI && worldSpaceUI != null)
-                worldSpaceUI.HideUI();
+
         }
     }
     private void CreateRangeCircle()

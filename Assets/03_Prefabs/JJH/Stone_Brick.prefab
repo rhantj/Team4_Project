@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 1357277054218881845}
   - component: {fileID: 2611616048387894217}
   - component: {fileID: 2848556915174941771}
-  - component: {fileID: -3771007291491454635}
   m_Layer: 0
   m_Name: Stone_Brick
   m_TagString: Untagged
@@ -113,17 +112,3 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.6711089, y: 0.6713885, z: 1.5106237}
   m_Center: {x: 0.000001013279, y: 0.3359881, z: -0.0013352633}
---- !u!114 &-3771007291491454635
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3262397564025271819}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bbb150e00619e314293744a1d11531ec, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Item
-  m_ItemData: {fileID: 11400000, guid: 036aef80678f24d4f85d1b091693e64e, type: 2}
-  m_ItemName: 
