@@ -26,6 +26,12 @@ public class PlayerController : MonoBehaviour
         Vector2 input = fixedJoystick.Direction;
         //if (input == Vector2.zero)
         //    input = dynamicJoystick.Direction;
+     
+
+        // 방향키 입력 추가
+        Vector2 keyInput = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
+        if (keyInput != Vector2.zero)
+            input = keyInput.normalized;
 
         Vector3 moveDir = new Vector3(input.x, 0f, input.y) * moveSpeed;
         rb.linearVelocity = new Vector3(moveDir.x, rb.linearVelocity.y, moveDir.z);
