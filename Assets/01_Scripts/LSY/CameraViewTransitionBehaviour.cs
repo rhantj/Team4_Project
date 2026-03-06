@@ -116,4 +116,10 @@ public class CameraViewTransitionBehaviour : MonoBehaviour
         m_thisCamera.transform.SetPositionAndRotation(resultPosition, resultRotation);
         m_thisCamera.fieldOfView = fieldOfView;
     }
+
+    public void SetEndLookAtOffset(Vector3 offset) =>
+        m_EndLookAtOffset = offset;
+
+    public void SetEndCameraOffset(Vector3 offset) =>
+        m_EndCameraOffset = offset;
 }

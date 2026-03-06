@@ -18,6 +18,6 @@ public class BuildingPanelVM : IDisposable
 
     public void Dispose()
     {
-        m_Building.m_OnStepChanged -= Input.Refresh;
+        m_Building.m_OnInputChanged -= Input.Refresh;
     }
 }

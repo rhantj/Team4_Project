@@ -14,68 +14,38 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SOStageConfig
   Steps:
   - StageTheme:
-      PrefabReference:
-        m_AssetGUID: e8165ad1b986a8440aaa9d28be2bc14f
-        m_SubObjectName: 
-        m_SubObjectType: 
-        m_SubObjectGUID: 
-        m_EditorAssetChanged: 0
+      Type: 1
       SpawnPoint: {fileID: 0}
       LocalOffset: {x: 0, y: 0, z: 0}
-      UsePointRotation: 0
+      UseOverrideRotation: 0
       EulerRoatationOverride: {x: 0, y: 0, z: 0}
     MainBuilding:
-      PrefabReference:
-        m_AssetGUID: 7ad7be3a1fe66c8409e3e9d5dc0018a0
-        m_SubObjectName: 
-        m_SubObjectType: 
-        m_SubObjectGUID: 
-        m_EditorAssetChanged: 0
+      Type: 4
       SpawnPoint: {fileID: 0}
-      LocalOffset: {x: -15.39, y: 0, z: 20.38}
-      UsePointRotation: 0
+      LocalOffset: {x: -17.08, y: 0, z: 30}
+      UseOverrideRotation: 0
       EulerRoatationOverride: {x: 0, y: 0, z: 0}
     Resources:
-    - PrefabReference:
-        m_AssetGUID: 5c4fa75ca5c53314dab04ad4b9a0ad70
-        m_SubObjectName: 
-        m_SubObjectType: 
-        m_SubObjectGUID: 
-        m_EditorAssetChanged: 0
+    - Type: 8
       SpawnPoint: {fileID: 0}
       LocalOffset: {x: 16.76, y: 0, z: -5.87}
-      UsePointRotation: 0
+      UseOverrideRotation: 0
       EulerRoatationOverride: {x: 0, y: 0, z: 0}
   - StageTheme:
-      PrefabReference:
-        m_AssetGUID: 261e12c20a38bb147ad34a5ce593bfcd
-        m_SubObjectName: 
-        m_SubObjectType: 
-        m_SubObjectGUID: 
-        m_EditorAssetChanged: 0
+      Type: 2
       SpawnPoint: {fileID: 0}
       LocalOffset: {x: 0, y: 0, z: 0}
-      UsePointRotation: 0
+      UseOverrideRotation: 0
       EulerRoatationOverride: {x: 0, y: 0, z: 0}
     MainBuilding:
-      PrefabReference:
-        m_AssetGUID: a35c4c2a84dcd294d870e35ce1d9431a
-        m_SubObjectName: 
-        m_SubObjectType: 
-        m_SubObjectGUID: 
-        m_EditorAssetChanged: 0
+      Type: 5
       SpawnPoint: {fileID: 0}
-      LocalOffset: {x: 0, y: 0, z: 12.26}
-      UsePointRotation: 0
+      LocalOffset: {x: 0, y: 0, z: 16.28}
+      UseOverrideRotation: 0
       EulerRoatationOverride: {x: 0, y: 0, z: 0}
     Resources:
-    - PrefabReference:
-        m_AssetGUID: 5c4fa75ca5c53314dab04ad4b9a0ad70
-        m_SubObjectName: 
-        m_SubObjectType: 
-        m_SubObjectGUID: 
-        m_EditorAssetChanged: 0
+    - Type: 9
       SpawnPoint: {fileID: 0}
       LocalOffset: {x: -17.52, y: 0, z: 7.67}
-      UsePointRotation: 0
+      UseOverrideRotation: 0
       EulerRoatationOverride: {x: 0, y: 0, z: 0}

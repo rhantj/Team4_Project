@@ -1,43 +1,46 @@
 ﻿using System;
-using System.Collections.Generic;
 using UnityEngine;
 
-[Serializable]
-public class StageManagerConfig : ServiceConfig<StageManager>
+public class StageManager : MonoBehaviour
 {
-    [field: SerializeField] public SOStageConfig StageConfig { get; private set; }
-}
-
-public class StageManager : MonoBehaviour, IService
-{
-    private SOStageConfig m_StageConfig;
+    [SerializeField] private SOStageConfig m_StageConfig;
     [SerializeField] private int m_StageIdx = 0;
 
     private FacilitySpawner m_FacilitySpawner;
 
-    private List<GameObject> m_SpawnedObjects = new();
     private Building m_CurrentMainBuilding;
+    public event Action m_OnStageFinished;
+    public event Action<int> m_OnStageIdxChanged;
 
     public int StageIdx
     {
         get => m_StageIdx;
-        set { m_StageIdx = value; }
+        set { m_StageIdx = value; m_OnStageIdxChanged?.Invoke(m_StageIdx); }
     }
 
-    private async void Start()
+
+    public async void BuildStage(int stageIdx)
     {
+        StageIdx = stageIdx;
+        await WaitForService();
         await RebuildStage(StageIdx);
+
+        m_OnStageIdxChanged?.Invoke(m_StageIdx);
     }
 
-    public void Configure(IServiceConfig iConfig)
+    private async Awaitable WaitForService()
     {
-        if (iConfig is StageManagerConfig cfg && cfg.StageConfig != null)
-            m_StageConfig = cfg.StageConfig;
+        while (!m_FacilitySpawner)
+        {
+            m_FacilitySpawner = GameManager.Instance.GetService<FacilitySpawner>();
+            await Awaitable.NextFrameAsync();
+        }
 
-        m_FacilitySpawner ??= GameManager.Instance.GetService<FacilitySpawner>();
+        while (!m_FacilitySpawner.IsServiceReady)
+            await Awaitable.NextFrameAsync();
     }
 
-    public async Awaitable RebuildStage(int stageIdx)
+    private async Awaitable RebuildStage(int stageIdx)
     {
         ClearStage();
 
@@ -45,13 +48,12 @@ public class StageManager : MonoBehaviour, IService
 
         // Theme spawn
         var theme = await m_FacilitySpawner.SpawnFromRequestAsync(step.StageTheme);
-        m_SpawnedObjects.Add(theme);
 
         // Main Building spawn
         var buildingGO = await m_FacilitySpawner.SpawnFromRequestAsync(step.MainBuilding);
-        m_SpawnedObjects.Add(buildingGO);
 
-        m_CurrentMainBuilding = buildingGO.GetComponent<Building>();
+        if (buildingGO.TryGetComponent<Building>(out var building))
+            m_CurrentMainBuilding = building;
         if (m_CurrentMainBuilding)
             m_CurrentMainBuilding.m_OnBuildCompleted += OnBuildCompleted;
 
@@ -59,16 +61,12 @@ public class StageManager : MonoBehaviour, IService
         foreach (var res in step.Resources)
         {
             var obj = await m_FacilitySpawner.SpawnFromRequestAsync(res);
-            m_SpawnedObjects.Add(obj);
         }
     }
 
     private void ClearStage()
     {
-        foreach (var obj in m_SpawnedObjects)
-            m_FacilitySpawner. RemoveObject(obj);
-
-        m_SpawnedObjects.Clear();
+        m_FacilitySpawner.RemoveAllObject();
 
         if (m_CurrentMainBuilding)
         {
@@ -77,10 +75,10 @@ public class StageManager : MonoBehaviour, IService
         }
     }
 
-    private async void OnBuildCompleted()
+    private void OnBuildCompleted()
     {
-        StageIdx++;
-        await RebuildStage(StageIdx);
+        m_OnStageFinished?.Invoke();
+        ClearStage();
     }
 }
  

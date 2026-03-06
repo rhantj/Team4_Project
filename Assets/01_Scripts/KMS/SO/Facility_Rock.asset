@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e7181f36b54a6c340ba530149e36eaf7, type: 3}
   m_Name: Facility_Rock
   m_EditorClassIdentifier: Assembly-CSharp::SOProductionFacility
-  inputItem: {fileID: 7274242822923078438, guid: 79a6d645c30d92845ad59219da93456c, type: 3}
-  outputItem: {fileID: 5352302794306164855, guid: d82b5e14f778b0642aec0aee94b0eb31, type: 3}
+  inputItem: {fileID: 3262397564025271819, guid: 9d720b0637deabd489c8018fb2a2f169, type: 3}
+  outputItem: {fileID: 7274242822923078438, guid: b20dae90918798e45a6c5adb7ae0489d, type: 3}

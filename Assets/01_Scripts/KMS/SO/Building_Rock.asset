@@ -13,9 +13,11 @@ MonoBehaviour:
   m_Name: Building_Rock
   m_EditorClassIdentifier: Assembly-CSharp::SOBuilding
   Steps:
-  - StepName: 
-    RequierItem: {fileID: 0}
-    RequierAmount: 0
-  - StepName: 
-    RequierItem: {fileID: 0}
-    RequierAmount: 0
+  - StepName: Stone_Brick
+    RequierItem: {fileID: 3262397564025271819, guid: 9d720b0637deabd489c8018fb2a2f169, type: 3}
+    ItemIcon: {fileID: 21300000, guid: 7cd8bec149cdf7443b7a85b6f1a2ae90, type: 3}
+    RequierAmount: 10
+  - StepName: Brick
+    RequierItem: {fileID: 7274242822923078438, guid: b20dae90918798e45a6c5adb7ae0489d, type: 3}
+    ItemIcon: {fileID: 21300000, guid: db3ce66a60cb4d44eba8b359dd208e89, type: 3}
+    RequierAmount: 10

@@ -15,6 +15,16 @@ MonoBehaviour:
   m_GroupName: Default Local Group
   m_GUID: 2fa4d381fbbe9694a9986573569a7ac0
   m_SerializeEntries:
+  - m_GUID: 1092c0c0af382354bb136f1865b81220
+    m_Address: Assets/03_Prefabs/KMS/Resource Node/StoneNode.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 15c63c1898053b949b216d9c0a3b1280
+    m_Address: Assets/03_Prefabs/KMS/Resource Node/IronNode.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 1962bd5c254893e40858e8adad67d91f
     m_Address: Assets/03_Prefabs/KMS/Theme-Japen.prefab
     m_ReadOnly: 0
@@ -30,8 +40,8 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 5c4fa75ca5c53314dab04ad4b9a0ad70
-    m_Address: Assets/03_Prefabs/KMS/Tree_Round.prefab
+  - m_GUID: 4dc66ad70050be94da8e055efefab29b
+    m_Address: Assets/03_Prefabs/KMS/Facility/Facility-Steel.prefab
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
@@ -45,8 +55,8 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 945fede1c5106f14db2ee04e703fd44e
-    m_Address: Assets/03_Prefabs/KMS/Facility-Rock.prefab
+  - m_GUID: 9a2b2be8a0ae7e747876359beb099217
+    m_Address: Assets/03_Prefabs/KMS/Resource Node/TreeNode.prefab
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
@@ -67,6 +77,11 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: e8165ad1b986a8440aaa9d28be2bc14f
     m_Address: Assets/03_Prefabs/KMS/Theme-Egypt.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: ed184aa361e9cd549b9dece764cc5b75
+    m_Address: Assets/03_Prefabs/KMS/Facility/Facility-Rock.prefab
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0

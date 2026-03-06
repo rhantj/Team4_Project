@@ -15,7 +15,9 @@ MonoBehaviour:
   Steps:
   - StepName: Log
     RequierItem: {fileID: 6754428488172609419, guid: b84eaf5ef0fb91140b1d56f7b61572be, type: 3}
+    ItemIcon: {fileID: 21300000, guid: 6d11d1e724b2edd49a690b96fc2d88bc, type: 3}
     RequierAmount: 10
-  - StepName: Log2
-    RequierItem: {fileID: 5620069798872243853, guid: cfaeed19511c25a40a9cf1f3c4623eaa, type: 3}
+  - StepName: Log_Brich
+    RequierItem: {fileID: 1000011820032016, guid: daab99de4a6bd5b4ca29d30bf181160f, type: 3}
+    ItemIcon: {fileID: 21300000, guid: 9e9040ad4e64c2141b3122d2a68c3c07, type: 3}
     RequierAmount: 10

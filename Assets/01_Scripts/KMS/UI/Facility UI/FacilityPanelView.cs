@@ -1,4 +1,3 @@
-using System.Net.NetworkInformation;
 using UnityEngine;
 
 public class FacilityPanelView : MonoBehaviour, IBindable<ProductionFacility>
@@ -23,7 +22,7 @@ public class FacilityPanelView : MonoBehaviour, IBindable<ProductionFacility>
 
         m_PanelVM.Input.Refresh();
         m_PanelVM.Output.Refresh();
-        m_PanelVM.Upgrade.Refresh();
+        m_PanelVM.Upgrade.Refresh(0);
     }
 
     public void Unbind()

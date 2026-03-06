@@ -20,7 +20,7 @@ public class FacilityPanelVM : IDisposable
         m_Facility.m_OnOutputChanged += Output.Refresh;
         m_Facility.m_OnUpgradeChanged += OnUpgradeChanged;
 
-        Upgrade.Refresh();
+        Upgrade.Refresh(0);
         Input.Refresh();
         Output.Refresh();
     }
@@ -32,9 +32,9 @@ public class FacilityPanelVM : IDisposable
         m_Facility.m_OnUpgradeChanged -= OnUpgradeChanged;
     }
 
-    private void OnUpgradeChanged()
+    private void OnUpgradeChanged(int cost)
     {
-        Upgrade.Refresh();
+        Upgrade.Refresh(cost);
         Input.Refresh();
         Output.Refresh();
     }
