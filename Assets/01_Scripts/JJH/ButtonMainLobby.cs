@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -18,6 +19,22 @@ public class ButtonMainLobby : MonoBehaviour
     public GameObject m_BuildingInfoPannel;
     public Button m_OpenBuildingInfo;
     public Button m_CloseBuildingInfo;
+    public GameObject m_InfoContent;
+    public Image m_InfoPanel;
+    public Image m_InfoImage;
+    public Button m_InfoCloseButton;
+
+
+    [Header("게임종료")]
+    public Button m_QuitGame;
+    public Button m_Option_QuitGame;
+
+    [Header("GitLink")]
+    public Button m_GitLink;
+
+    [Header("팀 소개")]
+    public Image m_TeamIcon;
+    public Image m_TeamName;
 
 
     private void Start()
@@ -52,8 +69,33 @@ public class ButtonMainLobby : MonoBehaviour
         if(m_BuildingInfoPannel != null)
         {
             m_BuildingInfoPannel.SetActive(false);
-        }        
+        }
+        Button[]infoBtn= m_InfoContent.GetComponentsInChildren<Button>();
+        foreach(Button btn in infoBtn)
+        {
+            Image image= btn.GetComponent<Image>();
+
+            if (image != null)
+            {
+                btn.onClick.AddListener(() => DetailImage(image.sprite));
+            }
+        }
+        if(m_InfoCloseButton != null)m_InfoCloseButton.onClick.AddListener(CloseDetailImage);
+
         //
+
+        //게임종료
+        if (m_QuitGame != null)
+        {
+            m_QuitGame.onClick.AddListener(GameQuit);
+        }
+        if(m_Option_QuitGame !=null)m_Option_QuitGame.onClick.AddListener(GameQuit);
+
+        //GitLink
+        if(m_GitLink!=null)m_GitLink.onClick.AddListener(GitLink);
+
+
+
     }
 
     //옵션창
@@ -70,7 +112,46 @@ public class ButtonMainLobby : MonoBehaviour
         m_BuildingInfoPannel.SetActive(true);
     }
     private void CloseBuildingOption() => m_BuildingInfoPannel.SetActive(false);
+
+    public void DetailImage(Sprite sprite)
+    {
+
+        m_InfoImage.sprite = sprite;
+
+        m_InfoPanel.gameObject.SetActive(true);
+
+    }
+    private void CloseDetailImage()
+    {
+        m_InfoPanel.gameObject.SetActive(false);
+    }
     //
+
+    //게임종료
+    private void GameQuit()
+    {
+        //Debug.Log("게임종료");
+        m_QuitGame.onClick.AddListener(Application.Quit);
+    }
+
+    //GitLink
+    private void GitLink()
+    {
+        //Debug.Log("GitLink");
+        Application.OpenURL("https://github.com/rhantj/Team4_Project");
+    }
+
+    //팀 소개아이콘
+    public void ShowImage()
+    {
+        if(m_TeamName!=null)m_TeamName.gameObject.SetActive(true);
+    }
+    public void HideImaeg()
+    {
+        if(m_TeamName!=null)m_TeamName.gameObject.SetActive(false);
+    }
+
+
 
 
 }
