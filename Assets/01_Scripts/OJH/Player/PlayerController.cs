@@ -7,7 +7,7 @@ public class PlayerController : MonoBehaviour
 
     [Header("Joysticks")]
     [SerializeField] private Joystick fixedJoystick;
-    [SerializeField] private DynamicJoystick dynamicJoystick;
+    //[SerializeField] private DynamicJoystick dynamicJoystick;
 
     [Header("Animation")]
     [SerializeField] private Animator animator;
@@ -24,8 +24,8 @@ public class PlayerController : MonoBehaviour
     private void FixedUpdate()
     {
         Vector2 input = fixedJoystick.Direction;
-        if (input == Vector2.zero)
-            input = dynamicJoystick.Direction;
+        //if (input == Vector2.zero)
+        //    input = dynamicJoystick.Direction;
 
         Vector3 moveDir = new Vector3(input.x, 0f, input.y) * moveSpeed;
         rb.linearVelocity = new Vector3(moveDir.x, rb.linearVelocity.y, moveDir.z);
