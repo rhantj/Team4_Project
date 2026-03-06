@@ -27,8 +27,6 @@ public class ResourceNode : MonoBehaviour, ICollectable
 
     [Header("UI References")]
     [SerializeField] private bool usePlayerUI = true;
-    [SerializeField] private bool useWorldSpaceUI = true;
-
 
     [Header("Range Indicator")]
     [SerializeField] private bool showRangeCircle = true;
@@ -36,9 +34,7 @@ public class ResourceNode : MonoBehaviour, ICollectable
     [SerializeField] private int circleSegments = 36;
 
     private LineRenderer rangeCircle;
-
-
-    private ResourceNodeUI playerUI;
+    private TaskProgressBarUI taskProgressBarUI;
 
     private bool isBeingHarvested = false;
     private bool isDepleted = false;
@@ -54,20 +50,14 @@ public class ResourceNode : MonoBehaviour, ICollectable
             playerTransform = player.transform;
             currentInventory = player.GetComponent<Inventory>();
 
-            // collectionRange 동기화
             var collector = player.GetComponent<PlayerResourceCollector>();
             if (collector != null)
                 interactionDistance = collector.CollectionRange;
-
-            if (usePlayerUI)
-            {
-                playerUI = player.GetComponentInChildren<ResourceNodeUI>();
-                if (playerUI == null)
-                    Debug.LogWarning("Player에 ResourceNodeUI가 없습니다!");
-            }
         }
 
-    
+        taskProgressBarUI = FindObjectOfType<TaskProgressBarUI>();
+        if (taskProgressBarUI == null)
+            Debug.LogWarning("TaskProgressBarUI를 찾을 수 없습니다!");
 
         if (showRangeCircle)
             CreateRangeCircle();
@@ -83,22 +73,20 @@ public class ResourceNode : MonoBehaviour, ICollectable
 
         if (isPlayerNearby && !wasNearby)
         {
-            bool isFull = currentInventory != null && currentInventory.IsFull; // 수정
+            bool isFull = currentInventory != null && currentInventory.IsFull;
 
-            if (usePlayerUI && playerUI != null)
+            if (usePlayerUI && taskProgressBarUI != null)
             {
-                playerUI.ShowResourceInfo(this);
+                taskProgressBarUI.ShowResourceInfo(this);
                 if (!isFull)
-                    playerUI.ShowLoadingBar(harvestTime);
+                    taskProgressBarUI.ShowLoadingBar();
             }
-
         }
         else if (!isPlayerNearby && wasNearby)
         {
-            if (usePlayerUI && playerUI != null)
-                playerUI.HideUI();
+            if (usePlayerUI && taskProgressBarUI != null)
+                taskProgressBarUI.HideUI();
 
-       
             CancelHarvest();
         }
     }
@@ -119,15 +107,12 @@ public class ResourceNode : MonoBehaviour, ICollectable
     public bool CanCollect()
     {
         if (currentInventory != null)
-        {
-            if (currentInventory.IsFull) return false; // IsFull만
-        }
+            if (currentInventory.IsFull) return false;
+
         return !isBeingHarvested && !isDepleted && currentHarvestCount < maxHarvestCount;
     }
-    public bool IsBeingHarvested()
-    {
-        return isBeingHarvested;
-    }
+
+    public bool IsBeingHarvested() => isBeingHarvested;
 
     public void Collect()
     {
@@ -149,10 +134,8 @@ public class ResourceNode : MonoBehaviour, ICollectable
         if (harvestEffect != null)
             harvestEffect.Stop();
 
-        if (usePlayerUI && playerUI != null)
-            playerUI.ResetLoadingBar();
-
-
+        if (usePlayerUI && taskProgressBarUI != null)
+            taskProgressBarUI.ResetLoadingBar();
     }
 
     public ResourceData GetResourceData()
@@ -165,64 +148,44 @@ public class ResourceNode : MonoBehaviour, ICollectable
         };
     }
 
-    public void SetInventory(Inventory inventory)
-    {
-        currentInventory = inventory;
-    }
-
-    public ResourceItemData GetItemData() => itemData; // 추가
-
-    public string GetHarvestInfo()
-    {
-        return $"{currentHarvestCount}/{maxHarvestCount}";
-    }
-
-    public int GetRemainingHarvests()
-    {
-        return maxHarvestCount - currentHarvestCount;
-    }
-
-    public int GetMaxHarvestCount()
-    {
-        return maxHarvestCount;
-    }
+    public void SetInventory(Inventory inventory) => currentInventory = inventory;
+    public ResourceItemData GetItemData() => itemData;
+    public string GetHarvestInfo() => $"{currentHarvestCount}/{maxHarvestCount}";
+    public int GetRemainingHarvests() => maxHarvestCount - currentHarvestCount;
+    public int GetMaxHarvestCount() => maxHarvestCount;
 
     private IEnumerator HarvestCoroutine(Inventory playerInventory)
     {
         if (harvestEffect != null)
-        harvestEffect.Play();
+            harvestEffect.Play();
 
-    float elapsedTime = 0f;
+        float elapsedTime = 0f;
 
-    while (elapsedTime < harvestTime)
-    {
-        elapsedTime += Time.deltaTime;
-        float progress = elapsedTime / harvestTime;
+        while (elapsedTime < harvestTime)
+        {
+            elapsedTime += Time.deltaTime;
+            float progress = elapsedTime / harvestTime;
 
-        if (usePlayerUI && playerUI != null)
-            playerUI.UpdateLoadingBar(progress);
+            if (usePlayerUI && taskProgressBarUI != null)
+                taskProgressBarUI.UpdateProgress(progress);
 
- 
+            yield return null;
+        }
 
-        yield return null;
-    }
         currentHarvestCount++;
 
         if (playerInventory != null && itemData != null)
         {
             for (int i = 0; i < resourceAmount; i++)
-            {
                 playerInventory.AddItem(itemData);
-            }
         }
 
-        if (usePlayerUI && playerUI != null)
+        if (usePlayerUI && taskProgressBarUI != null)
         {
-            playerUI.ResetLoadingBar();
+            taskProgressBarUI.ResetLoadingBar();
             if (isPlayerNearby)
-                playerUI.UpdateUI();
+                taskProgressBarUI.UpdateUI();
         }
-
 
         if (currentHarvestCount >= maxHarvestCount)
         {
@@ -230,10 +193,9 @@ public class ResourceNode : MonoBehaviour, ICollectable
             if (visualModel != null)
                 visualModel.SetActive(false);
 
-            if (usePlayerUI && playerUI != null)
-                playerUI.HideUI();
+            if (usePlayerUI && taskProgressBarUI != null)
+                taskProgressBarUI.HideUI();
 
-    
             StartCoroutine(RespawnCoroutine());
         }
         else
@@ -243,6 +205,10 @@ public class ResourceNode : MonoBehaviour, ICollectable
 
             if (visualModel != null)
                 visualModel.SetActive(true);
+
+            // 채집 완료 후 다음 채집 위해 로딩바 다시 표시
+            if (usePlayerUI && taskProgressBarUI != null && isPlayerNearby)
+                taskProgressBarUI.ShowLoadingBar();
         }
     }
 
@@ -252,24 +218,20 @@ public class ResourceNode : MonoBehaviour, ICollectable
         currentHarvestCount = 0;
         isDepleted = false;
         isBeingHarvested = false;
+
         if (visualModel != null)
             visualModel.SetActive(true);
 
-        if (usePlayerUI && playerUI != null && isPlayerNearby)
-            playerUI.UpdateUI();
-
+        if (usePlayerUI && taskProgressBarUI != null && isPlayerNearby)
+            taskProgressBarUI.UpdateUI();
     }
 
     private void OnDestroy()
     {
-        if (isPlayerNearby)
-        {
-            if (usePlayerUI && playerUI != null)
-                playerUI.HideUI();
-
-
-        }
+        if (isPlayerNearby && usePlayerUI && taskProgressBarUI != null)
+            taskProgressBarUI.HideUI();
     }
+
     private void CreateRangeCircle()
     {
         GameObject circleObj = new GameObject("RangeCircle");
@@ -282,12 +244,10 @@ public class ResourceNode : MonoBehaviour, ICollectable
         rangeCircle.widthMultiplier = 0.05f;
         rangeCircle.positionCount = circleSegments;
 
-        // 머티리얼 설정
         rangeCircle.material = new Material(Shader.Find("Sprites/Default"));
         rangeCircle.startColor = rangeColor;
         rangeCircle.endColor = rangeColor;
 
-        // 원 그리기
         for (int i = 0; i < circleSegments; i++)
         {
             float angle = 2f * Mathf.PI * i / circleSegments;
