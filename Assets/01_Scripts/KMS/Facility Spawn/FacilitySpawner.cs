@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Unity.VisualScripting.Antlr3.Runtime.Tree;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 
@@ -19,11 +20,10 @@ public class FacilitySpawner : MonoBehaviour, IService
     [ReadOnly, SerializeField] private GameObjectPoolingService m_PoolingService;
     [ReadOnly, SerializeField] private ResourceManager m_ResourceManager;
 
-    private void Start()
-    {
-        m_PoolingService ??= GameManager.Instance.GetService<GameObjectPoolingService>();
-        m_ResourceManager ??= GameManager.Instance.GetService<ResourceManager>();
-    }
+    private List<GameObject> m_SpawnedObjects = new();
+
+    bool m_IsServiceReady = false;
+    public bool IsServiceReady => m_IsServiceReady;
 
     public void Configure(IServiceConfig iConfig)
     {
@@ -31,6 +31,7 @@ public class FacilitySpawner : MonoBehaviour, IService
             m_Facilities = cfg.Facilities;
 
         RebuildPrefabCache();
+        m_IsServiceReady = true;
     }
 
     private void RebuildPrefabCache()
@@ -40,30 +41,61 @@ public class FacilitySpawner : MonoBehaviour, IService
 
         foreach(var facility in m_Facilities)
         {
-            if (facility == null || facility.PrefabReference != null)
+            if (facility == null || facility.PrefabReference == null)
                 continue;
 
-            if (!m_AddressTable.ContainsKey(facility.FacilityType))
-                m_AddressTable.Add(facility.FacilityType, facility.PrefabReference);
+            m_AddressTable[facility.FacilityType] = facility.PrefabReference;
+        }
+    }
+
+    private async Awaitable WaitForService()
+    {
+        while (!m_ResourceManager)
+        {
+            m_ResourceManager = GameManager.Instance.GetService<ResourceManager>();
+            await Awaitable.NextFrameAsync();
+        }
+
+        while (!m_PoolingService)
+        {
+            m_PoolingService = GameManager.Instance.GetService<GameObjectPoolingService>();
+            await Awaitable.NextFrameAsync();
         }
     }
 
     //Spawn facility
     public async Awaitable<GameObject> SpawnFromRequestAsync(SpawnRequest req)
     {
-        var prefab = await m_ResourceManager.LoadPrefabAsync(req.PrefabReference);
-        if (!prefab) return null;
+        await WaitForService();
 
-        var point = prefab.transform;
+        if (!m_AddressTable.TryGetValue(req.Type, out var assetRef))
+            return null;
 
+        var pf = await m_ResourceManager.LoadPrefabAsync(assetRef);
+        if (!pf)
+            return null;
+
+        var instance = m_PoolingService.GetOrCreateGameObject(pf);
+        var point = req.SpawnPoint ? req.SpawnPoint : instance.transform;
         var pos = point.TransformPoint(req.LocalOffset);
-        var rot = req.UsePointRotation ?
-                  point.rotation :
-                  Quaternion.Euler(req.EulerRoatationOverride);
+        var rot = req.UseOverrideRotation ?
+                  Quaternion.Euler(req.EulerRoatationOverride) :
+                  point.rotation;
 
-        var instance = m_PoolingService != null ?
-                       m_PoolingService.GetOrCreateGameObject(prefab, pos, rot) :
-                       Instantiate(prefab, pos, rot);
+        instance.transform.SetPositionAndRotation(pos, rot);
+        m_SpawnedObjects.Add(instance);
+        return instance;
+    }
+
+    public async Awaitable<GameObject> GetOrCreateFacility(SpawnRequest req)
+    {
+        if(m_InstanceCache.TryGetValue(req.Type, out var existing) && existing)
+            return existing;
+
+        var instance = await SpawnFromRequestAsync(req);
+        if(instance) m_InstanceCache[req.Type] = instance;
+        
+
         return instance;
     }
 
@@ -86,6 +118,19 @@ public class FacilitySpawner : MonoBehaviour, IService
             m_PoolingService.ReturnOrDestroyGameObject(obj);
         else
             Destroy(obj);
+    }
+
+    public void RemoveAllObject()
+    {
+        if (m_SpawnedObjects.Count > 0)
+        {
+            foreach(var inst in m_SpawnedObjects)
+            {
+                m_PoolingService.ReturnOrDestroyGameObject(inst);
+            }
+        }
+
+        m_SpawnedObjects.Clear();
     }
 
     public void Clear()

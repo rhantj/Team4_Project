@@ -16,7 +16,7 @@ public class ProductionFacility : MonoBehaviour
     [SerializeField, ReadOnly] private float m_CurrentProductionProgress = 0f;
 
     [Header("Upgrades")]
-    [ReadOnly][SerializeField] private float m_CurrentCostProgress = 0f;
+    [ReadOnly][SerializeField] private int m_CurrentCostProgress = 0;
     [ReadOnly][SerializeField] private float m_UpgradeCost = 1000f;
     [ReadOnly][SerializeField] private bool m_IsUpgraded = false;
 
@@ -36,7 +36,7 @@ public class ProductionFacility : MonoBehaviour
 
     public event Action m_OnInputChanged;
     public event Action m_OnOutputChanged;
-    public event Action m_OnUpgradeChanged;
+    public event Action<int> m_OnUpgradeChanged;
     public event Action<float> m_OnProductionProgressChanged;
 
     public int InputCount => m_Inputs.Count;
@@ -51,7 +51,7 @@ public class ProductionFacility : MonoBehaviour
 
     void NotifyInput() => m_OnInputChanged?.Invoke();
     void NotifyOutput() => m_OnOutputChanged?.Invoke();
-    void NotifyUpgrade() => m_OnUpgradeChanged?.Invoke();
+    void NotifyUpgrade(int cost) => m_OnUpgradeChanged?.Invoke(cost);
     void NotifyProductionProgress(float val) => m_OnProductionProgressChanged?.Invoke(val);
 
     public SOProductionFacility FacilitySO { get { return m_FacilitySO; } }
@@ -278,13 +278,16 @@ public class ProductionFacility : MonoBehaviour
             yield return null;
         }
 
+        while (m_ProductionCoroutine != null)
+            yield return null;
+
         while (m_UpgradeArea.IsPlayerEnter && m_CurrentCostProgress < m_UpgradeCost && !m_IsUpgraded)
         {
             if (m_Inv.Gold > 0)
             {
-                m_Inv.Gold -= 100f;
-                m_CurrentCostProgress += 100f;
-                NotifyUpgrade();
+                m_Inv.Gold -= 100;
+                m_CurrentCostProgress += 100;
+                NotifyUpgrade(m_CurrentCostProgress);
             }
 
             if(m_CurrentCostProgress >= m_UpgradeCost)
@@ -307,6 +310,6 @@ public class ProductionFacility : MonoBehaviour
         m_InputLimit += 5;
         m_ProductionTime *= 0.5f;
 
-        NotifyUpgrade();
+        NotifyUpgrade(m_CurrentCostProgress);
     }
 }

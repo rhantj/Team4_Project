@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 3325605324953210785}
   - component: {fileID: 6164748704768443101}
   m_Layer: 0
-  m_Name: Facility-Wood
+  m_Name: Facility-Steel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -49,13 +49,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2af0492bf9a2d6b48be1dbb086ad26e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ProdictionFacility
-  m_FacilitySO: {fileID: 11400000, guid: 1b70a41afa367f14bbb25701fcb68a90, type: 2}
+  m_FacilitySO: {fileID: 11400000, guid: 4abaf8f5e486fe14ab0f508089bc582d, type: 2}
   m_OutputArea: {fileID: 3997228798268027977}
   m_InputArea: {fileID: 8600882287195131195}
   m_UpgradeArea: {fileID: 5624542262212825873}
   m_InputLimit: 5
   m_OutputLimit: 5
   m_ProductionTime: 5
+  m_CurrentProductionProgress: 0
   m_CurrentCostProgress: 0
   m_UpgradeCost: 1000
   m_IsUpgraded: 0
@@ -123,6 +124,7 @@ GameObject:
   - component: {fileID: 3413904279543121451}
   - component: {fileID: 8622554053874819971}
   - component: {fileID: 2782412155249994246}
+  - component: {fileID: 2761678107141259695}
   m_Layer: 5
   m_Name: Output UI
   m_TagString: Untagged
@@ -172,14 +174,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 0.5372549}
-  m_RaycastTarget: 1
+  m_Color: {r: 0.6509804, g: 0.6509804, b: 0.6509804, a: 0.87058824}
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300000, guid: bd38c9e672875e046aaf4d5369356d63, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -202,6 +204,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FacilityOutputView
   m_Text: {fileID: 2258265605281329881}
+--- !u!114 &2761678107141259695
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1341308628944045635}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e79fc087d31994044aafb603876d4900, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BillboardUI
 --- !u!1 &2070521294613111788
 GameObject:
   m_ObjectHideFlags: 0
@@ -479,7 +493,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 6d11d1e724b2edd49a690b96fc2d88bc, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 7e3b724afa74f304c9b5953c1b274e97, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -572,8 +586,8 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5935596921881918857}
-  - {fileID: 2003980287415945182}
   - {fileID: 2131797812580295109}
+  - {fileID: 2003980287415945182}
   - {fileID: 6779443711718003122}
   m_Father: {fileID: 3325605324953210785}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -672,7 +686,6 @@ GameObject:
   - component: {fileID: 219988264565271165}
   - component: {fileID: 3732422987381588471}
   - component: {fileID: 7310022056574193029}
-  - component: {fileID: 6640924807326286310}
   m_Layer: 0
   m_Name: Area
   m_TagString: Untagged
@@ -752,27 +765,6 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &6640924807326286310
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5483271258669359497}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 0, y: 1, z: 0}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &5896864174142693524
 GameObject:
   m_ObjectHideFlags: 0
@@ -1046,7 +1038,6 @@ GameObject:
   - component: {fileID: 5249669160498561212}
   - component: {fileID: 4665275915462168587}
   - component: {fileID: 2601468223965328206}
-  - component: {fileID: 3817754763844072358}
   m_Layer: 0
   m_Name: Area
   m_TagString: Untagged
@@ -1126,27 +1117,6 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &3817754763844072358
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7072677535130360725}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 0, y: 1, z: 0}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &7414609081809064581
 GameObject:
   m_ObjectHideFlags: 0
@@ -1212,7 +1182,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: c94a886559c87574db06ddf8d9d4799d, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 06fa2d2ab0e27494fb6024bbb00263ed, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1234,6 +1204,7 @@ GameObject:
   - component: {fileID: 60797620480977394}
   - component: {fileID: 8995482626035337594}
   - component: {fileID: 418329370457027641}
+  - component: {fileID: 9088123168609058915}
   m_Layer: 5
   m_Name: Upgrade UI
   m_TagString: Untagged
@@ -1283,14 +1254,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 0.5372549}
-  m_RaycastTarget: 1
+  m_Color: {r: 0.6509804, g: 0.6509804, b: 0.6509804, a: 0.87058824}
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300000, guid: bd38c9e672875e046aaf4d5369356d63, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1315,6 +1286,18 @@ MonoBehaviour:
   m_Text: {fileID: 7004457792907498420}
   m_Fill: 0
   m_IsUpgraded: 0
+--- !u!114 &9088123168609058915
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7708836001594031898}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e79fc087d31994044aafb603876d4900, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BillboardUI
 --- !u!1 &7735646308790505093
 GameObject:
   m_ObjectHideFlags: 0
@@ -1326,7 +1309,6 @@ GameObject:
   - component: {fileID: 1886274239345994402}
   - component: {fileID: 9088004496480652176}
   - component: {fileID: 8663933669574742}
-  - component: {fileID: 5097392130603580718}
   m_Layer: 0
   m_Name: Area
   m_TagString: Untagged
@@ -1406,27 +1388,6 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &5097392130603580718
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7735646308790505093}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 0, y: 1, z: 0}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &8329663635853993417
 GameObject:
   m_ObjectHideFlags: 0
@@ -1492,7 +1453,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300000, guid: eb8621a8a1ec9604391b434359a47b19, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1649,6 +1610,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6779443711718003122}
   - component: {fileID: 5676569509554195378}
+  - component: {fileID: 5621259989636691963}
   m_Layer: 5
   m_Name: Progress Bar
   m_TagString: Untagged
@@ -1691,6 +1653,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ProgressBar
   m_FillArea: {fileID: 4807898276625322217}
   m_Value: 0
+--- !u!114 &5621259989636691963
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8666807184742078417}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e79fc087d31994044aafb603876d4900, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BillboardUI
 --- !u!1 &8942204465886873968
 GameObject:
   m_ObjectHideFlags: 0
@@ -1816,6 +1790,7 @@ GameObject:
   - component: {fileID: 200469557331682949}
   - component: {fileID: 5231345542031393203}
   - component: {fileID: 8705413391536356721}
+  - component: {fileID: 4845776176560976556}
   m_Layer: 5
   m_Name: Input UI
   m_TagString: Untagged
@@ -1865,14 +1840,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 0.5372549}
-  m_RaycastTarget: 1
+  m_Color: {r: 0.6509804, g: 0.6509804, b: 0.6509804, a: 0.87058824}
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300000, guid: bd38c9e672875e046aaf4d5369356d63, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1895,3 +1870,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::InputView
   m_Text: {fileID: 5331584972818173575}
+--- !u!114 &4845776176560976556
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9104684942517057610}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e79fc087d31994044aafb603876d4900, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BillboardUI

@@ -9,10 +9,10 @@ public class UpgradeVM
 
     public UpgradeVM(ProductionFacility facility) => _facility = facility;
 
-    public void Refresh()
+    public void Refresh(int cost)
     {
         var fill = (_facility.UpgradeCost <= 0f) ? 0f : _facility.UpgradeProgress / _facility.UpgradeCost;
-        var text = $"{_facility.UpgradeProgress} / {_facility.UpgradeCost}";
+        var text = $"{cost} / {_facility.UpgradeCost}";
 
         OnFillChanged?.Invoke(fill);
         OnTextChanged?.Invoke(text);

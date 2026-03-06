@@ -6,6 +6,7 @@ public class ProductionSales : MonoBehaviour
 {
     [SerializeField] private ItemIOArea m_InputArea;
     [SerializeField] private SOAllMaterials m_Materials;
+    [SerializeField] private int m_GoldAmount = 100;
 
     private Coroutine m_InputCoroutine;
 
@@ -67,8 +68,7 @@ public class ProductionSales : MonoBehaviour
                 if (inv.TryRemoveItemByName(itemName))
                 {
                     // return cash
-                    Debug.Log("Get Cash");
-                    inv.Gold += 100f;
+                    inv.Gold += m_GoldAmount;
                 }
             }
 

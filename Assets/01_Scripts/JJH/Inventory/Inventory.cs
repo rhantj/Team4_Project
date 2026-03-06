@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -16,6 +17,9 @@ public class Inventory : MonoBehaviour
     public bool IsEmpty => m_StackItem.Count == 0;
 
     protected List<Item> m_StackItem = new List<Item>();
+
+    public event Action<int> m_OnInventoryCountChanged;
+    public void NotifyCountChanged() => m_OnInventoryCountChanged?.Invoke(m_StackItem.Count);
 
     //아이템개수관련
     public int m_ItemCount=> m_StackItem.Count;
@@ -126,6 +130,7 @@ public class Inventory : MonoBehaviour
 
 
         m_StackItem.Add(item);
+        NotifyCountChanged();
     }
 
     public void RemoveItem(ResourceItemData data)
@@ -140,6 +145,7 @@ public class Inventory : MonoBehaviour
                 Destroy(itemRemove.gameObject);
 
                 SortItem();
+                NotifyCountChanged();
                 return;
             }
         }

@@ -1,14 +1,13 @@
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.AddressableAssets;
 
 [System.Serializable]
 public struct SpawnRequest
 {
-    public AssetReferenceGameObject PrefabReference;
+    public EFacilityType Type;
     public Transform SpawnPoint;
     public Vector3 LocalOffset;
-    public bool UsePointRotation;
+    public bool UseOverrideRotation;
     public Vector3 EulerRoatationOverride;
 }
 

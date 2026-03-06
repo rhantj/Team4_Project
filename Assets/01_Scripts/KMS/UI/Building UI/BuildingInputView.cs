@@ -1,9 +1,11 @@
 using UnityEngine;
 using TMPro;
+using UnityEngine.UI;
 
 public class BuildingInputView : MonoBehaviour, IBindable<BuildingInputVM>
 {
     [SerializeField] TMP_Text m_Text;
+    [SerializeField] Image m_Image;
     private BuildingInputVM m_VM;
 
     public void Bind(BuildingInputVM vm)
@@ -12,12 +14,14 @@ public class BuildingInputView : MonoBehaviour, IBindable<BuildingInputVM>
 
         m_VM = vm;
         m_VM.OnTextChanged += SetText;
+        m_VM.OnSpriteChanged += SetSprite;
     }
 
     public void Unbind()
     {
         if (m_VM == null) return;
         m_VM.OnTextChanged -= SetText;
+        m_VM.OnSpriteChanged -= SetSprite;
         m_VM = null;
     }
 
@@ -27,4 +31,5 @@ public class BuildingInputView : MonoBehaviour, IBindable<BuildingInputVM>
     }
 
     private void SetText(string str) => m_Text.text = str;
+    private void SetSprite(Sprite sp)=> m_Image.sprite = sp;
 }

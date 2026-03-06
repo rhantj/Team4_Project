@@ -6,6 +6,7 @@ public struct BuildingStep
 {
     public string StepName;
     public GameObject RequierItem;
+    public Sprite ItemIcon;
     public int RequierAmount;
 }
 
