@@ -132,6 +132,7 @@ public class ButtonMainLobby : MonoBehaviour
     {
         //Debug.Log("게임종료");
         m_QuitGame.onClick.AddListener(Application.Quit);
+        m_Option_QuitGame.onClick.AddListener(Application.Quit);
     }
 
     //GitLink
