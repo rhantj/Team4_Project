@@ -19,6 +19,11 @@ public class BuildingSpawnController : MonoBehaviour
         m_Building.m_OnStepCompleted += OnStepCompleted;
     }
 
+    private void OnDisable()
+    {
+        m_Building.m_OnStepCompleted -= OnStepCompleted;
+    }
+
     private async void OnStepCompleted(int stepIdx)
     {
         var gp = m_SpawnGroups.Find(g => g.StepIndexToTrigger == stepIdx);

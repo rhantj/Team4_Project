@@ -43,7 +43,7 @@ public class UIManager : MonoBehaviour
         m_HUD.Open();
     }
 
-    private void SwapPanel()
+    public void SwapPanel()
     {
         m_HUD.Close();
         m_StartUI.Open();

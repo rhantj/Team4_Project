@@ -181,7 +181,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a67f632816fda2f41aa085cdf1704bff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BuildingSpawnController
-  m_Building: {fileID: 5553058705740161970, guid: 7ad7be3a1fe66c8409e3e9d5dc0018a0, type: 3}
+  m_Building: {fileID: 5553058705740161970}
   m_SpawnGroups:
   - StepIndexToTrigger: 1
     Requests:
@@ -205,15 +205,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 502818409566209244, guid: 5f6ea0487390bc64cac8aaaee407ddf5, type: 3}
       propertyPath: m_Width
-      value: 4.8
+      value: 5.79
       objectReference: {fileID: 0}
     - target: {fileID: 502818409566209244, guid: 5f6ea0487390bc64cac8aaaee407ddf5, type: 3}
       propertyPath: m_Height
-      value: 4.92
+      value: 6.58
       objectReference: {fileID: 0}
     - target: {fileID: 1010274725110797252, guid: 5f6ea0487390bc64cac8aaaee407ddf5, type: 3}
       propertyPath: m_LocalScale.x
-      value: 4.8
+      value: 5.79
       objectReference: {fileID: 0}
     - target: {fileID: 1010274725110797252, guid: 5f6ea0487390bc64cac8aaaee407ddf5, type: 3}
       propertyPath: m_LocalScale.y
@@ -221,7 +221,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1010274725110797252, guid: 5f6ea0487390bc64cac8aaaee407ddf5, type: 3}
       propertyPath: m_LocalScale.z
-      value: 4.92
+      value: 6.58
       objectReference: {fileID: 0}
     - target: {fileID: 1010274725110797252, guid: 5f6ea0487390bc64cac8aaaee407ddf5, type: 3}
       propertyPath: m_LocalPosition.x

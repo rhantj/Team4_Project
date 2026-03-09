@@ -49,19 +49,37 @@ public class ProductionFacility : MonoBehaviour
     public float UpgradeCost => m_UpgradeCost;
     public bool IsUpgraded => m_IsUpgraded;
 
-    void NotifyInput() => m_OnInputChanged?.Invoke();
-    void NotifyOutput() => m_OnOutputChanged?.Invoke();
-    void NotifyUpgrade(int cost) => m_OnUpgradeChanged?.Invoke(cost);
+    private const string m_InputSound = "ITEM_Click_Item_Put";
+    private const string m_OutputSound = "ITEM_Click_Item_Pick_Up";
+    private const string m_CoinInputSound = "ITEM_Coin";
+
+    void NotifyInput(bool playSound = true) 
+    {
+        if (playSound)
+            m_SoundManager.PlaySound(m_InputSound, transform.position, Quaternion.identity);
+        m_OnInputChanged?.Invoke();
+    }
+
+    void NotifyOutput(bool playSound = true)
+    {
+        if (playSound)
+            m_SoundManager.PlaySound(m_OutputSound, transform.position, Quaternion.identity);
+        m_OnOutputChanged?.Invoke();
+    }
+    void NotifyUpgrade(int cost, bool playSound = true)
+    {
+        if (playSound)
+            m_SoundManager.PlaySound(m_CoinInputSound, transform.position, Quaternion.identity);
+        m_OnUpgradeChanged?.Invoke(cost);
+    }
     void NotifyProductionProgress(float val) => m_OnProductionProgressChanged?.Invoke(val);
 
-    public SOProductionFacility FacilitySO { get { return m_FacilitySO; } }
-
-    FacilityPanelView m_PanelView;
+    private FacilityPanelView m_PanelView;
+    private SoundManager m_SoundManager;
 
     private void Awake()
     {
         InitializeIOProduct(m_FacilitySO);
-        m_Inv = m_InputArea.Player.GetComponent<InventoryExpended>();
 
         m_PanelView = GetComponentInChildren<FacilityPanelView>(true);
     }
@@ -69,6 +87,8 @@ public class ProductionFacility : MonoBehaviour
     private void Start()
     {
         m_PanelView?.Bind(this);
+        m_SoundManager ??= GameManager.Instance.GetService<SoundManager>();
+        m_Inv = m_InputArea.m_Player.GetComponent<InventoryExpended>();
     }
 
     private void OnEnable()
@@ -161,7 +181,6 @@ public class ProductionFacility : MonoBehaviour
             yield break;
         }
 
-        Debug.Log("item output start");
         float elapsedTime = 0f;
         while (elapsedTime < .5f)
         {
@@ -223,6 +242,7 @@ public class ProductionFacility : MonoBehaviour
             if (m_Inv.TryRemoveItemByName(m_Input.name))
             {
                 m_Inputs.Add(m_Input);
+                
                 NotifyInput();
                 m_ProductionCoroutine ??= StartCoroutine(Co_ProductItems(m_ProductionTime));
             }
@@ -263,8 +283,8 @@ public class ProductionFacility : MonoBehaviour
 
             m_Inputs.RemoveAt(0);
             m_Outputs.Add(m_Output);
-            NotifyInput();
-            NotifyOutput();
+            NotifyInput(false);
+            NotifyOutput(false);
         }
         m_ProductionCoroutine = null;
     }
@@ -310,6 +330,6 @@ public class ProductionFacility : MonoBehaviour
         m_InputLimit += 5;
         m_ProductionTime *= 0.5f;
 
-        NotifyUpgrade(m_CurrentCostProgress);
+        NotifyUpgrade(m_CurrentCostProgress, false);
     }
 }

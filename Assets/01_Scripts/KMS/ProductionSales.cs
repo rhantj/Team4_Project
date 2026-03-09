@@ -9,6 +9,12 @@ public class ProductionSales : MonoBehaviour
     [SerializeField] private int m_GoldAmount = 100;
 
     private Coroutine m_InputCoroutine;
+    private SoundManager m_SoundManager;
+
+    private void Start()
+    {
+        m_SoundManager ??= GameManager.Instance.GetService<SoundManager>();
+    }
 
     private void OnEnable()
     {
@@ -52,7 +58,7 @@ public class ProductionSales : MonoBehaviour
             yield return null;
         }
 
-        var inv = m_InputArea.Player.GetComponent<InventoryExpended>();
+        var inv = m_InputArea.m_Player.GetComponent<InventoryExpended>();
         while (m_InputArea.IsPlayerEnter)
         {
             if (inv.IsEmpty)
@@ -69,6 +75,7 @@ public class ProductionSales : MonoBehaviour
                 {
                     // return cash
                     inv.Gold += m_GoldAmount;
+                    m_SoundManager.PlaySound("ITEM_Coin Sell", transform.position, Quaternion.identity);
                 }
             }
 

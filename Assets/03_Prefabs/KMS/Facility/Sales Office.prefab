@@ -27,7 +27,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: 1, z: -0, w: 0}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 5, y: 0.1, z: 7}
+  m_LocalScale: {x: 5, y: 0.5, z: 7}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 41882833039061826}
@@ -45,7 +45,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aa62c5d7792dea74d94c50920c2db869, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ItemIOArea
-  m_Player: {fileID: 11400000, guid: 1a4bc2378e9cd8d44a873f47d948ec92, type: 2}
+  m_Player: {fileID: 0}
   m_CheckAreaInterval: 0.1
   m_Width: 5
   m_Height: 7
@@ -98,6 +98,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ProductionSales
   m_InputArea: {fileID: 9041078537998915662}
   m_Materials: {fileID: 11400000, guid: db41ddbe44138f846bc0d51bd9b10fd6, type: 2}
+  m_GoldAmount: 100
 --- !u!1 &7808211995716149033
 GameObject:
   m_ObjectHideFlags: 0

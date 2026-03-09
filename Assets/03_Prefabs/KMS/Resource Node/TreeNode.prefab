@@ -160,7 +160,6 @@ MonoBehaviour:
   interactionDistance: 3
   respawnTime: 5
   usePlayerUI: 1
-  useWorldSpaceUI: 1
   showRangeCircle: 1
   rangeColor: {r: 1, g: 1, b: 0, a: 0.5}
   circleSegments: 36

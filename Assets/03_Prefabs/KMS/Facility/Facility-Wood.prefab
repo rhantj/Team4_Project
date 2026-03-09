@@ -107,7 +107,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aa62c5d7792dea74d94c50920c2db869, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ItemIOArea
-  m_Player: {fileID: 11400000, guid: 1a4bc2378e9cd8d44a873f47d948ec92, type: 2}
+  m_Player: {fileID: 0}
   m_CheckAreaInterval: 0.1
   m_Width: 2
   m_Height: 2
@@ -548,7 +548,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aa62c5d7792dea74d94c50920c2db869, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ItemIOArea
-  m_Player: {fileID: 11400000, guid: 1a4bc2378e9cd8d44a873f47d948ec92, type: 2}
+  m_Player: {fileID: 0}
   m_CheckAreaInterval: 0.1
   m_Width: 2
   m_Height: 2
@@ -947,7 +947,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aa62c5d7792dea74d94c50920c2db869, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ItemIOArea
-  m_Player: {fileID: 11400000, guid: 1a4bc2378e9cd8d44a873f47d948ec92, type: 2}
+  m_Player: {fileID: 0}
   m_CheckAreaInterval: 0.1
   m_Width: 3
   m_Height: 2
@@ -1182,7 +1182,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: c94a886559c87574db06ddf8d9d4799d, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 9e9040ad4e64c2141b3122d2a68c3c07, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
