@@ -33,8 +33,16 @@ public class Building : MonoBehaviour
     public event Action<Sprite> m_OnSpriteChanged;
 
     private BuildingPanelView m_PanelView;
+    private SoundManager m_SoundManager;
 
-    void NotifyInput() => m_OnInputChanged?.Invoke();
+    private const string m_InputSound = "ITEM_Click_Item_Put";
+
+    void NotifyInput(bool playSound = true)
+    {
+        if (playSound)
+            m_SoundManager.PlaySound(m_InputSound, transform.position, Quaternion.identity);
+        m_OnInputChanged?.Invoke();
+    }
     void NotifyBuildComplete() => m_OnBuildCompleted?.Invoke();
 
     // Property Getters/Setters
@@ -64,6 +72,9 @@ public class Building : MonoBehaviour
     private void Start()
     {
         m_PanelView?.Bind(this);
+        m_SoundManager ??= GameManager.Instance.GetService<SoundManager>();
+
+        m_OnProgressChanged?.Invoke(0f);
     }
 
     private void OnEnable()
@@ -108,11 +119,12 @@ public class Building : MonoBehaviour
             yield return null;
         }
 
-        var inv = m_InputArea.Player.GetComponent<InventoryExpended>();
-        var currentStep = m_BuildingData.Steps[m_CurrentStepIdx];
+        var inv = m_InputArea.m_Player.GetComponent<InventoryExpended>();
 
         while (m_InputArea.IsPlayerEnter)
         {
+            var currentStep = m_BuildingData.Steps[m_CurrentStepIdx];
+
             if (m_CurrentStepIdx >= m_BuildingData.Steps.Count)
             {
                 yield return null;
@@ -142,7 +154,6 @@ public class Building : MonoBehaviour
                 {
                     m_Progress = 1f;
                     m_OnProgressChanged?.Invoke(m_Progress);
-
                     NotifyBuildComplete();
                     yield break;
                 }

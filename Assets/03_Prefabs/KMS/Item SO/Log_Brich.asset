@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2efe8d37b6d6d04a9ac5ca0c3c13f35, type: 3}
   m_Name: Log_Brich
   m_EditorClassIdentifier: Assembly-CSharp::ResourceItemData
-  m_SoItemName: Log_Brich
+  m_SoItemName: Log_Birch
   m_ItemPrefab: {fileID: 1000011820032016, guid: daab99de4a6bd5b4ca29d30bf181160f, type: 3}

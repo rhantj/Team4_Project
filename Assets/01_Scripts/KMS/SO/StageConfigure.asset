@@ -32,20 +32,38 @@ MonoBehaviour:
       UseOverrideRotation: 0
       EulerRoatationOverride: {x: 0, y: 0, z: 0}
   - StageTheme:
-      Type: 2
+      Type: 1
       SpawnPoint: {fileID: 0}
       LocalOffset: {x: 0, y: 0, z: 0}
       UseOverrideRotation: 0
       EulerRoatationOverride: {x: 0, y: 0, z: 0}
     MainBuilding:
-      Type: 5
+      Type: 4
       SpawnPoint: {fileID: 0}
-      LocalOffset: {x: 0, y: 0, z: 16.28}
+      LocalOffset: {x: -17.08, y: 0, z: 30}
       UseOverrideRotation: 0
       EulerRoatationOverride: {x: 0, y: 0, z: 0}
     Resources:
-    - Type: 9
+    - Type: 8
       SpawnPoint: {fileID: 0}
-      LocalOffset: {x: -17.52, y: 0, z: 7.67}
+      LocalOffset: {x: 16.76, y: 0, z: -5.87}
+      UseOverrideRotation: 0
+      EulerRoatationOverride: {x: 0, y: 0, z: 0}
+  - StageTheme:
+      Type: 3
+      SpawnPoint: {fileID: 0}
+      LocalOffset: {x: 0, y: 0, z: 0}
+      UseOverrideRotation: 0
+      EulerRoatationOverride: {x: 0, y: 0, z: 0}
+    MainBuilding:
+      Type: 6
+      SpawnPoint: {fileID: 0}
+      LocalOffset: {x: 0, y: 0, z: 8.67}
+      UseOverrideRotation: 0
+      EulerRoatationOverride: {x: 0, y: 0, z: 0}
+    Resources:
+    - Type: 7
+      SpawnPoint: {fileID: 0}
+      LocalOffset: {x: -16.04, y: 0, z: -7.06}
       UseOverrideRotation: 0
       EulerRoatationOverride: {x: 0, y: 0, z: 0}

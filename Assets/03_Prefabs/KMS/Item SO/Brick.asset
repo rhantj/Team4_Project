@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: Brick
   m_EditorClassIdentifier: Assembly-CSharp::ResourceItemData
   m_SoItemName: Brick
-  m_ItemPrefab: {fileID: 3262397564025271819, guid: 9d720b0637deabd489c8018fb2a2f169, type: 3}
+  m_ItemPrefab: {fileID: 7274242822923078438, guid: b20dae90918798e45a6c5adb7ae0489d, type: 3}

@@ -9,7 +9,7 @@ public class ItemIOArea : MonoBehaviour
     public event Action m_OnExitArea;
 
     [Header("Setting")]
-    [SerializeField] private SOPlayerReference m_Player;
+    [field: SerializeField] public GameObject m_Player;
     [SerializeField] protected float m_CheckAreaInterval = 0.1f;
     [SerializeField] protected float m_Width;
     [SerializeField] protected float m_Height;
@@ -22,7 +22,6 @@ public class ItemIOArea : MonoBehaviour
 
     private Coroutine m_CheckCoroutine;
 
-    public Transform Player => m_Player.player.transform;
     public bool IsPlayerEnter => m_isPlayerEnter;
 
     protected virtual void Awake()
@@ -30,13 +29,15 @@ public class ItemIOArea : MonoBehaviour
         RecalculateOBB();
     }
 
-
     protected virtual void Start()
     {
         m_CheckCoroutine ??= StartCoroutine(Co_CheckArea());
     }
 
-    protected virtual void OnEnable() { }
+    protected virtual void OnEnable()
+    {
+        m_Player = GameObject.FindGameObjectWithTag("Player");
+    }
 
     protected virtual void OnDisable()
     {
@@ -55,7 +56,7 @@ public class ItemIOArea : MonoBehaviour
         {
             RecalculateOBB();
 
-            bool isInsideNow = IsInsideOBB(m_Player.player.transform.position);
+            bool isInsideNow = IsInsideOBB(m_Player.transform.position);
 
             if(isInsideNow && !m_isPlayerEnter)
             {

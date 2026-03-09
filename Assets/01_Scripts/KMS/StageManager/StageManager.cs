@@ -7,6 +7,7 @@ public class StageManager : MonoBehaviour
     [SerializeField] private int m_StageIdx = 0;
 
     private FacilitySpawner m_FacilitySpawner;
+    private SoundManager m_SoundManager;
 
     private Building m_CurrentMainBuilding;
     public event Action m_OnStageFinished;
@@ -18,12 +19,17 @@ public class StageManager : MonoBehaviour
         set { m_StageIdx = value; m_OnStageIdxChanged?.Invoke(m_StageIdx); }
     }
 
+    public const string m_StageClearNotification = "NOTIFICATION_Positive_Notification_27";
+
 
     public async void BuildStage(int stageIdx)
     {
         StageIdx = stageIdx;
         await WaitForService();
         await RebuildStage(StageIdx);
+
+        var player = GameObject.FindGameObjectWithTag("Player");
+        player.transform.position = Vector3.zero;
 
         m_OnStageIdxChanged?.Invoke(m_StageIdx);
     }
@@ -38,6 +44,12 @@ public class StageManager : MonoBehaviour
 
         while (!m_FacilitySpawner.IsServiceReady)
             await Awaitable.NextFrameAsync();
+
+        while (!m_SoundManager)
+        {
+            m_SoundManager = GameManager.Instance.GetService<SoundManager>();
+            await Awaitable.NextFrameAsync();
+        }
     }
 
     private async Awaitable RebuildStage(int stageIdx)
@@ -55,7 +67,7 @@ public class StageManager : MonoBehaviour
         if (buildingGO.TryGetComponent<Building>(out var building))
             m_CurrentMainBuilding = building;
         if (m_CurrentMainBuilding)
-            m_CurrentMainBuilding.m_OnBuildCompleted += OnBuildCompleted;
+            m_CurrentMainBuilding.m_OnBuildCompleted += () => OnBuildCompleted();
 
         // Resources spawn
         foreach (var res in step.Resources)
@@ -64,19 +76,23 @@ public class StageManager : MonoBehaviour
         }
     }
 
-    private void ClearStage()
+    public void ClearStage()
     {
         m_FacilitySpawner.RemoveAllObject();
+        m_FacilitySpawner.Clear();
 
         if (m_CurrentMainBuilding)
         {
-            m_CurrentMainBuilding.m_OnBuildCompleted -= OnBuildCompleted;
+            m_CurrentMainBuilding.m_OnBuildCompleted -= () => OnBuildCompleted();
             m_CurrentMainBuilding = null;
         }
     }
 
-    private void OnBuildCompleted()
+    private async void OnBuildCompleted(bool playSound = true)
     {
+        if (playSound)
+            m_SoundManager.PlaySound(m_StageClearNotification, transform.position, Quaternion.identity);
+        await Awaitable.WaitForSecondsAsync(2f);
         m_OnStageFinished?.Invoke();
         ClearStage();
     }
