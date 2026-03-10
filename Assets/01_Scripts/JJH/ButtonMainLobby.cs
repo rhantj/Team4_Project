@@ -101,6 +101,9 @@ public class ButtonMainLobby : MonoBehaviour
     //옵션창
     private void OpenOption()
     {
+        //Debug.Log("옵션창 열기");
+        //Debug.Log("버튼 클릭 소리 재생");
+        //UiSound.Instance.PlayButtonSound();
         m_OptionPannel.SetActive(true);
     }
     private void CloseOption()=>m_OptionPannel.SetActive(false);
