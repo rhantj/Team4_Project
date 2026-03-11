@@ -279,7 +279,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 112
+  m_Constraints: 116
   m_CollisionDetection: 0
 --- !u!114 &2519041660453919693
 MonoBehaviour:
@@ -351,7 +351,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
   moveSpeed: 5
   fixedJoystick: {fileID: 0}
-  dynamicJoystick: {fileID: 0}
   animator: {fileID: 5518432036742763098}
 --- !u!1 &1046756973095621559
 GameObject:
