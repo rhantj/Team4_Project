@@ -36,6 +36,9 @@ public class PlayerController : MonoBehaviour
         Vector3 moveDir = new Vector3(input.x, 0f, input.y) * moveSpeed;
         rb.linearVelocity = new Vector3(moveDir.x, rb.linearVelocity.y, moveDir.z);
 
+
+
+
         if (input != Vector2.zero)
         {
             Quaternion targetRotation = Quaternion.LookRotation(new Vector3(input.x, 0f, input.y));
