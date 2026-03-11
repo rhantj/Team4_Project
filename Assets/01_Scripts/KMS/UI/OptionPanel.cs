@@ -27,6 +27,8 @@ public class OptionPanel : MonoBehaviour
 
     private void OnEnable()
     {
+        Time.timeScale = 0f;
+
         m_Volume.onValueChanged.AddListener(UpdateVolume);
 
         m_MainLobbyBtn.onClick.AddListener(OnMainLobbyButtonClicked);
@@ -37,6 +39,8 @@ public class OptionPanel : MonoBehaviour
 
     private void OnDisable()
     {
+        Time.timeScale = 1f;
+
         m_Volume.onValueChanged.RemoveAllListeners();
 
         m_MainLobbyBtn.onClick.RemoveAllListeners();

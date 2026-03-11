@@ -43,7 +43,6 @@ public class ProductionFacility : MonoBehaviour
     public int OutputCount => m_Outputs.Count;
     public int InputLimit => m_InputLimit;
     public int OutputLimit => m_OutputLimit;
-    public float ProductionProgress => m_CurrentProductionProgress;
 
     public float UpgradeProgress => m_CurrentCostProgress;
     public float UpgradeCost => m_UpgradeCost;
@@ -51,7 +50,7 @@ public class ProductionFacility : MonoBehaviour
 
     private const string m_InputSound = "ITEM_Click_Item_Put";
     private const string m_OutputSound = "ITEM_Click_Item_Pick_Up";
-    private const string m_CoinInputSound = "ITEM_Coin";
+    private const string m_CoinInputSound = "ITEM_Coin Buy";
 
     void NotifyInput(bool playSound = true) 
     {

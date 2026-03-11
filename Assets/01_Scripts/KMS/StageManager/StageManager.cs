@@ -8,6 +8,7 @@ public class StageManager : MonoBehaviour
 
     private FacilitySpawner m_FacilitySpawner;
     private SoundManager m_SoundManager;
+    private UIManager m_UIManager;
 
     private Building m_CurrentMainBuilding;
     public event Action m_OnStageFinished;
@@ -34,6 +35,42 @@ public class StageManager : MonoBehaviour
         m_OnStageIdxChanged?.Invoke(m_StageIdx);
     }
 
+    private async Awaitable RebuildStage(int stageIdx)
+    {
+        ClearStage();
+
+        var step = m_StageConfig.Steps[stageIdx];
+
+        // Theme spawn
+        var theme = await m_FacilitySpawner.SpawnFromRequestAsync(step.StageTheme);
+
+        // Main Building spawn
+        var buildingGO = await m_FacilitySpawner.SpawnFromRequestAsync(step.MainBuilding);
+
+        if (buildingGO.TryGetComponent<Building>(out var building))
+            m_CurrentMainBuilding = building;
+        if (m_CurrentMainBuilding)
+            m_CurrentMainBuilding.m_OnBuildCompleted += OnBuildCompleted;
+
+        // Resources spawn
+        foreach (var res in step.Resources)
+        {
+            var obj = await m_FacilitySpawner.SpawnFromRequestAsync(res);
+        }
+    }
+
+    public void ClearStage()
+    {
+        m_FacilitySpawner.RemoveAllObject();
+        m_FacilitySpawner.Clear();
+
+        if (m_CurrentMainBuilding)
+        {
+            m_CurrentMainBuilding.m_OnBuildCompleted -= OnBuildCompleted;
+            m_CurrentMainBuilding = null;
+        }
+    }
+
     private async Awaitable WaitForService()
     {
         while (!m_FacilitySpawner)
@@ -50,51 +87,22 @@ public class StageManager : MonoBehaviour
             m_SoundManager = GameManager.Instance.GetService<SoundManager>();
             await Awaitable.NextFrameAsync();
         }
-    }
 
-    private async Awaitable RebuildStage(int stageIdx)
-    {
-        ClearStage();
-
-        var step = m_StageConfig.Steps[stageIdx];
-
-        // Theme spawn
-        var theme = await m_FacilitySpawner.SpawnFromRequestAsync(step.StageTheme);
-
-        // Main Building spawn
-        var buildingGO = await m_FacilitySpawner.SpawnFromRequestAsync(step.MainBuilding);
-
-        if (buildingGO.TryGetComponent<Building>(out var building))
-            m_CurrentMainBuilding = building;
-        if (m_CurrentMainBuilding)
-            m_CurrentMainBuilding.m_OnBuildCompleted += () => OnBuildCompleted();
-
-        // Resources spawn
-        foreach (var res in step.Resources)
+        while (!m_UIManager)
         {
-            var obj = await m_FacilitySpawner.SpawnFromRequestAsync(res);
+            m_UIManager = GameManager.Instance.GetComponent<UIManager>();
+            await Awaitable.NextFrameAsync();
         }
     }
 
-    public void ClearStage()
-    {
-        m_FacilitySpawner.RemoveAllObject();
-        m_FacilitySpawner.Clear();
 
-        if (m_CurrentMainBuilding)
-        {
-            m_CurrentMainBuilding.m_OnBuildCompleted -= () => OnBuildCompleted();
-            m_CurrentMainBuilding = null;
-        }
-    }
-
-    private async void OnBuildCompleted(bool playSound = true)
+    private async void OnBuildCompleted()
     {
-        if (playSound)
-            m_SoundManager.PlaySound(m_StageClearNotification, transform.position, Quaternion.identity);
+        m_SoundManager.PlaySound(m_StageClearNotification, transform.position, Quaternion.identity);
         await Awaitable.WaitForSecondsAsync(2f);
+
+        m_UIManager.OpenClearPanel();
         m_OnStageFinished?.Invoke();
-        ClearStage();
     }
 }
  

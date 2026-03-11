@@ -12,7 +12,7 @@ public class BuildingInputVM
         _building = building;
     }
 
-    public void Refresh()
+    public void Refresh(bool increaseCnt = false)
     {
         var text = $"{_building.CurrentStepItems} / {_building.CurrentRequire}";
         var sprite = _building.CurrentItemSprite;

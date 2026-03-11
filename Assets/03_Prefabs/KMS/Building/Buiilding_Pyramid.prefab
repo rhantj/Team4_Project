@@ -12,6 +12,8 @@ GameObject:
   - component: {fileID: 9221553676067051208}
   - component: {fileID: 2262622240382342995}
   - component: {fileID: 8247083573797766010}
+  - component: {fileID: 5783416199189732046}
+  - component: {fileID: 585216585401588384}
   m_Layer: 0
   m_Name: Mesh_Pyramid
   m_TagString: Untagged
@@ -112,6 +114,41 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 60.000004, y: 39.140762, z: 60.000004}
   m_Center: {x: 0, y: 19.570381, z: 0}
+--- !u!65 &5783416199189732046
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1094532679432116824}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 70, y: 5, z: 5}
+  m_Center: {x: 0, y: 1, z: -31.9}
+--- !u!114 &585216585401588384
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1094532679432116824}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c9dbf281b698c51418b2aa32a8115c78, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TutorialPopup
+  m_TutorialIndex: 1
+  m_Duration: 2
 --- !u!1 &5652102533273159326
 GameObject:
   m_ObjectHideFlags: 0

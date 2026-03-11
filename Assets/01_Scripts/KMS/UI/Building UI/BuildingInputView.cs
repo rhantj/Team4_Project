@@ -15,6 +15,8 @@ public class BuildingInputView : MonoBehaviour, IBindable<BuildingInputVM>
         m_VM = vm;
         m_VM.OnTextChanged += SetText;
         m_VM.OnSpriteChanged += SetSprite;
+
+        m_VM.Refresh();
     }
 
     public void Unbind()
@@ -31,5 +33,9 @@ public class BuildingInputView : MonoBehaviour, IBindable<BuildingInputVM>
     }
 
     private void SetText(string str) => m_Text.text = str;
-    private void SetSprite(Sprite sp)=> m_Image.sprite = sp;
+    private void SetSprite(Sprite sp)
+    {
+        if(m_Image != null)
+            m_Image.sprite = sp;
+    }
 }
