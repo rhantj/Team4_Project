@@ -11,6 +11,8 @@ public class ProductionSales : MonoBehaviour
     private Coroutine m_InputCoroutine;
     private SoundManager m_SoundManager;
 
+    private InventoryExpended inv;
+
     private void Start()
     {
         m_SoundManager ??= GameManager.Instance.GetService<SoundManager>();
@@ -18,6 +20,8 @@ public class ProductionSales : MonoBehaviour
 
     private void OnEnable()
     {
+        inv = GameObject.FindGameObjectWithTag("Player").GetComponent<InventoryExpended>();
+
         if (m_InputArea)
         {
             m_InputArea.m_OnEnterArea += PlayerEnterInputArea;
@@ -58,7 +62,6 @@ public class ProductionSales : MonoBehaviour
             yield return null;
         }
 
-        var inv = m_InputArea.m_Player.GetComponent<InventoryExpended>();
         while (m_InputArea.IsPlayerEnter)
         {
             if (inv.IsEmpty)

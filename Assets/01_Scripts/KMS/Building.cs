@@ -20,6 +20,7 @@ public class Building : MonoBehaviour
 
     [Header("Area")]
     [SerializeField] private ItemIOArea m_InputArea;
+    private InventoryExpended inv;
 
     private Coroutine m_InputCoroutine;
     private readonly WaitForSeconds m_InputDuration = new(0.1f);
@@ -76,6 +77,8 @@ public class Building : MonoBehaviour
 
     private void OnEnable()
     {
+        inv = GameObject.FindGameObjectWithTag("Player").GetComponent<InventoryExpended>();
+
         m_InputArea.m_OnEnterArea += InputItems;
         m_InputArea.m_OnExitArea += ExitArea;
 
@@ -115,8 +118,6 @@ public class Building : MonoBehaviour
             elapsedTime += Time.deltaTime;
             yield return null;
         }
-
-        var inv = m_InputArea.m_Player.GetComponent<InventoryExpended>();
 
         while (m_InputArea.IsPlayerEnter)
         {

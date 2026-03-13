@@ -31,7 +31,9 @@ public class OptionPanel : MonoBehaviour
 
         m_Volume.onValueChanged.AddListener(UpdateVolume);
 
-        m_MainLobbyBtn.onClick.AddListener(OnMainLobbyButtonClicked);
+        if (m_MainLobbyBtn != null)
+            m_MainLobbyBtn.onClick.AddListener(OnMainLobbyButtonClicked);
+
         m_GitLinkBtn.onClick.AddListener(OnGitLinkButtonClicked);
         m_GameQuitBtn.onClick.AddListener(OnGameQuitButtonClicked);
         m_ClosePanelBtn.onClick.AddListener(OnClosedButtonClicked);
@@ -43,7 +45,9 @@ public class OptionPanel : MonoBehaviour
 
         m_Volume.onValueChanged.RemoveAllListeners();
 
-        m_MainLobbyBtn.onClick.RemoveAllListeners();
+        if(m_MainLobbyBtn != null)
+            m_MainLobbyBtn.onClick.RemoveAllListeners();
+
         m_GitLinkBtn.onClick.RemoveAllListeners();
         m_GameQuitBtn.onClick.RemoveAllListeners();
         m_ClosePanelBtn.onClick.RemoveAllListeners();

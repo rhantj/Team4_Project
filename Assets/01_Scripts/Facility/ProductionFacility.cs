@@ -87,11 +87,12 @@ public class ProductionFacility : MonoBehaviour
     {
         m_PanelView?.Bind(this);
         m_SoundManager ??= GameManager.Instance.GetService<SoundManager>();
-        m_Inv = m_InputArea.m_Player.GetComponent<InventoryExpended>();
     }
 
     private void OnEnable()
     {
+        m_Inv = GameObject.FindGameObjectWithTag("Player").GetComponent<InventoryExpended>();
+
         if (m_OutputArea)
         {
             m_OutputArea.m_OnEnterArea += PlayerEnterOutputArea;
