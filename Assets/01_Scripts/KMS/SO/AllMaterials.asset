@@ -13,10 +13,6 @@ MonoBehaviour:
   m_Name: AllMaterials
   m_EditorClassIdentifier: Assembly-CSharp::SOAllMaterials
   AllMaterials:
-  - {fileID: 8370879627702163877, guid: 5e249106b92deea40af2e8f541ab1f75, type: 3}
-  - {fileID: 5775305057822508408, guid: 6bfd6dbd7baa0e04898493613fd61221, type: 3}
-  - {fileID: 4409973861345141747, guid: 3d51427295f317c41aa0f755ced3a149, type: 3}
-  - {fileID: 6754428488172609419, guid: b84eaf5ef0fb91140b1d56f7b61572be, type: 3}
-  - {fileID: 4276442632256341720, guid: 96af75075ae04d242985466d4153157a, type: 3}
-  - {fileID: 2122339790789127740, guid: 62d95e4e81b84644d8b4f6cb038117ca, type: 3}
-  - {fileID: 6906487911144238011, guid: b2b3c42eb7a73c24695fb4e75acbd9cf, type: 3}
+  - {fileID: 6754428488172609419, guid: bf017200e374f84459dbada412fc617f, type: 3}
+  - {fileID: 2122339790789127740, guid: 34f08c14d16b5eb4eb62be5ec93334c2, type: 3}
+  - {fileID: 3262397564025271819, guid: 9d720b0637deabd489c8018fb2a2f169, type: 3}

@@ -13,9 +13,10 @@ public class ProductionFacility : MonoBehaviour
     [SerializeField] private int m_InputLimit = 5;
     [SerializeField] private int m_OutputLimit = 5;
     [SerializeField] private float m_ProductionTime = 5f;
+    [SerializeField, ReadOnly] private float m_CurrentProductionProgress = 0f;
 
     [Header("Upgrades")]
-    [ReadOnly][SerializeField] private float m_CurrentCostProgress = 0f;
+    [ReadOnly][SerializeField] private int m_CurrentCostProgress = 0;
     [ReadOnly][SerializeField] private float m_UpgradeCost = 1000f;
     [ReadOnly][SerializeField] private bool m_IsUpgraded = false;
 
@@ -35,7 +36,8 @@ public class ProductionFacility : MonoBehaviour
 
     public event Action m_OnInputChanged;
     public event Action m_OnOutputChanged;
-    public event Action m_OnUpgradeChanged;
+    public event Action<int> m_OnUpgradeChanged;
+    public event Action<float> m_OnProductionProgressChanged;
 
     public int InputCount => m_Inputs.Count;
     public int OutputCount => m_Outputs.Count;
@@ -46,18 +48,37 @@ public class ProductionFacility : MonoBehaviour
     public float UpgradeCost => m_UpgradeCost;
     public bool IsUpgraded => m_IsUpgraded;
 
-    void NotifyInput() => m_OnInputChanged?.Invoke();
-    void NotifyOutput() => m_OnOutputChanged?.Invoke();
-    void NotifyUpgrade() => m_OnUpgradeChanged?.Invoke();
+    private const string m_InputSound = "ITEM_Click_Item_Put";
+    private const string m_OutputSound = "ITEM_Click_Item_Pick_Up";
+    private const string m_CoinInputSound = "ITEM_Coin Buy";
 
-    public SOProductionFacility FacilitySO { get { return m_FacilitySO; } }
+    void NotifyInput(bool playSound = true) 
+    {
+        if (playSound)
+            m_SoundManager.PlaySound(m_InputSound, transform.position, Quaternion.identity);
+        m_OnInputChanged?.Invoke();
+    }
 
-    FacilityPanelView m_PanelView;
+    void NotifyOutput(bool playSound = true)
+    {
+        if (playSound)
+            m_SoundManager.PlaySound(m_OutputSound, transform.position, Quaternion.identity);
+        m_OnOutputChanged?.Invoke();
+    }
+    void NotifyUpgrade(int cost, bool playSound = true)
+    {
+        if (playSound)
+            m_SoundManager.PlaySound(m_CoinInputSound, transform.position, Quaternion.identity);
+        m_OnUpgradeChanged?.Invoke(cost);
+    }
+    void NotifyProductionProgress(float val) => m_OnProductionProgressChanged?.Invoke(val);
+
+    private FacilityPanelView m_PanelView;
+    private SoundManager m_SoundManager;
 
     private void Awake()
     {
         InitializeIOProduct(m_FacilitySO);
-        m_Inv = m_InputArea.Player.GetComponent<InventoryExpended>();
 
         m_PanelView = GetComponentInChildren<FacilityPanelView>(true);
     }
@@ -65,10 +86,13 @@ public class ProductionFacility : MonoBehaviour
     private void Start()
     {
         m_PanelView?.Bind(this);
+        m_SoundManager ??= GameManager.Instance.GetService<SoundManager>();
     }
 
     private void OnEnable()
     {
+        m_Inv = GameObject.FindGameObjectWithTag("Player").GetComponent<InventoryExpended>();
+
         if (m_OutputArea)
         {
             m_OutputArea.m_OnEnterAreaByPlayer += PlayerEnterOutputArea;
@@ -157,7 +181,6 @@ public class ProductionFacility : MonoBehaviour
             yield break;
         }
 
-        Debug.Log("item output start");
         float elapsedTime = 0f;
         while (elapsedTime < .5f)
         {
@@ -219,6 +242,7 @@ public class ProductionFacility : MonoBehaviour
             if (m_Inv.TryRemoveItemByName(m_Input.name))
             {
                 m_Inputs.Add(m_Input);
+                
                 NotifyInput();
                 m_ProductionCoroutine ??= StartCoroutine(Co_ProductItems(m_ProductionTime));
             }
@@ -241,12 +265,26 @@ public class ProductionFacility : MonoBehaviour
                 continue;
             }
 
-            yield return wait;
+            float elapse = 0;
+            m_CurrentCostProgress = 0;
+            NotifyProductionProgress(m_CurrentProductionProgress);
+
+            while (elapse < delay)
+            {
+                elapse += Time.deltaTime;
+                m_CurrentProductionProgress = elapse / delay;
+                NotifyProductionProgress(m_CurrentProductionProgress);
+
+                yield return null;
+            }
+
+            m_CurrentProductionProgress = 1f;
+            NotifyProductionProgress(m_CurrentProductionProgress);
 
             m_Inputs.RemoveAt(0);
             m_Outputs.Add(m_Output);
-            NotifyInput();
-            NotifyOutput();
+            NotifyInput(false);
+            NotifyOutput(false);
         }
         m_ProductionCoroutine = null;
     }
@@ -260,13 +298,16 @@ public class ProductionFacility : MonoBehaviour
             yield return null;
         }
 
+        while (m_ProductionCoroutine != null)
+            yield return null;
+
         while (m_UpgradeArea.IsPlayerEnter && m_CurrentCostProgress < m_UpgradeCost && !m_IsUpgraded)
         {
             if (m_Inv.Gold > 0)
             {
-                m_Inv.Gold -= 100f;
-                m_CurrentCostProgress += 100f;
-                NotifyUpgrade();
+                m_Inv.Gold -= 100;
+                m_CurrentCostProgress += 100;
+                NotifyUpgrade(m_CurrentCostProgress);
             }
 
             if(m_CurrentCostProgress >= m_UpgradeCost)
@@ -289,6 +330,6 @@ public class ProductionFacility : MonoBehaviour
         m_InputLimit += 5;
         m_ProductionTime *= 0.5f;
 
-        NotifyUpgrade();
+        NotifyUpgrade(m_CurrentCostProgress, false);
     }
 }

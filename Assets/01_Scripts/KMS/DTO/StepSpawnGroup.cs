@@ -5,5 +5,5 @@ using System;
 public class StepSpawnGroup
 {
     public int StepIndexToTrigger;
-    public List<FacilitySpawnRequest> Requests;
+    public List<SpawnRequest> Requests;
 }

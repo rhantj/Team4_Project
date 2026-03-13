@@ -9,29 +9,29 @@ public class PlayerMovement : MonoBehaviour
     [Header("Joystick")]
     [SerializeField] private Joystick joystick;
 
+    [Header("Animation")]
+    [SerializeField] private Animator animator;
+
     private Rigidbody rb;
     private Vector3 moveDirection;
-
     public bool IsMoving => moveDirection.sqrMagnitude > 0.01f;
 
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
-
-        if (rb == null)
-        {
-            return;
-        }
+        if (rb == null) return;
 
         rb.constraints = RigidbodyConstraints.FreezeRotation;
         rb.interpolation = RigidbodyInterpolation.Interpolate;
 
-  
+        if (animator == null)
+            animator = GetComponentInChildren<Animator>();
     }
 
     private void Update()
     {
         GetInput();
+        UpdateAnimation();
     }
 
     private void FixedUpdate()
@@ -45,24 +45,17 @@ public class PlayerMovement : MonoBehaviour
         {
             Vector2 input = joystick.Direction;
             moveDirection = new Vector3(input.x, 0f, input.y);
-
-         
         }
     }
 
     private void Move()
     {
         if (rb == null) return;
-
         if (moveDirection.sqrMagnitude > 0.01f)
         {
-            // Transform 직접 이동 (가장 확실함!)
             Vector3 movement = moveDirection * moveSpeed * Time.fixedDeltaTime;
             transform.position += movement;
 
-         
-
-            // 회전
             Quaternion targetRotation = Quaternion.LookRotation(moveDirection);
             transform.rotation = Quaternion.Slerp(
                 transform.rotation,
@@ -70,5 +63,13 @@ public class PlayerMovement : MonoBehaviour
                 rotationSpeed * Time.fixedDeltaTime
             );
         }
+    }
+
+    private void UpdateAnimation()
+    {
+        if (animator == null) return;
+      
+        float speed = moveDirection.magnitude * moveSpeed;
+        animator.SetFloat("Speed", speed);
     }
 }

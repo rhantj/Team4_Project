@@ -1,6 +1,5 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Building : MonoBehaviour
@@ -8,61 +7,91 @@ public class Building : MonoBehaviour
     [Header("Data")]
     [SerializeField] private SOBuilding m_BuildingData;
 
-    [Header("Upgrade Spawns")] [Tooltip("Per Step Index")]
-    [SerializeField] private List<StepSpawnGroup> m_SpawnGroups = new();
-
     [Header("Status")]
     [SerializeField] private int m_CurrentStepIdx = 0;
     [SerializeField] private int m_CurrentStepItems = 0;
+    [SerializeField] private Sprite m_CurrentStepItemSprite;
     [Range(0, 1)]
     [SerializeField] private float m_Progress = 0;
 
+    [Header("Camera Offset")]
+    [SerializeField] private Vector3 m_EndLookAtOffset;
+    [SerializeField] private Vector3 m_EndCameraOffset;
+
     [Header("Area")]
     [SerializeField] private ItemIOArea m_InputArea;
+    private InventoryExpended inv;
 
     private Coroutine m_InputCoroutine;
     private readonly WaitForSeconds m_InputDuration = new(0.1f);
-    private readonly HashSet<int> m_ExcutedStepSpawns = new();
 
-    public event Action m_OnInputChanged;
+    // Events
+    public event Action<bool> m_OnInputChanged;
     public event Action m_OnStepChanged;
     public event Action<float> m_OnProgressChanged;
     public event Action m_OnBuildCompleted;
+    public event Action<int> m_OnStepCompleted;
+    public event Action<Sprite> m_OnSpriteChanged;
+    public event Action m_OnCurrentStepItemAdded;
 
+    private SoundManager m_SoundManager;
+
+    private const string m_InputSound = "ITEM_Click_Item_Put";
+
+    void NotifyInput(bool increaseCount = true, bool playSound = true)
+    {
+        if (playSound)
+            m_SoundManager.PlaySound(m_InputSound, transform.position, Quaternion.identity);
+        m_OnInputChanged?.Invoke(increaseCount);
+    }
+    void NotifyBuildComplete() => m_OnBuildCompleted?.Invoke();
+
+    // Property Getters/Setters
     public float Progress => m_Progress;
     public int CurrentStepItems => m_CurrentStepItems;
     public int CurrentRequire = 0;
-
-    void NotifyInput() => m_OnInputChanged?.Invoke();
-
-    BuildingPanelView m_PanelView;
+    public Sprite CurrentItemSprite 
+    { 
+        get { return m_CurrentStepItemSprite; }
+        set
+        {
+            m_CurrentStepItemSprite = value;
+            m_OnSpriteChanged?.Invoke(m_CurrentStepItemSprite);
+        }
+    }
+    public SOBuilding BuildingData => m_BuildingData;
 
     private void Awake()
     {
-        m_PanelView = GetComponentInChildren<BuildingPanelView>(true);
-
         var currentStep = m_BuildingData.Steps[0];
+        CurrentItemSprite = currentStep.ItemIcon;
         CurrentRequire = currentStep.RequierAmount;
     }
 
     private void Start()
     {
-        m_PanelView?.Bind(this);
+        m_SoundManager ??= GameManager.Instance.GetService<SoundManager>();
+
+        m_OnProgressChanged?.Invoke(0f);
     }
 
     private void OnEnable()
     {
-        m_InputArea.m_OnEnterAreaByPlayer += InputItems;
-        m_InputArea.m_OnExitAreaByPlayer += ExitArea;
+        inv = GameObject.FindGameObjectWithTag("Player").GetComponent<InventoryExpended>();
+
+        m_InputArea.m_OnEnterArea += InputItems;
+        m_InputArea.m_OnExitArea += ExitArea;
 
         var cvTransition = Camera.main.GetComponent<CameraViewTransitionBehaviour>();
         cvTransition.MainBuildingTransform = this.transform;
+        cvTransition.SetEndLookAtOffset(m_EndLookAtOffset);
+        cvTransition.SetEndCameraOffset(m_EndCameraOffset);
     }
 
     private void OnDisable()
     {
-        m_InputArea.m_OnEnterAreaByPlayer -= InputItems;
-        m_InputArea.m_OnExitAreaByPlayer -= ExitArea;
+        m_InputArea.m_OnEnterArea -= InputItems;
+        m_InputArea.m_OnExitArea -= ExitArea;
     }
 
     public void InputItems()
@@ -90,11 +119,10 @@ public class Building : MonoBehaviour
             yield return null;
         }
 
-        var inv = m_InputArea.Player.GetComponent<InventoryExpended>();
-        var currentStep = m_BuildingData.Steps[m_CurrentStepIdx];
-
         while (m_InputArea.IsPlayerEnter)
         {
+            var currentStep = m_BuildingData.Steps[m_CurrentStepIdx];
+
             if (m_CurrentStepIdx >= m_BuildingData.Steps.Count)
             {
                 yield return null;
@@ -120,8 +148,17 @@ public class Building : MonoBehaviour
                 m_CurrentStepIdx++;
                 m_CurrentStepItems = 0;
 
-                // spawn facility
-                ExcuteSpawnGroupForStep(m_CurrentStepIdx);
+                if(m_CurrentStepIdx >= m_BuildingData.Steps.Count)
+                {
+                    m_Progress = 1f;
+                    m_OnProgressChanged?.Invoke(m_Progress);
+                    NotifyBuildComplete();
+                    yield break;
+                }
+
+                m_OnStepCompleted?.Invoke(m_CurrentStepIdx);
+                CurrentItemSprite = m_BuildingData.Steps[m_CurrentStepIdx].ItemIcon;
+                NotifyInput(false);
 
                 yield break;
             }
@@ -141,34 +178,5 @@ public class Building : MonoBehaviour
 
         m_Progress = (m_CurrentStepIdx + currentStepProgress) / totalStep;
         m_OnProgressChanged?.Invoke(m_Progress);
-    }
-
-    private void ExcuteSpawnGroupForStep(int stepIdx)
-    {
-        if (m_ExcutedStepSpawns.Contains(stepIdx)) return;
-
-        var group = m_SpawnGroups.Find(g => g.StepIndexToTrigger == stepIdx);
-        if (group == null || group.Requests == null || group.Requests.Count == 0)
-            return;
-
-        foreach(var req in group.Requests)
-        {
-            if (req.SpawnPoint == null)
-                req.SpawnPoint = this.transform;
-
-            var facilitySpawn = GameManager.Instance.GetService<FacilitySpawner>();
-            var go = facilitySpawn.GetOrCreateFacility(req.Type, Vector3.zero, Quaternion.identity);
-
-            req.SpawnPoint = go.transform;
-            var pos = req.SpawnPoint.TransformPoint(req.LocalOffset);
-            var rot = req.UsePointRotation ?
-                      req.SpawnPoint.rotation :
-                      Quaternion.Euler(req.EulerRotationOverride);
-
-            go.transform.SetPositionAndRotation(pos, rot);
-        }
-
-        m_ExcutedStepSpawns.Add(stepIdx);
-        NotifyInput();
     }
 }

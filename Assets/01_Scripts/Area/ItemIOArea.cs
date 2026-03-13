@@ -1,18 +1,13 @@
 using System;
-using System.Collections;
 using UnityEngine;
 
 
 public class ItemIOArea : MonoBehaviour
 {
-    public event Action m_OnEnterAreaByPlayer;
-    public event Action m_OnExitAreaByPlayer;
-
-    public event Action<Reworked.WorkerResourceUnloadBehaviour> m_OnEnterAreaByWorker;
-    public event Action<Reworked.WorkerResourceUnloadBehaviour> m_OnExitAreaByWorker;
+    public event Action m_OnEnterArea;
+    public event Action m_OnExitArea;
 
     [Header("Setting")]
-    [SerializeField] private SOPlayerReference m_Player;
     [SerializeField] protected float m_CheckAreaInterval = 0.1f;
     [SerializeField] protected float m_Width;
     [SerializeField] protected float m_Height;
@@ -25,7 +20,6 @@ public class ItemIOArea : MonoBehaviour
 
     private Coroutine m_CheckCoroutine;
 
-    public Transform Player => m_Player.player.transform;
     public bool IsPlayerEnter => m_isPlayerEnter;
 
     protected virtual void Awake()
@@ -33,13 +27,14 @@ public class ItemIOArea : MonoBehaviour
         RecalculateOBB();
     }
 
-
     protected virtual void Start()
     {
-        m_CheckCoroutine ??= StartCoroutine(Co_CheckArea());
     }
 
-    protected virtual void OnEnable() { }
+    protected virtual void OnEnable()
+    {
+        SpatialHashManager.Instance.SetArea(this);
+    }
 
     protected virtual void OnDisable()
     {
@@ -48,35 +43,13 @@ public class ItemIOArea : MonoBehaviour
             StopCoroutine(m_CheckCoroutine);
             m_CheckCoroutine = null;
         }
-    }
 
-    protected IEnumerator Co_CheckArea()
-    {
-        var wait = new WaitForSeconds(m_CheckAreaInterval);
-
-        while (canDetect)
-        {
-            RecalculateOBB();
-
-            bool isInsideNow = IsInsideOBB(m_Player.player.transform.position);
-
-            if(isInsideNow && !m_isPlayerEnter)
-            {
-                m_isPlayerEnter = true;
-                m_OnEnterAreaByPlayer?.Invoke();
-            }
-            else if(!isInsideNow && m_isPlayerEnter)
-            {
-                m_isPlayerEnter = false;
-                m_OnExitAreaByPlayer?.Invoke();
-            }
-
-            yield return wait;
-        }
+        SpatialHashManager.Instance.RemoveArea(this);
     }
 
     protected void RecalculateOBB()
     {
+        if (!gameObject.activeSelf) return;
         transform.GetPositionAndRotation(out var pos, out var rot);
         m_WorldCenter = pos;
 
@@ -101,14 +74,32 @@ public class ItemIOArea : MonoBehaviour
 
     private static Vector3 Rotate(Quaternion q, Vector3 v)
     {
-        // v' = q * v * q^-1
+        // v' = v +2(s * (u x v) + u x (u x v)))
         var u = new Vector3(q.x, q.y, q.z);
         var s = q.w;
 
-        Vector3 crossUV = Vector3.Cross(u, v);
-        Vector3 crossU_crossUV = Vector3.Cross(u, crossUV);
+        Vector3 crossUV = Vector3.Cross(u, v);              // u x v
+        Vector3 crossU_crossUV = Vector3.Cross(u, crossUV); // u x (u x v)
 
         return v + 2f * (s * crossUV + crossU_crossUV);
+    }
+
+    public bool CheckPlayer(Vector3 pos)
+    {
+        RecalculateOBB();
+        return IsInsideOBB(pos);
+    }
+
+    public void Enter()
+    {
+        m_isPlayerEnter = true;
+        m_OnEnterArea?.Invoke();
+    }
+
+    public void Exit()
+    {
+        m_isPlayerEnter = false;
+        m_OnExitArea?.Invoke();
     }
 
     protected void OnDrawGizmos()

@@ -6,11 +6,22 @@ public class ProductionSales : MonoBehaviour
 {
     [SerializeField] private ItemIOArea m_InputArea;
     [SerializeField] private SOAllMaterials m_Materials;
+    [SerializeField] private int m_GoldAmount = 100;
 
     private Coroutine m_InputCoroutine;
+    private SoundManager m_SoundManager;
+
+    private InventoryExpended inv;
+
+    private void Start()
+    {
+        m_SoundManager ??= GameManager.Instance.GetService<SoundManager>();
+    }
 
     private void OnEnable()
     {
+        inv = GameObject.FindGameObjectWithTag("Player").GetComponent<InventoryExpended>();
+
         if (m_InputArea)
         {
             m_InputArea.m_OnEnterAreaByPlayer += PlayerEnterInputArea;
@@ -51,7 +62,6 @@ public class ProductionSales : MonoBehaviour
             yield return null;
         }
 
-        var inv = m_InputArea.Player.GetComponent<InventoryExpended>();
         while (m_InputArea.IsPlayerEnter)
         {
             if (inv.IsEmpty)
@@ -67,8 +77,8 @@ public class ProductionSales : MonoBehaviour
                 if (inv.TryRemoveItemByName(itemName))
                 {
                     // return cash
-                    Debug.Log("Get Cash");
-                    inv.Gold += 100f;
+                    inv.Gold += m_GoldAmount;
+                    m_SoundManager.PlaySound("ITEM_Coin Sell", transform.position, Quaternion.identity);
                 }
             }
 

@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f2bc8dbd59d04a4987c0c134190588a, type: 3}
+  m_Name: Building_Rock
+  m_EditorClassIdentifier: Assembly-CSharp::SOBuilding
+  Steps:
+  - StepName: Stone_Brick
+    RequierItem: {fileID: 3262397564025271819, guid: 9d720b0637deabd489c8018fb2a2f169, type: 3}
+    ItemIcon: {fileID: 21300000, guid: 7cd8bec149cdf7443b7a85b6f1a2ae90, type: 3}
+    RequierAmount: 10
+  - StepName: Brick
+    RequierItem: {fileID: 7274242822923078438, guid: b20dae90918798e45a6c5adb7ae0489d, type: 3}
+    ItemIcon: {fileID: 21300000, guid: db3ce66a60cb4d44eba8b359dd208e89, type: 3}
+    RequierAmount: 10

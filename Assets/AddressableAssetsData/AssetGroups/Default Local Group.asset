@@ -1,0 +1,93 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: Default Local Group
+  m_EditorClassIdentifier: Unity.Addressables.Editor::UnityEditor.AddressableAssets.Settings.AddressableAssetGroup
+  m_GroupName: Default Local Group
+  m_GUID: 2fa4d381fbbe9694a9986573569a7ac0
+  m_SerializeEntries:
+  - m_GUID: 1092c0c0af382354bb136f1865b81220
+    m_Address: Assets/03_Prefabs/KMS/Resource Node/StoneNode.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 15c63c1898053b949b216d9c0a3b1280
+    m_Address: Assets/03_Prefabs/KMS/Resource Node/IronNode.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 1962bd5c254893e40858e8adad67d91f
+    m_Address: Assets/03_Prefabs/KMS/Theme-Japen.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 261e12c20a38bb147ad34a5ce593bfcd
+    m_Address: Assets/03_Prefabs/KMS/Theme-France.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 35d8cffe6e5357b48b69ff2b2fdb43cc
+    m_Address: Assets/03_Prefabs/KMS/Facility-Wood.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 4dc66ad70050be94da8e055efefab29b
+    m_Address: Assets/03_Prefabs/KMS/Facility/Facility-Steel.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 7ad7be3a1fe66c8409e3e9d5dc0018a0
+    m_Address: Assets/03_Prefabs/KMS/Buiilding_Pyramid.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 8228b1f08c2e68d46aed9daf118b0a70
+    m_Address: Assets/03_Prefabs/KMS/Theme-Greece.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 9a2b2be8a0ae7e747876359beb099217
+    m_Address: Assets/03_Prefabs/KMS/Resource Node/TreeNode.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 9f9ca647e1ce86d4a8ec75b115637a19
+    m_Address: Assets/03_Prefabs/KMS/Buiilding_Japanese Gate.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a35c4c2a84dcd294d870e35ce1d9431a
+    m_Address: Assets/03_Prefabs/KMS/Buiilding_EiffelTower.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: be4b49cf51ff4d448a9b65b1e14f318e
+    m_Address: Assets/03_Prefabs/KMS/Sales Office.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: e8165ad1b986a8440aaa9d28be2bc14f
+    m_Address: Assets/03_Prefabs/KMS/Theme-Egypt.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: ed184aa361e9cd549b9dece764cc5b75
+    m_Address: Assets/03_Prefabs/KMS/Facility/Facility-Rock.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: 8bcf76d329fed7344b2eeeada208d4e7, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: 7275db1b27e229142b165cd79fe6cad9, type: 2}
+    - {fileID: 11400000, guid: 7066633e0ae23aa40af655df5123433b, type: 2}

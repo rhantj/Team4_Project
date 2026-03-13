@@ -22,15 +22,19 @@ public class ResourceNode : MonoBehaviour, ICollectable
     [SerializeField] private ParticleSystem harvestEffect;
 
     [Header("UI Settings")]
-    [SerializeField] private float interactionDistance = 3f;
+    [SerializeField] private float interactionDistance = 5f;
     [SerializeField] private float respawnTime = 5f;
 
     [Header("UI References")]
     [SerializeField] private bool usePlayerUI = true;
-    [SerializeField] private bool useWorldSpaceUI = true;
 
-    private ResourceNodeUI playerUI;
-    private WorldSpaceResourceUI worldSpaceUI;
+    [Header("Range Indicator")]
+    [SerializeField] private bool showRangeCircle = true;
+    [SerializeField] private Color rangeColor = new Color(1f, 1f, 0f, 0.5f);
+    [SerializeField] private int circleSegments = 36;
+
+    private LineRenderer rangeCircle;
+    private TaskProgressBarUI taskProgressBarUI;
 
     private bool isBeingHarvested = false;
     private bool isDepleted = false;
@@ -44,21 +48,19 @@ public class ResourceNode : MonoBehaviour, ICollectable
         if (player != null)
         {
             playerTransform = player.transform;
+            currentInventory = player.GetComponent<Inventory>();
 
-            if (usePlayerUI)
-            {
-                playerUI = player.GetComponentInChildren<ResourceNodeUI>();
-                if (playerUI == null)
-                    Debug.LogWarning("Player에 ResourceNodeUI가 없습니다!");
-            }
+            var collector = player.GetComponent<PlayerResourceCollector>();
+            if (collector != null)
+                interactionDistance = collector.CollectionRange;
         }
 
-        if (useWorldSpaceUI)
-        {
-            worldSpaceUI = GetComponentInChildren<WorldSpaceResourceUI>();
-            if (worldSpaceUI == null)
-                Debug.LogWarning("WorldSpaceResourceUI가 없습니다!");
-        }
+        taskProgressBarUI = FindObjectOfType<TaskProgressBarUI>();
+        if (taskProgressBarUI == null)
+            Debug.LogWarning("TaskProgressBarUI를 찾을 수 없습니다!");
+
+        if (showRangeCircle)
+            CreateRangeCircle();
     }
 
     private void Update()
@@ -71,28 +73,24 @@ public class ResourceNode : MonoBehaviour, ICollectable
 
         if (isPlayerNearby && !wasNearby)
         {
-            if (usePlayerUI && playerUI != null)
-            {
-                playerUI.ShowResourceInfo(this);
-                playerUI.ShowLoadingBar(harvestTime);
-            }
+            bool isFull = currentInventory != null && currentInventory.IsFull;
 
-            if (useWorldSpaceUI && worldSpaceUI != null)
+            if (usePlayerUI && taskProgressBarUI != null)
             {
-                worldSpaceUI.ShowResourceInfo();
-                worldSpaceUI.ShowLoadingBar(harvestTime);
+                taskProgressBarUI.ShowResourceInfo(this);
+                if (!isFull)
+                    taskProgressBarUI.ShowLoadingBar();
             }
         }
         else if (!isPlayerNearby && wasNearby)
         {
-            if (usePlayerUI && playerUI != null)
-                playerUI.HideUI();
+            if (usePlayerUI && taskProgressBarUI != null)
+                taskProgressBarUI.HideUI();
 
-            if (useWorldSpaceUI && worldSpaceUI != null)
-                worldSpaceUI.HideUI();
             CancelHarvest();
         }
     }
+
     private IEnumerator RespawnCoroutine()
     {
         yield return new WaitForSeconds(respawnTime);
@@ -105,23 +103,20 @@ public class ResourceNode : MonoBehaviour, ICollectable
         if (visualModel != null)
             visualModel.SetActive(true);
     }
+
     public bool CanCollect()
     {
+        if (currentInventory != null)
+            if (currentInventory.IsFull) return false;
+
         return !isBeingHarvested && !isDepleted && currentHarvestCount < maxHarvestCount;
     }
 
-    public bool IsBeingHarvested()
-    {
-        return isBeingHarvested;
-    }
+    public bool IsBeingHarvested() => isBeingHarvested;
 
     public void Collect()
     {
-        if (isBeingHarvested) // 이미 수집 중이면 무시
-        {
-            //Debug.Log("이미 수집 중 - Collect 무시!");
-            return;
-        }
+        if (isBeingHarvested) return;
 
         if (currentInventory != null)
         {
@@ -129,6 +124,7 @@ public class ResourceNode : MonoBehaviour, ICollectable
             harvestCoroutine = StartCoroutine(HarvestCoroutine(currentInventory));
         }
     }
+
     public void CancelHarvest()
     {
         StopAllCoroutines();
@@ -138,13 +134,8 @@ public class ResourceNode : MonoBehaviour, ICollectable
         if (harvestEffect != null)
             harvestEffect.Stop();
 
-        if (usePlayerUI && playerUI != null)
-            playerUI.ResetLoadingBar();
-
-        if (useWorldSpaceUI && worldSpaceUI != null)
-            worldSpaceUI.ResetLoadingBar();
-
-        //Debug.Log("수집 중단!");
+        if (usePlayerUI && taskProgressBarUI != null)
+            taskProgressBarUI.ResetLoadingBar();
     }
 
     public ResourceData GetResourceData()
@@ -157,71 +148,43 @@ public class ResourceNode : MonoBehaviour, ICollectable
         };
     }
 
-    public void SetInventory(Inventory inventory)
-    {
-        currentInventory = inventory;
-    }
-
-    public string GetHarvestInfo()
-    {
-        return $"{currentHarvestCount}/{maxHarvestCount}";
-    }
-
-    public int GetRemainingHarvests()
-    {
-        return maxHarvestCount - currentHarvestCount;
-    }
-
-    public int GetMaxHarvestCount()
-    {
-        return maxHarvestCount;
-    }
+    public void SetInventory(Inventory inventory) => currentInventory = inventory;
+    public ResourceItemData GetItemData() => itemData;
+    public string GetHarvestInfo() => $"{currentHarvestCount}/{maxHarvestCount}";
+    public int GetRemainingHarvests() => maxHarvestCount - currentHarvestCount;
+    public int GetMaxHarvestCount() => maxHarvestCount;
 
     private IEnumerator HarvestCoroutine(Inventory playerInventory)
     {
         if (harvestEffect != null)
             harvestEffect.Play();
 
-        float totalTime = (currentHarvestCount == 0) ? harvestTime : (respawnTime + harvestTime);
         float elapsedTime = 0f;
 
-        while (elapsedTime < totalTime)
+        while (elapsedTime < harvestTime)
         {
             elapsedTime += Time.deltaTime;
-            float progress = elapsedTime / totalTime;
+            float progress = elapsedTime / harvestTime;
 
-            if (usePlayerUI && playerUI != null)
-                playerUI.UpdateLoadingBar(progress);
-
-            if (useWorldSpaceUI && worldSpaceUI != null)
-                worldSpaceUI.UpdateLoadingBar(progress);
+            if (usePlayerUI && taskProgressBarUI != null)
+                taskProgressBarUI.UpdateProgress(progress);
 
             yield return null;
         }
 
-        // 수집 완료
         currentHarvestCount++;
 
         if (playerInventory != null && itemData != null)
         {
             for (int i = 0; i < resourceAmount; i++)
-            {
                 playerInventory.AddItem(itemData);
-            }
         }
 
-        if (usePlayerUI && playerUI != null)
+        if (usePlayerUI && taskProgressBarUI != null)
         {
-            playerUI.ResetLoadingBar();
+            taskProgressBarUI.ResetLoadingBar();
             if (isPlayerNearby)
-                playerUI.UpdateUI();
-        }
-
-        if (useWorldSpaceUI && worldSpaceUI != null)
-        {
-            worldSpaceUI.ResetLoadingBar();
-            if (isPlayerNearby)
-                worldSpaceUI.UpdateUI();
+                taskProgressBarUI.UpdateUI();
         }
 
         if (currentHarvestCount >= maxHarvestCount)
@@ -230,12 +193,10 @@ public class ResourceNode : MonoBehaviour, ICollectable
             if (visualModel != null)
                 visualModel.SetActive(false);
 
-            if (usePlayerUI && playerUI != null)
-                playerUI.HideUI();
+            if (usePlayerUI && taskProgressBarUI != null)
+                taskProgressBarUI.HideUI();
 
-            if (useWorldSpaceUI && worldSpaceUI != null)
-                worldSpaceUI.HideUI();
-            StartCoroutine(RespawnCoroutine()); 
+            StartCoroutine(RespawnCoroutine());
         }
         else
         {
@@ -244,6 +205,10 @@ public class ResourceNode : MonoBehaviour, ICollectable
 
             if (visualModel != null)
                 visualModel.SetActive(true);
+
+            // 채집 완료 후 다음 채집 위해 로딩바 다시 표시
+            if (usePlayerUI && taskProgressBarUI != null && isPlayerNearby)
+                taskProgressBarUI.ShowLoadingBar();
         }
     }
 
@@ -253,25 +218,42 @@ public class ResourceNode : MonoBehaviour, ICollectable
         currentHarvestCount = 0;
         isDepleted = false;
         isBeingHarvested = false;
+
         if (visualModel != null)
             visualModel.SetActive(true);
 
-        if (usePlayerUI && playerUI != null && isPlayerNearby)
-            playerUI.UpdateUI();
-
-        if (useWorldSpaceUI && worldSpaceUI != null && isPlayerNearby)
-            worldSpaceUI.UpdateUI();
+        if (usePlayerUI && taskProgressBarUI != null && isPlayerNearby)
+            taskProgressBarUI.UpdateUI();
     }
 
     private void OnDestroy()
     {
-        if (isPlayerNearby)
-        {
-            if (usePlayerUI && playerUI != null)
-                playerUI.HideUI();
+        if (isPlayerNearby && usePlayerUI && taskProgressBarUI != null)
+            taskProgressBarUI.HideUI();
+    }
 
-            if (useWorldSpaceUI && worldSpaceUI != null)
-                worldSpaceUI.HideUI();
+    private void CreateRangeCircle()
+    {
+        GameObject circleObj = new GameObject("RangeCircle");
+        circleObj.transform.SetParent(transform);
+        circleObj.transform.localPosition = Vector3.zero;
+
+        rangeCircle = circleObj.AddComponent<LineRenderer>();
+        rangeCircle.loop = true;
+        rangeCircle.useWorldSpace = false;
+        rangeCircle.widthMultiplier = 0.05f;
+        rangeCircle.positionCount = circleSegments;
+
+        rangeCircle.material = new Material(Shader.Find("Sprites/Default"));
+        rangeCircle.startColor = rangeColor;
+        rangeCircle.endColor = rangeColor;
+
+        for (int i = 0; i < circleSegments; i++)
+        {
+            float angle = 2f * Mathf.PI * i / circleSegments;
+            float x = Mathf.Cos(angle) * interactionDistance;
+            float z = Mathf.Sin(angle) * interactionDistance;
+            rangeCircle.SetPosition(i, new Vector3(x, 0.05f, z));
         }
     }
 }

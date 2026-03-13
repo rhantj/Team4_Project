@@ -1,17 +1,20 @@
+using System;
 using UnityEngine;
 
 public class InventoryExpended : Inventory
 {
-    public bool HasItem(Item item)
+    private int m_Gold;
+    public int Gold
     {
-        if (m_StackItem.Contains(item))
+        get { return m_Gold; }
+        set
         {
-            return true;
+            m_Gold = value;
+            m_OnGoldChanged?.Invoke(m_Gold);
         }
-        return false;
     }
 
-    public float Gold { get; set; }
+    public event Action<int> m_OnGoldChanged;
 
     public bool TryRemoveItemByName(string itemName)
     {
@@ -25,6 +28,7 @@ public class InventoryExpended : Inventory
                 Destroy(removeItem.gameObject);
                 SortItem();
 
+                NotifyCountChanged();
                 return true;
             }
         }
@@ -56,5 +60,6 @@ public class InventoryExpended : Inventory
         resItem.transform.localPosition = new Vector3(0, height, 0);
 
         m_StackItem.Add(i);
+        NotifyCountChanged();
     }
 }

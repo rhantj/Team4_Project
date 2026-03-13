@@ -1,0 +1,16 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7181f36b54a6c340ba530149e36eaf7, type: 3}
+  m_Name: Facility_Steel
+  m_EditorClassIdentifier: Assembly-CSharp::SOProductionFacility
+  inputItem: {fileID: 2122339790789127740, guid: 34f08c14d16b5eb4eb62be5ec93334c2, type: 3}
+  outputItem: {fileID: 4687589196083443368, guid: 36fe883f3a15ad24699b56f8b61f3a63, type: 3}
