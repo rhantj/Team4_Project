@@ -8,8 +8,8 @@ public class ItemIOArea : MonoBehaviour
     public event Action m_OnEnterAreaByPlayer;
     public event Action m_OnExitAreaByPlayer;
 
-    private event Action m_OnEnterAreaByWorker;
-    private event Action m_OnExitAreaByWorker;
+    public event Action<Reworked.WorkerResourceUnloadBehaviour> m_OnEnterAreaByWorker;
+    public event Action<Reworked.WorkerResourceUnloadBehaviour> m_OnExitAreaByWorker;
 
     [Header("Setting")]
     [SerializeField] private SOPlayerReference m_Player;
