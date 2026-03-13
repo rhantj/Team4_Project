@@ -113,7 +113,7 @@ public class GameManager : MonoBehaviour
     {
         if (m_RegesteredServices.TryGetValue(typeof(T), out IService iService)) service = iService as T;
         else service = null;
-        return null == service;
+        return null != service;
     }
 
 #if UNITY_EDITOR
