@@ -68,6 +68,21 @@ public class SoundManager : MonoBehaviour, IService
         StartCoroutine(Co_DespawnSoundPlayer(audioSource));
     }
 
+    public void PlaySound2D(string name)
+    {
+        CheckServicies();
+
+        var speaker = m_PoolingService.GetOrCreateGameObject(m_SoundPlayer);
+        var audioSource = speaker.GetComponent<AudioSource>();
+
+        audioSource.clip = GetClip(name);
+        audioSource.volume = 1f;
+        audioSource.spatialBlend = 0f;
+        audioSource.Play();
+
+        StartCoroutine(Co_DespawnSoundPlayer(audioSource));
+    }
+
     public void PlayBGM(string name, Vector3 pos, Quaternion rot)
     {
         CheckServicies();

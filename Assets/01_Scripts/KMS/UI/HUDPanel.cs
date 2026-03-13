@@ -13,6 +13,11 @@ public class HUDPanel : UIPanel
     [SerializeField] private Button m_OptionBtn;
     [SerializeField] private GameObject m_OptionPanel;
 
+    [Header("UI Panel")]
+    [SerializeField] private BuildingPanelView m_BuildingPanelView;
+
+    private Building m_CurrentBuilding;
+
     private void OnEnable()
     {
         m_Inv.m_OnGoldChanged += UpdateGoldText;
@@ -27,6 +32,23 @@ public class HUDPanel : UIPanel
         m_Inv.m_OnInventoryCountChanged -= UpdateCountText;
 
         m_OptionBtn.onClick.RemoveAllListeners();
+    }
+
+    private void FixedUpdate()
+    {
+        CheckBuilding();
+    }
+
+    private void CheckBuilding()
+    {
+        var building = FindAnyObjectByType<Building>();
+
+        if (!building || m_CurrentBuilding) return;
+        if (m_CurrentBuilding != building)
+        {
+            m_CurrentBuilding = building;
+            m_BuildingPanelView.Bind(building);
+        }
     }
 
     private void UpdateGoldText(int gold)

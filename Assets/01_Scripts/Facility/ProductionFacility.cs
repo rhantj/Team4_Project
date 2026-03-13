@@ -43,7 +43,6 @@ public class ProductionFacility : MonoBehaviour
     public int OutputCount => m_Outputs.Count;
     public int InputLimit => m_InputLimit;
     public int OutputLimit => m_OutputLimit;
-    public float ProductionProgress => m_CurrentProductionProgress;
 
     public float UpgradeProgress => m_CurrentCostProgress;
     public float UpgradeCost => m_UpgradeCost;
@@ -51,7 +50,7 @@ public class ProductionFacility : MonoBehaviour
 
     private const string m_InputSound = "ITEM_Click_Item_Put";
     private const string m_OutputSound = "ITEM_Click_Item_Pick_Up";
-    private const string m_CoinInputSound = "ITEM_Coin";
+    private const string m_CoinInputSound = "ITEM_Coin Buy";
 
     void NotifyInput(bool playSound = true) 
     {
@@ -88,11 +87,12 @@ public class ProductionFacility : MonoBehaviour
     {
         m_PanelView?.Bind(this);
         m_SoundManager ??= GameManager.Instance.GetService<SoundManager>();
-        m_Inv = m_InputArea.m_Player.GetComponent<InventoryExpended>();
     }
 
     private void OnEnable()
     {
+        m_Inv = GameObject.FindGameObjectWithTag("Player").GetComponent<InventoryExpended>();
+
         if (m_OutputArea)
         {
             m_OutputArea.m_OnEnterArea += PlayerEnterOutputArea;

@@ -111,6 +111,9 @@ GameObject:
   - component: {fileID: 8432009046576228755}
   - component: {fileID: 2266325837775799162}
   - component: {fileID: 6351026696963938631}
+  - component: {fileID: 5051541120058755086}
+  - component: {fileID: 1845365345867119475}
+  - component: {fileID: 2020959264915043421}
   m_Layer: 0
   m_Name: 'Mesh_Sales Office '
   m_TagString: Untagged
@@ -212,6 +215,62 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 4300002, guid: 50f81aad3470843d7af4977c857573f5, type: 3}
+--- !u!65 &5051541120058755086
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7808211995716149033}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 5.639468, y: 5.7142973, z: 8.699999}
+  m_Center: {x: 0.030265689, y: 2.8579988, z: 0.68006647}
+--- !u!65 &1845365345867119475
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7808211995716149033}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 11.3, y: 5.7142973, z: 14.12}
+  m_Center: {x: 0.030265689, y: 2.8579988, z: 0.68006647}
+--- !u!114 &2020959264915043421
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7808211995716149033}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c9dbf281b698c51418b2aa32a8115c78, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TutorialPopup
+  m_TutorialIndex: 2
+  m_Duration: 2
 --- !u!1 &8388874312663903907
 GameObject:
   m_ObjectHideFlags: 0

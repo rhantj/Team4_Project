@@ -20,28 +20,29 @@ public class Building : MonoBehaviour
 
     [Header("Area")]
     [SerializeField] private ItemIOArea m_InputArea;
+    private InventoryExpended inv;
 
     private Coroutine m_InputCoroutine;
     private readonly WaitForSeconds m_InputDuration = new(0.1f);
 
     // Events
-    public event Action m_OnInputChanged;
+    public event Action<bool> m_OnInputChanged;
     public event Action m_OnStepChanged;
     public event Action<float> m_OnProgressChanged;
     public event Action m_OnBuildCompleted;
     public event Action<int> m_OnStepCompleted;
     public event Action<Sprite> m_OnSpriteChanged;
+    public event Action m_OnCurrentStepItemAdded;
 
-    private BuildingPanelView m_PanelView;
     private SoundManager m_SoundManager;
 
     private const string m_InputSound = "ITEM_Click_Item_Put";
 
-    void NotifyInput(bool playSound = true)
+    void NotifyInput(bool increaseCount = true, bool playSound = true)
     {
         if (playSound)
             m_SoundManager.PlaySound(m_InputSound, transform.position, Quaternion.identity);
-        m_OnInputChanged?.Invoke();
+        m_OnInputChanged?.Invoke(increaseCount);
     }
     void NotifyBuildComplete() => m_OnBuildCompleted?.Invoke();
 
@@ -58,12 +59,10 @@ public class Building : MonoBehaviour
             m_OnSpriteChanged?.Invoke(m_CurrentStepItemSprite);
         }
     }
-        
+    public SOBuilding BuildingData => m_BuildingData;
 
     private void Awake()
     {
-        m_PanelView = FindAnyObjectByType<BuildingPanelView>();
-
         var currentStep = m_BuildingData.Steps[0];
         CurrentItemSprite = currentStep.ItemIcon;
         CurrentRequire = currentStep.RequierAmount;
@@ -71,7 +70,6 @@ public class Building : MonoBehaviour
 
     private void Start()
     {
-        m_PanelView?.Bind(this);
         m_SoundManager ??= GameManager.Instance.GetService<SoundManager>();
 
         m_OnProgressChanged?.Invoke(0f);
@@ -79,6 +77,8 @@ public class Building : MonoBehaviour
 
     private void OnEnable()
     {
+        inv = GameObject.FindGameObjectWithTag("Player").GetComponent<InventoryExpended>();
+
         m_InputArea.m_OnEnterArea += InputItems;
         m_InputArea.m_OnExitArea += ExitArea;
 
@@ -119,8 +119,6 @@ public class Building : MonoBehaviour
             yield return null;
         }
 
-        var inv = m_InputArea.m_Player.GetComponent<InventoryExpended>();
-
         while (m_InputArea.IsPlayerEnter)
         {
             var currentStep = m_BuildingData.Steps[m_CurrentStepIdx];
@@ -160,7 +158,7 @@ public class Building : MonoBehaviour
 
                 m_OnStepCompleted?.Invoke(m_CurrentStepIdx);
                 CurrentItemSprite = m_BuildingData.Steps[m_CurrentStepIdx].ItemIcon;
-                NotifyInput();
+                NotifyInput(false);
 
                 yield break;
             }

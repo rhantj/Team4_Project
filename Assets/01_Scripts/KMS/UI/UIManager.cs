@@ -1,17 +1,11 @@
 using UnityEngine;
 using System;
 
-public enum UIKey
-{
-    HUD,
-    Menu,
-    FadeOut
-}
-
 public class UIManager : MonoBehaviour
 {
     [SerializeField] private HUDPanel m_HUD;
     [SerializeField] private MainPanel m_StartUI;
+    [SerializeField] private ClearPanel m_ClearUI;
 
     private StageManager m_StageManager;
 
@@ -26,13 +20,11 @@ public class UIManager : MonoBehaviour
 
     private void OnEnable()
     {
-        m_StageManager.m_OnStageFinished += SwapPanel;
         m_StartUI.m_OnStageSelected += StageSelected;
     }
 
     private void OnDisable()
     {
-        m_StageManager.m_OnStageFinished -= SwapPanel;
         m_StartUI.m_OnStageSelected -= StageSelected;
     }
 
@@ -47,5 +39,10 @@ public class UIManager : MonoBehaviour
     {
         m_HUD.Close();
         m_StartUI.Open();
+    }
+
+    public void OpenClearPanel()
+    {
+        m_ClearUI.Open();
     }
 }

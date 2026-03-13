@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using UnityEngine;
 
 
@@ -9,7 +8,6 @@ public class ItemIOArea : MonoBehaviour
     public event Action m_OnExitArea;
 
     [Header("Setting")]
-    [field: SerializeField] public GameObject m_Player;
     [SerializeField] protected float m_CheckAreaInterval = 0.1f;
     [SerializeField] protected float m_Width;
     [SerializeField] protected float m_Height;
@@ -31,12 +29,11 @@ public class ItemIOArea : MonoBehaviour
 
     protected virtual void Start()
     {
-        m_CheckCoroutine ??= StartCoroutine(Co_CheckArea());
     }
 
     protected virtual void OnEnable()
     {
-        m_Player = GameObject.FindGameObjectWithTag("Player");
+        SpatialHashManager.Instance.SetArea(this);
     }
 
     protected virtual void OnDisable()
@@ -46,35 +43,13 @@ public class ItemIOArea : MonoBehaviour
             StopCoroutine(m_CheckCoroutine);
             m_CheckCoroutine = null;
         }
-    }
 
-    protected IEnumerator Co_CheckArea()
-    {
-        var wait = new WaitForSeconds(m_CheckAreaInterval);
-
-        while (canDetect)
-        {
-            RecalculateOBB();
-
-            bool isInsideNow = IsInsideOBB(m_Player.transform.position);
-
-            if(isInsideNow && !m_isPlayerEnter)
-            {
-                m_isPlayerEnter = true;
-                m_OnEnterArea?.Invoke();
-            }
-            else if(!isInsideNow && m_isPlayerEnter)
-            {
-                m_isPlayerEnter = false;
-                m_OnExitArea?.Invoke();
-            }
-
-            yield return wait;
-        }
+        SpatialHashManager.Instance.RemoveArea(this);
     }
 
     protected void RecalculateOBB()
     {
+        if (!gameObject.activeSelf) return;
         transform.GetPositionAndRotation(out var pos, out var rot);
         m_WorldCenter = pos;
 
@@ -107,6 +82,24 @@ public class ItemIOArea : MonoBehaviour
         Vector3 crossU_crossUV = Vector3.Cross(u, crossUV); // u x (u x v)
 
         return v + 2f * (s * crossUV + crossU_crossUV);
+    }
+
+    public bool CheckPlayer(Vector3 pos)
+    {
+        RecalculateOBB();
+        return IsInsideOBB(pos);
+    }
+
+    public void Enter()
+    {
+        m_isPlayerEnter = true;
+        m_OnEnterArea?.Invoke();
+    }
+
+    public void Exit()
+    {
+        m_isPlayerEnter = false;
+        m_OnExitArea?.Invoke();
     }
 
     protected void OnDrawGizmos()
