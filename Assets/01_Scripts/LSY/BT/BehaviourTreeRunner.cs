@@ -9,7 +9,7 @@ public class BehaviourTreeRunner : MonoBehaviour
     private void OnEnable()
     {
         m_Blackboard = new Blackboard();
-        m_Blackboard.Set("GameObject", this);
+        m_Blackboard.Set("GameObject", gameObject);
         m_BehaviourTree?.m_Root?.Initialize(m_Blackboard);
     }
 
@@ -21,7 +21,9 @@ public class BehaviourTreeRunner : MonoBehaviour
 #if UNITY_EDITOR
     private void OnValidate()
     {
-        if (m_BehaviourTree?.m_Root?.Validate() ?? false) Debug.LogWarning("Behaviour Tree has not been validated.");
+        if (!(m_BehaviourTree?.m_Root?.Validate() ?? false)) Debug.LogError("Behaviour Tree has not been validated.");
     }
 #endif
+
+    public void SetBlackboard<T>(string key, T value) => m_Blackboard.Set(key, value);
 }
