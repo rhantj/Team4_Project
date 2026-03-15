@@ -2958,28 +2958,28 @@ MonoBehaviour:
             m_SubObjectType: 
             m_SubObjectGUID: 
             m_EditorAssetChanged: 0
-          FacilityType: 11
+          FacilityType: 15
         - PrefabReference:
             m_AssetGUID: ed184aa361e9cd549b9dece764cc5b75
             m_SubObjectName: 
             m_SubObjectType: 
             m_SubObjectGUID: 
             m_EditorAssetChanged: 0
-          FacilityType: 12
+          FacilityType: 16
         - PrefabReference:
             m_AssetGUID: 4dc66ad70050be94da8e055efefab29b
             m_SubObjectName: 
             m_SubObjectType: 
             m_SubObjectGUID: 
             m_EditorAssetChanged: 0
-          FacilityType: 13
+          FacilityType: 17
         - PrefabReference:
             m_AssetGUID: be4b49cf51ff4d448a9b65b1e14f318e
             m_SubObjectName: 
             m_SubObjectType: 
             m_SubObjectGUID: 
             m_EditorAssetChanged: 0
-          FacilityType: 10
+          FacilityType: 14
         - PrefabReference:
             m_AssetGUID: e8165ad1b986a8440aaa9d28be2bc14f
             m_SubObjectName: 
@@ -3000,35 +3000,35 @@ MonoBehaviour:
             m_SubObjectType: 
             m_SubObjectGUID: 
             m_EditorAssetChanged: 1
-          FacilityType: 4
+          FacilityType: 6
         - PrefabReference:
             m_AssetGUID: a35c4c2a84dcd294d870e35ce1d9431a
             m_SubObjectName: 
             m_SubObjectType: 
             m_SubObjectGUID: 
             m_EditorAssetChanged: 1
-          FacilityType: 5
+          FacilityType: 7
         - PrefabReference:
             m_AssetGUID: 9a2b2be8a0ae7e747876359beb099217
             m_SubObjectName: 
             m_SubObjectType: 
             m_SubObjectGUID: 
             m_EditorAssetChanged: 0
-          FacilityType: 7
+          FacilityType: 11
         - PrefabReference:
             m_AssetGUID: 1092c0c0af382354bb136f1865b81220
             m_SubObjectName: 
             m_SubObjectType: 
             m_SubObjectGUID: 
             m_EditorAssetChanged: 1
-          FacilityType: 8
+          FacilityType: 12
         - PrefabReference:
             m_AssetGUID: 15c63c1898053b949b216d9c0a3b1280
             m_SubObjectName: 
             m_SubObjectType: 
             m_SubObjectGUID: 
             m_EditorAssetChanged: 0
-          FacilityType: 9
+          FacilityType: 13
         - PrefabReference:
             m_AssetGUID: 1962bd5c254893e40858e8adad67d91f
             m_SubObjectName: 
@@ -3042,7 +3042,35 @@ MonoBehaviour:
             m_SubObjectType: 
             m_SubObjectGUID: 
             m_EditorAssetChanged: 0
-          FacilityType: 6
+          FacilityType: 8
+        - PrefabReference:
+            m_AssetGUID: 8228b1f08c2e68d46aed9daf118b0a70
+            m_SubObjectName: 
+            m_SubObjectType: 
+            m_SubObjectGUID: 
+            m_EditorAssetChanged: 0
+          FacilityType: 4
+        - PrefabReference:
+            m_AssetGUID: 53c5d5f9e2b2c1541bf531c8ff0b38f4
+            m_SubObjectName: 
+            m_SubObjectType: 
+            m_SubObjectGUID: 
+            m_EditorAssetChanged: 0
+          FacilityType: 9
+        - PrefabReference:
+            m_AssetGUID: 1962bd5c254893e40858e8adad67d91f
+            m_SubObjectName: 
+            m_SubObjectType: 
+            m_SubObjectGUID: 
+            m_EditorAssetChanged: 0
+          FacilityType: 5
+        - PrefabReference:
+            m_AssetGUID: c5cf71690ab98284f97fc94997a2e240
+            m_SubObjectName: 
+            m_SubObjectType: 
+            m_SubObjectGUID: 
+            m_EditorAssetChanged: 0
+          FacilityType: 10
     - rid: 2890533097053094176
       type: {class: ResourceManagerConfig, ns: , asm: Assembly-CSharp}
       data:

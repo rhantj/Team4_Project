@@ -184,12 +184,12 @@ MonoBehaviour:
   m_SpawnGroups:
   - StepIndexToTrigger: 1
     Requests:
-    - Type: 11
+    - Type: 15
       SpawnPoint: {fileID: 0}
       LocalOffset: {x: -4.94, y: 0, z: -0.4}
       UseOverrideRotation: 0
       EulerRoatationOverride: {x: 0, y: 0, z: 0}
-    - Type: 10
+    - Type: 14
       SpawnPoint: {fileID: 0}
       LocalOffset: {x: 4.56, y: 0, z: -5.67}
       UseOverrideRotation: 0
