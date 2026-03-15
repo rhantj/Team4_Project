@@ -20,33 +20,33 @@ MonoBehaviour:
       UseOverrideRotation: 0
       EulerRoatationOverride: {x: 0, y: 0, z: 0}
     MainBuilding:
-      Type: 4
+      Type: 6
       SpawnPoint: {fileID: 0}
       LocalOffset: {x: -17.08, y: 0, z: 30}
       UseOverrideRotation: 0
       EulerRoatationOverride: {x: 0, y: 0, z: 0}
     Resources:
-    - Type: 8
+    - Type: 12
       SpawnPoint: {fileID: 0}
       LocalOffset: {x: 16.76, y: 0, z: -5.87}
       UseOverrideRotation: 0
       EulerRoatationOverride: {x: 0, y: 0, z: 0}
   - StageTheme:
-      Type: 1
+      Type: 2
       SpawnPoint: {fileID: 0}
       LocalOffset: {x: 0, y: 0, z: 0}
       UseOverrideRotation: 0
       EulerRoatationOverride: {x: 0, y: 0, z: 0}
     MainBuilding:
-      Type: 4
+      Type: 7
       SpawnPoint: {fileID: 0}
-      LocalOffset: {x: -17.08, y: 0, z: 30}
+      LocalOffset: {x: 0, y: 0, z: 8.67}
       UseOverrideRotation: 0
       EulerRoatationOverride: {x: 0, y: 0, z: 0}
     Resources:
-    - Type: 8
+    - Type: 13
       SpawnPoint: {fileID: 0}
-      LocalOffset: {x: 16.76, y: 0, z: -5.87}
+      LocalOffset: {x: -1.604, y: 0, z: 0.724}
       UseOverrideRotation: 0
       EulerRoatationOverride: {x: 0, y: 0, z: 0}
   - StageTheme:
@@ -56,14 +56,50 @@ MonoBehaviour:
       UseOverrideRotation: 0
       EulerRoatationOverride: {x: 0, y: 0, z: 0}
     MainBuilding:
-      Type: 6
+      Type: 8
       SpawnPoint: {fileID: 0}
-      LocalOffset: {x: 0, y: 0, z: 8.67}
+      LocalOffset: {x: 0, y: 0, z: 9.84}
       UseOverrideRotation: 0
       EulerRoatationOverride: {x: 0, y: 0, z: 0}
     Resources:
-    - Type: 7
+    - Type: 11
       SpawnPoint: {fileID: 0}
-      LocalOffset: {x: -16.04, y: 0, z: -7.06}
+      LocalOffset: {x: -14.69, y: 0, z: -5.66}
+      UseOverrideRotation: 0
+      EulerRoatationOverride: {x: 0, y: 0, z: 0}
+  - StageTheme:
+      Type: 4
+      SpawnPoint: {fileID: 0}
+      LocalOffset: {x: 0, y: 0, z: 0}
+      UseOverrideRotation: 0
+      EulerRoatationOverride: {x: 0, y: 0, z: 0}
+    MainBuilding:
+      Type: 9
+      SpawnPoint: {fileID: 0}
+      LocalOffset: {x: -19.47, y: 0, z: -0.8000001}
+      UseOverrideRotation: 0
+      EulerRoatationOverride: {x: 0, y: 0, z: 0}
+    Resources:
+    - Type: 12
+      SpawnPoint: {fileID: 0}
+      LocalOffset: {x: 14.98, y: 0, z: 0}
+      UseOverrideRotation: 0
+      EulerRoatationOverride: {x: 0, y: 0, z: 0}
+  - StageTheme:
+      Type: 5
+      SpawnPoint: {fileID: 0}
+      LocalOffset: {x: 0, y: 0, z: 0}
+      UseOverrideRotation: 0
+      EulerRoatationOverride: {x: 0, y: 0, z: 0}
+    MainBuilding:
+      Type: 10
+      SpawnPoint: {fileID: 0}
+      LocalOffset: {x: 0, y: 0, z: 0}
+      UseOverrideRotation: 0
+      EulerRoatationOverride: {x: 0, y: 0, z: 0}
+    Resources:
+    - Type: 11
+      SpawnPoint: {fileID: 0}
+      LocalOffset: {x: 16.04, y: 0, z: -7.06}
       UseOverrideRotation: 0
       EulerRoatationOverride: {x: 0, y: 0, z: 0}

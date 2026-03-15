@@ -45,6 +45,11 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 53c5d5f9e2b2c1541bf531c8ff0b38f4
+    m_Address: Assets/03_Prefabs/KMS/Building/Building_Greece.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 7ad7be3a1fe66c8409e3e9d5dc0018a0
     m_Address: Assets/03_Prefabs/KMS/Buiilding_Pyramid.prefab
     m_ReadOnly: 0
@@ -72,6 +77,11 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: be4b49cf51ff4d448a9b65b1e14f318e
     m_Address: Assets/03_Prefabs/KMS/Sales Office.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: c5cf71690ab98284f97fc94997a2e240
+    m_Address: Assets/03_Prefabs/KMS/Building/Building_Japen2.prefab
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
