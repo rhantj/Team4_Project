@@ -45,7 +45,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aa62c5d7792dea74d94c50920c2db869, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ItemIOArea
-  m_Player: {fileID: 0}
   m_CheckAreaInterval: 0.1
   m_Width: 5
   m_Height: 7
@@ -60,6 +59,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7217994427453112386}
   - component: {fileID: 8356916895864400985}
+  - component: {fileID: -157235838002146692}
   m_Layer: 0
   m_Name: Sales Office
   m_TagString: Untagged
@@ -99,6 +99,22 @@ MonoBehaviour:
   m_InputArea: {fileID: 9041078537998915662}
   m_Materials: {fileID: 11400000, guid: db41ddbe44138f846bc0d51bd9b10fd6, type: 2}
   m_GoldAmount: 100
+--- !u!208 &-157235838002146692
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4257305481707861296}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 1.6, y: 1.5, z: 2}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 1.5, z: -0.1}
+  m_TimeToStationary: 0.5
 --- !u!1 &7808211995716149033
 GameObject:
   m_ObjectHideFlags: 0

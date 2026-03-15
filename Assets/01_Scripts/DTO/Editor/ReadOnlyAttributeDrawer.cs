@@ -8,7 +8,7 @@ public class ReadOnlyAttributeDrawer : PropertyDrawer
     {
         bool isRuntimeOnlyReadOnly = (attribute as ReadOnlyAttribute)?.IsRuntimeOnlyReadOnly ?? false;
         GUI.enabled = isRuntimeOnlyReadOnly && !Application.isPlaying;
-        EditorGUI.PropertyField(position, property, label);
+        EditorGUI.PropertyField(position, property, label, true);
         GUI.enabled = true;
     }
 

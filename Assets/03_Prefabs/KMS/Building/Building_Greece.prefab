@@ -172,6 +172,7 @@ GameObject:
   - component: {fileID: 8886323549478186053}
   - component: {fileID: 4069170843645561373}
   - component: {fileID: 5671700462738361403}
+  - component: {fileID: -6388125316395306400}
   m_Layer: 0
   m_Name: Building_Greece
   m_TagString: Untagged
@@ -243,6 +244,27 @@ MonoBehaviour:
       LocalOffset: {x: 0, y: 0, z: 18.201656}
       UseOverrideRotation: 0
       EulerRoatationOverride: {x: 0, y: 0, z: 0}
+    - Type: 19
+      SpawnPoint: {fileID: 0}
+      LocalOffset: {x: 4.36, y: 0, z: 9.5}
+      UseOverrideRotation: 0
+      EulerRoatationOverride: {x: 0, y: 0, z: 0}
+--- !u!208 &-6388125316395306400
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6527196826001298607}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 7.5, y: 4, z: 9.5}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 4, z: 0}
+  m_TimeToStationary: 0.5
 --- !u!1 &8917489930529892636
 GameObject:
   m_ObjectHideFlags: 0

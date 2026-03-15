@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace GOAP
@@ -5,6 +6,8 @@ namespace GOAP
     [RequireComponent(typeof(Rigidbody))]
     public class Agent : MonoBehaviour
     {
+        [ReadOnly(true)][SerializeField] private List<Action> m_possibleActions;
+        [ReadOnly(true)][SerializeField] private List<Goal> m_Goals;
         private Blackboard m_Blackboard;
 
         private void Awake()
@@ -33,11 +36,12 @@ namespace GOAP
                 - fsm: simple action and state itself - use animator
             runtime data store:
                 - [Done] blackboard
-                - flyweight
+                - flyweight - do it later, this is not urgent
                 - state/strategy as SO
             action logic:
                 - need to be saved as serialized data, not compiled into binary directly...
-                - use MONO to evaluate C# code at runtime?
+                - use Mono Roslyn to evaluate C# code at runtime?
+                - or use lua?
                 - no need to start with complete structure. just start with AOT code.
         */
     }

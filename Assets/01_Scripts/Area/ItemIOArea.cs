@@ -1,11 +1,15 @@
+using Reworked;
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 
 public class ItemIOArea : MonoBehaviour
 {
-    public event Action m_OnEnterArea;
-    public event Action m_OnExitArea;
+    public event Action m_OnEnterAreaByPlayer;
+    public event Action m_OnExitAreaByPlayer;
+    public event Action<GameObject> m_OnEnterAreaByWorker;
+    public event Action<GameObject> m_OnExitAreaByWorker;
 
     [Header("Setting")]
     [SerializeField] protected float m_CheckAreaInterval = 0.1f;
@@ -22,6 +26,9 @@ public class ItemIOArea : MonoBehaviour
 
     public bool IsPlayerEnter => m_isPlayerEnter;
 
+    private HashSet<GameObject> m_EnteredWorkers;
+    public bool IsWorkerEnter(GameObject worker) => m_EnteredWorkers?.Contains(worker) ?? false;
+
     protected virtual void Awake()
     {
         RecalculateOBB();
@@ -34,11 +41,13 @@ public class ItemIOArea : MonoBehaviour
     protected virtual void OnEnable()
     {
         SpatialHashManager.Instance.SetArea(this);
+        m_EnteredWorkers = new HashSet<GameObject>();
     }
 
     protected virtual void OnDisable()
     {
-        if(m_CheckCoroutine != null)
+        m_EnteredWorkers = null;
+        if (m_CheckCoroutine != null)
         {
             StopCoroutine(m_CheckCoroutine);
             m_CheckCoroutine = null;
@@ -93,13 +102,25 @@ public class ItemIOArea : MonoBehaviour
     public void Enter()
     {
         m_isPlayerEnter = true;
-        m_OnEnterArea?.Invoke();
+        m_OnEnterAreaByPlayer?.Invoke();
     }
 
     public void Exit()
     {
         m_isPlayerEnter = false;
-        m_OnExitArea?.Invoke();
+        m_OnExitAreaByPlayer?.Invoke();
+    }
+
+    public void WorkerEnter(GameObject worker)
+    {
+        m_EnteredWorkers.Add(worker);
+        m_OnEnterAreaByWorker?.Invoke(worker);
+    }
+
+    public void WorkerExit(GameObject worker)
+    {
+        m_EnteredWorkers.Remove(worker);
+        m_OnExitAreaByWorker?.Invoke(worker);
     }
 
     protected void OnDrawGizmos()

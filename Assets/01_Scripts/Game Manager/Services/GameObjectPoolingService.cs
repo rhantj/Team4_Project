@@ -16,8 +16,8 @@ public class GameObjectPoolingServiceConfig : ServiceConfig<GameObjectPoolingSer
 /// </summary>
 public class GameObjectPoolingService : MonoBehaviour, IService
 {
-    [field: SerializeField] public int DefaultInitialCount { get; private set; }
-    [field: SerializeField] public int DefaultCapacity { get; private set; }
+    public int DefaultInitialCount { get; private set; }
+    public int DefaultCapacity { get; private set; }
 
     public void Configure(IServiceConfig iConfig)
     {

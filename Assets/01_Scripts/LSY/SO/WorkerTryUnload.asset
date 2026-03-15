@@ -1,0 +1,50 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 929187d31f47a534385314e452c72066, type: 3}
+  m_Name: WorkerTryUnload
+  m_EditorClassIdentifier: Assembly-CSharp::BehaviourTree.BehaviourTreeSO
+  m_Root:
+    rid: 7912797517139673382
+  references:
+    version: 2
+    RefIds:
+    - rid: 7912797517139673382
+      type: {class: Root, ns: BehaviourTree, asm: Assembly-CSharp}
+      data:
+        <Name>k__BackingField: 
+        m_Node:
+          rid: 7912797517139673383
+    - rid: 7912797517139673383
+      type: {class: Sequence, ns: BehaviourTree, asm: Assembly-CSharp}
+      data:
+        <Name>k__BackingField: sequence
+        <Nodes>k__BackingField:
+        - rid: 7912797517139673384
+        - rid: 7912797517139673385
+    - rid: 7912797517139673384
+      type: {class: Leaf, ns: BehaviourTree, asm: Assembly-CSharp}
+      data:
+        <Name>k__BackingField: unload
+        m_ActionObject: {fileID: 11400000, guid: 4cba086b198a3ef439638a40015de09e, type: 2}
+    - rid: 7912797517139673385
+      type: {class: Cooldown, ns: BehaviourTree, asm: Assembly-CSharp}
+      data:
+        <Name>k__BackingField: enroute cooldown
+        m_DefaultCooldown: 0.2
+        m_StateOnWait: 0
+        <Node>k__BackingField:
+          rid: 7912797517139673386
+    - rid: 7912797517139673386
+      type: {class: Leaf, ns: BehaviourTree, asm: Assembly-CSharp}
+      data:
+        <Name>k__BackingField: enroute to resource
+        m_ActionObject: {fileID: 11400000, guid: 6ef1740f6d86b274ca1cf6f6cc4aef40, type: 2}

@@ -51,7 +51,7 @@ public class Blackboard : ISerializationCallbackReceiver,
     }
 
     private readonly Dictionary<string, IEntry> m_Entries = new Dictionary<string, IEntry>();
-    [ReadOnly][SerializeField] public readonly List<KeyEntryPair> m_SerializedEntries;
+    [ReadOnly][SerializeField] public List<KeyEntryPair> m_SerializedEntries;
 
     public void Set<T>(string key, T value)
     {
@@ -80,13 +80,17 @@ public class Blackboard : ISerializationCallbackReceiver,
 
     public void OnBeforeSerialize()
     {
-        m_SerializedEntries.Clear();
-        foreach (KeyValuePair<string, IEntry> kv in m_Entries) m_SerializedEntries.Add(new KeyEntryPair(kv.Key, kv.Value));
+        if (null != m_SerializedEntries)
+        {
+            m_SerializedEntries.Clear();
+            foreach (KeyValuePair<string, IEntry> kv in m_Entries) m_SerializedEntries.Add(new KeyEntryPair(kv.Key, kv.Value));
+        }
     }
 
     public void OnAfterDeserialize()
     {
         m_Entries.Clear();
+        if (null == m_SerializedEntries) m_SerializedEntries = new List<KeyEntryPair>();
         foreach (KeyEntryPair ke in m_SerializedEntries) m_Entries[ke.Key] = ke.Entry;
         m_SerializedEntries.Clear();
     }

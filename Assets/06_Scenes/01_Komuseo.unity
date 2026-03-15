@@ -799,7 +799,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6756872738745578527, guid: 9389198d52356854c83c54bdd87b39dc, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7780197615869270236, guid: 9389198d52356854c83c54bdd87b39dc, type: 3}
       propertyPath: m_AnchorMax.y
@@ -2124,7 +2124,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.6320754, g: 0.56350124, b: 0.56350124, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -2679,7 +2679,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: INFO
+  m_text: Congretulations!
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: b91b00a30d250e444afe82a3728d5f4d, type: 2}
   m_sharedMaterial: {fileID: 962312838707316630, guid: b91b00a30d250e444afe82a3728d5f4d, type: 2}
@@ -2927,12 +2927,17 @@ MonoBehaviour:
   <InitialConfigs>k__BackingField:
   - rid: 2890532804966219925
   - rid: 2890532804966219915
+  - rid: 1507085552480157696
   - rid: 2890532804966219916
   - rid: 2890533097053094176
   - rid: 3860465727962349645
   references:
     version: 2
     RefIds:
+    - rid: 1507085552480157696
+      type: {class: GameObjectTaggedGroupCacheServiceConfig, ns: , asm: Assembly-CSharp}
+      data:
+        <Requirement>k__BackingField: 3
     - rid: 2890532804966219915
       type: {class: GameObjectPoolingServiceConfig, ns: , asm: Assembly-CSharp}
       data:
@@ -3071,6 +3076,27 @@ MonoBehaviour:
             m_SubObjectGUID: 
             m_EditorAssetChanged: 0
           FacilityType: 10
+        - PrefabReference:
+            m_AssetGUID: 6340fd025288552419c0654df1efa738
+            m_SubObjectName: 
+            m_SubObjectType: 
+            m_SubObjectGUID: 
+            m_EditorAssetChanged: 0
+          FacilityType: 18
+        - PrefabReference:
+            m_AssetGUID: 42d0ab14ccbb22749bd6324898401ddd
+            m_SubObjectName: 
+            m_SubObjectType: 
+            m_SubObjectGUID: 
+            m_EditorAssetChanged: 0
+          FacilityType: 19
+        - PrefabReference:
+            m_AssetGUID: 9c8955c6b4bd9b141a67766d0be7f327
+            m_SubObjectName: 
+            m_SubObjectType: 
+            m_SubObjectGUID: 
+            m_EditorAssetChanged: 0
+          FacilityType: 20
     - rid: 2890533097053094176
       type: {class: ResourceManagerConfig, ns: , asm: Assembly-CSharp}
       data:
@@ -6955,7 +6981,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &4916958767002818463
 MonoBehaviour:
   m_ObjectHideFlags: 0

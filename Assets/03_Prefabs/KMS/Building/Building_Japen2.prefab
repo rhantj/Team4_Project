@@ -124,6 +124,7 @@ GameObject:
   - component: {fileID: 6812961329847615432}
   - component: {fileID: 5362628471660998818}
   - component: {fileID: 1901334432435160642}
+  - component: {fileID: -1819261722652212753}
   m_Layer: 0
   m_Name: Building_Japen2
   m_TagString: Untagged
@@ -195,6 +196,27 @@ MonoBehaviour:
       LocalOffset: {x: -4.56, y: 0, z: -5.67}
       UseOverrideRotation: 0
       EulerRoatationOverride: {x: 0, y: 0, z: 0}
+    - Type: 18
+      SpawnPoint: {fileID: 0}
+      LocalOffset: {x: 16, y: 0, z: 6}
+      UseOverrideRotation: 0
+      EulerRoatationOverride: {x: 0, y: 0, z: 0}
+--- !u!208 &-1819261722652212753
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2460887503900124630}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 8, y: 8, z: 9}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 8, z: 0}
+  m_TimeToStationary: 0.5
 --- !u!1001 &5296783895342756048
 PrefabInstance:
   m_ObjectHideFlags: 0

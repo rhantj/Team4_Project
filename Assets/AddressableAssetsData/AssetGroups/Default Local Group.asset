@@ -40,6 +40,11 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 42d0ab14ccbb22749bd6324898401ddd
+    m_Address: Assets/03_Prefabs/LSY/ResourcePickupArea_Stone_Brick.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 4dc66ad70050be94da8e055efefab29b
     m_Address: Assets/03_Prefabs/KMS/Facility/Facility-Steel.prefab
     m_ReadOnly: 0
@@ -47,6 +52,11 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 53c5d5f9e2b2c1541bf531c8ff0b38f4
     m_Address: Assets/03_Prefabs/KMS/Building/Building_Greece.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 6340fd025288552419c0654df1efa738
+    m_Address: Assets/03_Prefabs/LSY/ResourcePickupArea.prefab
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
@@ -62,6 +72,11 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 9a2b2be8a0ae7e747876359beb099217
     m_Address: Assets/03_Prefabs/KMS/Resource Node/TreeNode.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 9c8955c6b4bd9b141a67766d0be7f327
+    m_Address: Assets/03_Prefabs/LSY/ResourcePickupArea_Silver_Bar.prefab
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
