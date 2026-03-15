@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 3055319825873264187}
   - component: {fileID: 8853042693788021926}
   - component: {fileID: 3389531159769323773}
+  - component: {fileID: 8043366432277403370}
   m_Layer: 0
   m_Name: Mesh_EiffelTower
   m_TagString: Untagged
@@ -113,6 +114,20 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 6853923411949491279, guid: 8917caadfbf79c14d85ccaf041265432, type: 3}
+--- !u!114 &8043366432277403370
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1077077455972047022}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e673d9dd74536e0438ade9e082a64924, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MainBuildingProgressVisualizer
+  <MatarialToApply>k__BackingField: {fileID: 2100000, guid: af07bf8863cba0348ac796d81f9033b4, type: 2}
+  <SmoothTime>k__BackingField: 0.5
 --- !u!1 &5652102533273159326
 GameObject:
   m_ObjectHideFlags: 0
