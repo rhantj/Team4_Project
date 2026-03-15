@@ -47,8 +47,8 @@ public class EnrouteToResourceNodeAction : BehaviourTreeActionStrategy
     private GameObject FindNearestAvailableResourceObject(Vector2 position, List<ResourceType> resourceTypes)
     {
         IEnumerable<GameObject> resources = GameManager.Instance.GetService<GameObjectTaggedGroupCacheService>().GetTaggedGroupCache(ResourceTagKey);
-
-        return resources
+        if (null == resources) return null;
+        else return resources
             .Where(r => r.activeInHierarchy)
             .Where(r => r.TryGetComponent(out IHarvestable h) && h.IsHarvestable && resourceTypes.Contains(h.TargetResourceType))
             .Aggregate<GameObject, ValueTuple<GameObject, float>, GameObject>(

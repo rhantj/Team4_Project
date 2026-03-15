@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Threading;
 using UnityEngine;
 
@@ -29,7 +30,7 @@ namespace Reworked
             m_OnDisableCancellationTokenSource = null;
         }
 
-        public async Awaitable<ResourceItemData> UnloadAsync(ResourceItemData requestedResourceItemData)
+        public async Awaitable<ResourceItemData> UnloadAsync(List<ResourceItemData> requestedResourceItemData)
         {
             if (null != m_UnloadDelayAwaitable)
             {
@@ -37,10 +38,14 @@ namespace Reworked
                 m_UnloadDelayAwaitable = null;
             }
 
-            if (0 == m_Inventory.GetItemCount(requestedResourceItemData)) return null;
-            m_Inventory.RemoveItem(requestedResourceItemData);
-            m_UnloadDelayAwaitable = Awaitable.WaitForSecondsAsync(m_UnloadDelay, m_UnloadTokenSource.Token);
-            return requestedResourceItemData;
+            foreach (ResourceItemData item in requestedResourceItemData)
+            {
+                if (0 == m_Inventory.GetItemCount(item)) continue;
+                m_Inventory.RemoveItem(item);
+                m_UnloadDelayAwaitable = Awaitable.WaitForSecondsAsync(m_UnloadDelay, m_OnDisableCancellationTokenSource.Token);
+                return item;
+            }
+            return null;
         }
     }
 }

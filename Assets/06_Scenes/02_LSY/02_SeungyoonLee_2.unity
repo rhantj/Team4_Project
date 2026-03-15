@@ -319,6 +319,10 @@ PrefabInstance:
       value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 9215927410846896040, guid: ccdc07c424c99aa419358fe487153998, type: 3}
+      propertyPath: managedReferences[1507085493696200978].<Requirement>k__BackingField
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 9215927410846896040, guid: ccdc07c424c99aa419358fe487153998, type: 3}
       propertyPath: managedReferences[7749939153961746432].<Requirement>k__BackingField
       value: 2
       objectReference: {fileID: 0}
@@ -865,8 +869,6 @@ MonoBehaviour:
   m_HarvestContactDistance: 3
   m_RegeneratedResourceItemCountPerTick: 5
   m_RegenerateTimePerTick: 5
-  m_VisualModel: {fileID: 0}
-  m_HarvestEffect: {fileID: 0}
   b_IsWorldSpaceUIActive: 0
 --- !u!208 &1766238145
 NavMeshObstacle:

@@ -79,8 +79,8 @@ public class Building : MonoBehaviour
     {
         inv = GameObject.FindGameObjectWithTag("Player").GetComponent<InventoryExpended>();
 
-        m_InputArea.m_OnEnterArea += InputItems;
-        m_InputArea.m_OnExitArea += ExitArea;
+        m_InputArea.m_OnEnterAreaByPlayer += InputItems;
+        m_InputArea.m_OnExitAreaByPlayer += ExitArea;
 
         var cvTransition = Camera.main.GetComponent<CameraViewTransitionBehaviour>();
         cvTransition.MainBuildingTransform = this.transform;
@@ -90,8 +90,8 @@ public class Building : MonoBehaviour
 
     private void OnDisable()
     {
-        m_InputArea.m_OnEnterArea -= InputItems;
-        m_InputArea.m_OnExitArea -= ExitArea;
+        m_InputArea.m_OnEnterAreaByPlayer -= InputItems;
+        m_InputArea.m_OnExitAreaByPlayer -= ExitArea;
     }
 
     public void InputItems()

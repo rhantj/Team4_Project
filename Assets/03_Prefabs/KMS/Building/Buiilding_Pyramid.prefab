@@ -175,6 +175,7 @@ GameObject:
   - component: {fileID: 8249929145333991987}
   - component: {fileID: 5553058705740161970}
   - component: {fileID: 6899079700222242347}
+  - component: {fileID: 1277652881709223850}
   m_Layer: 0
   m_Name: Buiilding_Pyramid
   m_TagString: Untagged
@@ -236,7 +237,7 @@ MonoBehaviour:
   m_SpawnGroups:
   - StepIndexToTrigger: 1
     Requests:
-    - Type: 17
+    - Type: 16
       SpawnPoint: {fileID: 0}
       LocalOffset: {x: 9.03, y: 0, z: 3.19}
       UseOverrideRotation: 0
@@ -246,6 +247,27 @@ MonoBehaviour:
       LocalOffset: {x: -2.14, y: 0, z: -1.27}
       UseOverrideRotation: 0
       EulerRoatationOverride: {x: 0, y: 0, z: 0}
+    - Type: 19
+      SpawnPoint: {fileID: 0}
+      LocalOffset: {x: 3.47, y: 0, z: 3.2}
+      UseOverrideRotation: 0
+      EulerRoatationOverride: {x: 0, y: 0, z: 0}
+--- !u!208 &1277652881709223850
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5652102533273159326}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 20, y: 10, z: 20}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 10, z: 0}
+  m_TimeToStationary: 0.5
 --- !u!1001 &6069826196245645808
 PrefabInstance:
   m_ObjectHideFlags: 0

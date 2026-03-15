@@ -1,3 +1,4 @@
+using Mono.Cecil;
 using System;
 using System.Collections.Generic;
 using System.Threading;
@@ -61,8 +62,12 @@ namespace Reworked
         {
             Vector2 positionOnXZ = new Vector2(transform.position.x, transform.position.z);
 
-            foreach (GameObject resource in GameManager.Instance.GetService<GameObjectTaggedGroupCacheService>().GetTaggedGroupCache("Resource Node"))
+            IEnumerable<GameObject> group = GameManager.Instance.GetService<GameObjectTaggedGroupCacheService>().GetTaggedGroupCache("Resource Node");
+            if (null == group) return;
+
+            foreach (GameObject resource in group)
             {
+                if (null == resource) continue;
                 if (!resource.activeInHierarchy) continue;
                 if (!resource.TryGetComponent(out IHarvestable harvestable)) continue;
                 if (!harvestable.IsContacted(positionOnXZ)) continue;
@@ -73,6 +78,7 @@ namespace Reworked
             List<IHarvestable> removalList = new List<IHarvestable>();
             foreach (IHarvestable harvestable in m_ContactedHarvestableQueueAsLinkedList)
             {
+                if (null == harvestable) continue;
                 if (null != harvestable && harvestable.IsContacted(positionOnXZ)) continue;
                 removalList.Add(harvestable);
             }

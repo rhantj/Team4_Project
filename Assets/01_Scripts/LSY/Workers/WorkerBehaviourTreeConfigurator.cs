@@ -1,4 +1,6 @@
 using Reworked;
+using System.Linq;
+using System.Threading;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -9,17 +11,31 @@ using UnityEngine.AI;
 [RequireComponent(typeof(WorkerResourceUnloadBehaviour))]
 public class WorkerBehaviourTreeConfigurator : MonoBehaviour
 {
-    [ReadOnly(true)][SerializeField] private ItemIOArea m_UnloadArea;
+    private BehaviourTreeRunner m_BehaviourTreeRunner;
 
-    BehaviourTreeRunner m_BehaviourTreeRunner;
+    private CancellationTokenSource m_OnDisableCancellationTokenSource;
 
     private void Awake()
     {
         if (!TryGetComponent(out m_BehaviourTreeRunner) && Application.isEditor) Debug.LogError("Cannot find BehaviourTreeRunner");
     }
 
-    private void Start()
+    private void OnEnable()
     {
+        m_OnDisableCancellationTokenSource = new CancellationTokenSource();
+        UpdateAfterOnEnable();
+    }
+
+    private void OnDisable()
+    {
+        m_OnDisableCancellationTokenSource?.Cancel();
+        m_OnDisableCancellationTokenSource = null;
+    }
+
+    private async void UpdateAfterOnEnable()
+    {
+        await Awaitable.NextFrameAsync(m_OnDisableCancellationTokenSource.Token);
+
         if (TryGetComponent(out ResourceHarvestBehaviour resourceHarvestBehaviour)) m_BehaviourTreeRunner.SetBlackboard("ResourceTypes", resourceHarvestBehaviour.TargetResourceTypes);
         else if (Application.isEditor) Debug.LogError("Cannot find the ResourceHarvestBehaviour component.");
 
@@ -38,9 +54,10 @@ public class WorkerBehaviourTreeConfigurator : MonoBehaviour
         if (TryGetComponent(out NavMeshAgent agent)) m_BehaviourTreeRunner.SetBlackboard("NavMeshAgent", agent);
         else if (Application.isEditor) Debug.LogError("Cannot find the NavMeshAgent component.");
 
-        if (TryGetComponent(out NavMeshObstacle obstacle)) m_BehaviourTreeRunner.SetBlackboard("NavMeshObstacle", obstacle);
-        else if (Application.isEditor) Debug.LogError("Cannot find the NavMeshObstacle component.");
+        //if (TryGetComponent(out NavMeshObstacle obstacle)) m_BehaviourTreeRunner.SetBlackboard("NavMeshObstacle", obstacle);
+        //else if (Application.isEditor) Debug.LogError("Cannot find the NavMeshObstacle component.");
 
-        m_BehaviourTreeRunner.SetBlackboard("TargetPickupArea", m_UnloadArea);
+        ItemIOArea pickupArea = GameManager.Instance.GetService<GameObjectTaggedGroupCacheService>().GetTaggedGroupCache("Pickup Area").First().GetComponent<ItemIOArea>();
+        m_BehaviourTreeRunner.SetBlackboard("TargetPickupArea", pickupArea);
     }
 }

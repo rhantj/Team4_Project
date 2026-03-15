@@ -15,9 +15,12 @@ GameObject:
   - component: {fileID: 2715067118952792104}
   - component: {fileID: 8124383480656548632}
   - component: {fileID: 6486410459055374023}
+  - component: {fileID: 7003639505608784900}
+  - component: {fileID: 4359373792192051324}
+  - component: {fileID: 6572583331826117065}
   m_Layer: 8
   m_Name: StoneNode
-  m_TagString: Untagged
+  m_TagString: Resource Node
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -107,13 +110,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ResourceNode
   resourceType: 1
-  resourceAmount: 10
+  resourceAmount: 1
   harvestTime: 1
-  maxHarvestCount: 10
+  maxHarvestCount: 100
   itemData: {fileID: 11400000, guid: 658f3753752028e49843988ac268279e, type: 2}
   visualModel: {fileID: 0}
   harvestEffect: {fileID: 0}
-  interactionDistance: 3
+  interactionDistance: 4
   respawnTime: 5
   usePlayerUI: 1
   showRangeCircle: 1
@@ -175,3 +178,52 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TutorialPopup
   m_TutorialIndex: 0
   m_Duration: 2
+--- !u!208 &7003639505608784900
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1672603681471840076}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 0
+  m_Extents: {x: 2.381, y: 1.7, z: 2.381}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0, z: 0}
+  m_TimeToStationary: 0.5
+--- !u!114 &4359373792192051324
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1672603681471840076}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 94e4d89b661dafe459492cc141c34285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Reworked.ResourceNodeReworked
+  m_ResourceType: 1
+  m_ItemData: {fileID: 11400000, guid: 658f3753752028e49843988ac268279e, type: 2}
+  m_DefaultResourceItemCount: 10
+  m_MaxHarvestCount: 10
+  m_HarvestTime: 1
+  m_HarvestContactDistance: 4
+  m_RegeneratedResourceItemCountPerTick: 1
+  m_RegenerateTimePerTick: 5
+  b_IsWorldSpaceUIActive: 0
+--- !u!114 &6572583331826117065
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1672603681471840076}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 36b297039eac7064c9434f3bc7e6c455, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TaggedGroupCacheHelper

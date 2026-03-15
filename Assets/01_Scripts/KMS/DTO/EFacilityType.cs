@@ -18,5 +18,8 @@ public enum EFacilityType
     Sales,
     Wood,
     Rock,
-    Steel
+    Steel,
+    WorkerUpgradeArea_Log,
+    WorkerUpgradeArea_Stone_Brick,
+    WorkerUpgradeArea_Silver_Bar,
 }

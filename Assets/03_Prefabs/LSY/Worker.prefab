@@ -10,13 +10,14 @@ GameObject:
   m_Component:
   - component: {fileID: 5905861359875649687}
   - component: {fileID: 1849067457240454450}
+  - component: {fileID: 1508490194936891322}
   - component: {fileID: 7560730025295221471}
   - component: {fileID: 5719769050637214720}
   - component: {fileID: 7748247480669128386}
   - component: {fileID: 6115586768591529602}
   - component: {fileID: 2416638190286914977}
   - component: {fileID: 488222933240491682}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Worker
   m_TagString: Worker
   m_Icon: {fileID: 0}
@@ -63,10 +64,23 @@ Rigidbody:
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
   m_UseGravity: 1
-  m_IsKinematic: 0
+  m_IsKinematic: 1
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 80
   m_CollisionDetection: 0
+--- !u!114 &1508490194936891322
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5185653404625067925}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d2e3bcb52d4a79d4e8fdd1cda51f1c1e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WorkerAreaDetector
+  m_CheckInterval: 0.1
 --- !u!114 &7560730025295221471
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -79,7 +93,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 478197d0a20ebee4186887fb49e0180e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Inventory
-  m_Capacity: 10
+  m_Capacity: 5
   m_ItemSpawnPoint: {fileID: 5653474909709649238}
 --- !u!114 &5719769050637214720
 MonoBehaviour:
@@ -93,7 +107,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b923baf1ae482fe4297ae5902bc07ef0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Reworked.ResourceHarvestBehaviour
-  <TargetResourceTypes>k__BackingField: 
+  <TargetResourceTypes>k__BackingField: 000000000100000002000000
   <HarvestSpeedMultiplier>k__BackingField: 1
   <HarvestAmount>k__BackingField: 1
   <IsHarvesting>k__BackingField: 0
@@ -143,7 +157,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 45417ae2be032704eb04d0a0733ec7a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WorkerBehaviourTreeConfigurator
-  m_UnloadArea: {fileID: 0}
 --- !u!195 &488222933240491682
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -154,10 +167,10 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.5
-  m_Speed: 3.5
-  m_Acceleration: 8
+  m_Speed: 3
+  m_Acceleration: 6
   avoidancePriority: 50
-  m_AngularSpeed: 120
+  m_AngularSpeed: 270
   m_StoppingDistance: 0
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
@@ -175,7 +188,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5653474909709649238}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: stack
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -208,6 +221,22 @@ PrefabInstance:
     - target: {fileID: 1107689710067538, guid: d267c0ded21164d689a953e95fdbf17c, type: 3}
       propertyPath: m_Name
       value: Man_Farm
+      objectReference: {fileID: 0}
+    - target: {fileID: 1107689710067538, guid: d267c0ded21164d689a953e95fdbf17c, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 4648508514340484, guid: d267c0ded21164d689a953e95fdbf17c, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4648508514340484, guid: d267c0ded21164d689a953e95fdbf17c, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4648508514340484, guid: d267c0ded21164d689a953e95fdbf17c, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 4648508514340484, guid: d267c0ded21164d689a953e95fdbf17c, type: 3}
       propertyPath: m_LocalPosition.x
@@ -248,6 +277,10 @@ PrefabInstance:
     - target: {fileID: 4648508514340484, guid: d267c0ded21164d689a953e95fdbf17c, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4648508514340484, guid: d267c0ded21164d689a953e95fdbf17c, type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

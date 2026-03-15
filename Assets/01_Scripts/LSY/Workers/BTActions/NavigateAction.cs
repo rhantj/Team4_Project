@@ -34,7 +34,6 @@ public class NavigateAction : BehaviourTreeActionStrategy
     private void Navigate(NavMeshAgent agent, GameObject destinationGameObject)
     {
         Vector3 targetPositionOnXZ = new Vector3(destinationGameObject.transform.position.x, 0f, destinationGameObject.transform.position.z);
-        Vector3 finalDestination = targetPositionOnXZ;
 
         float obstacleRadius =
             (destinationGameObject.TryGetComponent(out NavMeshObstacle obstacle) && null != obstacle)
@@ -52,6 +51,8 @@ public class NavigateAction : BehaviourTreeActionStrategy
             return;
         }
 
+        Vector3 finalDestination = preliminaryAnchor.position;
+
         NavMeshPath path = new NavMeshPath();
         if (!NavMesh.CalculatePath(agent.transform.position, preliminaryAnchor.position, agent.areaMask, path) || 2 > path.corners.Length)
         {
@@ -65,7 +66,8 @@ public class NavigateAction : BehaviourTreeActionStrategy
         while (lowerBoundToQuery <= upperBoundToQuery)
         {
             int mid = (lowerBoundToQuery + upperBoundToQuery) / 2;
-            if (NavMesh.Raycast(path.corners[mid], targetPositionOnXZ, out NavMeshHit _, NavMesh.AllAreas))
+            if (NavMesh.Raycast(path.corners[mid], targetPositionOnXZ, out NavMeshHit testingHit, NavMesh.AllAreas)
+                && Vector3.Distance(testingHit.position, targetPositionOnXZ) <= obstacleRadius + 0.5f)
             {
                 firstCornerIndexOnLineOfSight = mid;
                 upperBoundToQuery = mid - 1;
@@ -78,7 +80,8 @@ public class NavigateAction : BehaviourTreeActionStrategy
 
         if (NavMesh.Raycast(path.corners[firstCornerIndexOnLineOfSight], targetPositionOnXZ, out NavMeshHit hit, NavMesh.AllAreas))
         {
-            finalDestination = hit.position;
+            Vector3 pushDir = (path.corners[firstCornerIndexOnLineOfSight] - hit.position).normalized;
+            finalDestination = hit.position + (pushDir * (agent.radius + 0.1f));
         }
 
         NavMeshPath finalPath = new NavMeshPath();

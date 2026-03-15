@@ -8,18 +8,21 @@ using UnityEngine;
 public class ResourcePickupAreaController : MonoBehaviour
 {
     [SerializeField] private float m_PlayerLoadDuration;
-    [ReadOnly(true)][SerializeField] private ResourceItemData m_ResourceItemData;
+    [ReadOnly(true)][SerializeField] private List<ResourceItemData> m_ResourceItemData;
     [ReadOnly(true)][SerializeField] private float m_MaxResourceCount;
+    public float MaxResourceCount => m_MaxResourceCount;
 
-    // TODO: need to change to fetch player inventory dynamically
-    [SerializeField] private InventoryExpended m_PlayerInventory;
+    private InventoryExpended m_InventoryExpended;
 
     private ItemIOArea m_ItemIOArea;
 
+    public Stack<ResourceItemData> StoredItems => m_StoredItems;
     private Stack<ResourceItemData> m_StoredItems; // need serialization
 
     private Dictionary<WorkerResourceUnloadBehaviour, CancellationTokenSource> m_WorkerInteractionCancellationTokenSourceMapping;
-    CancellationTokenSource m_PlayerInteractionCancellationTokenSource;
+    private CancellationTokenSource m_PlayerInteractionCancellationTokenSource;
+
+    private GameObject m_WorkerInstance;
 
     private void Awake()
     {
@@ -38,10 +41,13 @@ public class ResourcePickupAreaController : MonoBehaviour
         m_ItemIOArea.m_OnEnterAreaByWorker += OnEnterAreaByWorkerAction;
         m_ItemIOArea.m_OnExitAreaByWorker += OnExitAreaByWorkerAction;
 
+        m_InventoryExpended = GameObject.FindGameObjectWithTag("Player").GetComponent<InventoryExpended>();
     }
 
     private void OnDisable()
     {
+        if (null != m_WorkerInstance) GameManager.Instance.GetService<GameObjectPoolingService>().ReturnOrDestroyGameObject(m_WorkerInstance);
+
         m_ItemIOArea.m_OnExitAreaByWorker -= OnExitAreaByWorkerAction;
         m_ItemIOArea.m_OnEnterAreaByWorker -= OnEnterAreaByWorkerAction;
 
@@ -59,8 +65,8 @@ public class ResourcePickupAreaController : MonoBehaviour
         m_StoredItems = null;
     }
 
-    Action<WorkerResourceUnloadBehaviour> OnEnterAreaByWorkerAction => unloader => OnEnterAreaByWorker(unloader);
-    Action<WorkerResourceUnloadBehaviour> OnExitAreaByWorkerAction => unloader => OnExitAreaByWorker(unloader);
+    Action<GameObject> OnEnterAreaByWorkerAction => worker => { if (worker.TryGetComponent(out WorkerResourceUnloadBehaviour unloader)) OnEnterAreaByWorker(unloader); };
+    Action<GameObject> OnExitAreaByWorkerAction  => worker => { if (worker.TryGetComponent(out WorkerResourceUnloadBehaviour unloader)) OnExitAreaByWorker(unloader); };
 
     private void OnEnterAreaByWorker(WorkerResourceUnloadBehaviour unloader)
     {
@@ -79,8 +85,14 @@ public class ResourcePickupAreaController : MonoBehaviour
     {
         while (!token.IsCancellationRequested)
         {
+            if (m_StoredItems.Count >= m_MaxResourceCount)
+            {
+                await Awaitable.FixedUpdateAsync(token);
+                continue;
+            }
             ResourceItemData resourceItemData = await unloader.UnloadAsync(m_ResourceItemData);
             if (null != resourceItemData) m_StoredItems.Push(resourceItemData);
+            else await Awaitable.FixedUpdateAsync(token);
         }
     }
 
@@ -100,8 +112,18 @@ public class ResourcePickupAreaController : MonoBehaviour
     {
         while (!token.IsCancellationRequested)
         {
-            if (m_StoredItems.TryPop(out ResourceItemData resourceItemData)) m_PlayerInventory.AddItem(resourceItemData);
-            await Awaitable.WaitForSecondsAsync(m_PlayerLoadDuration);
+            if (m_InventoryExpended.IsFull)
+            {
+                await Awaitable.FixedUpdateAsync(token);
+                continue;
+            }
+            if (m_StoredItems.TryPop(out ResourceItemData resourceItemData)) m_InventoryExpended.AddItem(resourceItemData);
+            await Awaitable.WaitForSecondsAsync(m_PlayerLoadDuration, token);
         }
+    }
+
+    public void HandOverWorker(GameObject worker)
+    {
+        m_WorkerInstance = worker;
     }
 }

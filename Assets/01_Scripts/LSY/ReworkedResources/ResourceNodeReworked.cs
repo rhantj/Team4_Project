@@ -21,10 +21,6 @@ namespace Reworked
         [ReadOnly(true)][Min(0)][SerializeField] private int m_RegeneratedResourceItemCountPerTick = 5;
         [ReadOnly(true)][Min(0f)][SerializeField] private float m_RegenerateTimePerTick = 5f;
 
-        [Header("Visual")]
-        [SerializeField] private GameObject m_VisualModel;
-        [SerializeField] private ParticleSystem m_HarvestEffect;
-
         [Header("UI References")]
         [ReadOnly(true)][SerializeField] private bool b_IsWorldSpaceUIActive = true;
 
