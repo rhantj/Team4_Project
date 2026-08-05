@@ -150,9 +150,3 @@ Assets/
 | [@EnigmaticDoll](https://github.com/EnigmaticDoll) (Seungyoon Lee) | 일꾼 AI(Behaviour Tree), 수거 구역, 카메라 전환, 서비스 구조 |
 | [@jun191212](https://github.com/jun191212) (ohjun1999) | 플레이어 이동/수집/인터랙션, 조이스틱, 자원 노드 및 수집 UI |
 | [@rorem1](https://github.com/rorem1) | 인벤토리, 아이템 SO, 메인 로비·스테이지 선택·튜토리얼 UI |
-
-### 협업 규칙
-
-- 브랜치: `feat/기능이름`, `fix/버그이름` ([Conventional Branch](https://conventional-branch.github.io/))
-- 작업 전 `main` Pull → 브랜치 생성 → 작업 → PR → `main` 반영
-- 코딩 컨벤션: PascalCase / 멤버 변수 `m_Member` / 인터페이스 `IName` / enum `EName` / 프로퍼티 `PropertyName`
