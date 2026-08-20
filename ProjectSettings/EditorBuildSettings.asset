@@ -4,7 +4,10 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/06_Scenes/01_Komuseo.unity
+    guid: 435ad7f8dad68404fbe9cb50231c1808
   m_configObjects:
     com.unity.addressableassets: {fileID: 11400000, guid: fb46742165256f0459c87a94066cf3b8, type: 2}
   m_UseUCBPForAssetBundles: 0

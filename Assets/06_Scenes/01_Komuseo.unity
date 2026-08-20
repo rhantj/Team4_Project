@@ -3202,7 +3202,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ccbd7648d364b042b089d6d9b80da30, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SpatialHashManager
-  m_CellSize: 40
+  m_CellSize: 5
 --- !u!1 &2023923087
 GameObject:
   m_ObjectHideFlags: 0
