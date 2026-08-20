@@ -70,7 +70,7 @@ public class OptionPanel : MonoBehaviour
 #if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;
 #else
-        Applicayion.Quit();
+        Application.Quit();
 #endif
     }
 

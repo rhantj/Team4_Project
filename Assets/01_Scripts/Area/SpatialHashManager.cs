@@ -9,6 +9,8 @@ public class SpatialHashManager : MonoBehaviour
 
     private Dictionary<Vector2Int, List<ItemIOArea>> m_Grid = new();
 
+    public float CellSize => m_CellSize;
+
     private void Awake()
     {
         Instance = this;

@@ -1,4 +1,4 @@
-using Reworked;
+﻿using Reworked;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -31,6 +31,7 @@ public class ItemIOArea : MonoBehaviour
 
     protected virtual void Awake()
     {
+        ApplyAreaScale();
         RecalculateOBB();
     }
 
@@ -58,15 +59,25 @@ public class ItemIOArea : MonoBehaviour
 
     protected void RecalculateOBB()
     {
-        if (!gameObject.activeSelf) return;
         transform.GetPositionAndRotation(out var pos, out var rot);
         m_WorldCenter = pos;
 
         m_AxisX = Rotate(rot, Vector3.right).normalized;
         m_AxisZ = Rotate(rot, Vector3.forward).normalized;
-
-        transform.localScale = new Vector3(m_Width, .5f, m_Height);
     }
+
+    // 기즈모/판정 경로에서 크기를 쓰면 에디터가 씬을 계속 dirty로 표시한다
+    protected void ApplyAreaScale()
+    {
+        if (!gameObject.activeSelf) return;
+
+        Vector3 scale = new Vector3(m_Width, .5f, m_Height);
+        if (transform.localScale != scale) transform.localScale = scale;
+    }
+
+#if UNITY_EDITOR
+    protected virtual void OnValidate() => ApplyAreaScale();
+#endif
 
     private bool IsInsideOBB(Vector3 worldPos)
     {
@@ -126,7 +137,7 @@ public class ItemIOArea : MonoBehaviour
     protected void OnDrawGizmos()
     {
         RecalculateOBB();
-        Gizmos.color = Color.green;
+        Gizmos.color = m_isPlayerEnter ? Color.red : Color.green;
 
         float halfW = m_Width * 0.5f;
         float halfD = m_Height * 0.5f;

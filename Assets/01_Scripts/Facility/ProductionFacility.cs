@@ -51,6 +51,7 @@ public class ProductionFacility : MonoBehaviour
     private const string m_InputSound = "ITEM_Click_Item_Put";
     private const string m_OutputSound = "ITEM_Click_Item_Pick_Up";
     private const string m_CoinInputSound = "ITEM_Coin Buy";
+    private const int m_UpgradeGoldStep = 100;
 
     void NotifyInput(bool playSound = true) 
     {
@@ -266,7 +267,7 @@ public class ProductionFacility : MonoBehaviour
             }
 
             float elapse = 0;
-            m_CurrentCostProgress = 0;
+            m_CurrentProductionProgress = 0f;
             NotifyProductionProgress(m_CurrentProductionProgress);
 
             while (elapse < delay)
@@ -303,10 +304,10 @@ public class ProductionFacility : MonoBehaviour
 
         while (m_UpgradeArea.IsPlayerEnter && m_CurrentCostProgress < m_UpgradeCost && !m_IsUpgraded)
         {
-            if (m_Inv.Gold > 0)
+            if (m_Inv.Gold >= m_UpgradeGoldStep)
             {
-                m_Inv.Gold -= 100;
-                m_CurrentCostProgress += 100;
+                m_Inv.Gold -= m_UpgradeGoldStep;
+                m_CurrentCostProgress += m_UpgradeGoldStep;
                 NotifyUpgrade(m_CurrentCostProgress);
             }
 
